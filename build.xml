@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="jpl-omg-oti-magicdraw-adapter" basedir=".">
+
+    <property name="memorySize" 		value="-Xmx3076M"/>
+    <property name="maxPermGenSize"	value="-XX:MaxPermSize=1024M" />
+
+    <import file="${md.install.dir}/data/eclipse/zip.xml"/>
+
+    <property name="md.build.tools.dir" location="${md.install.dir}/data/eclipse/resource/SMDP-PackageB" />
+    <import file="${md.build.tools.dir}/build.md.scala.dynamicScripts.xml"/>
+
+    <property name="scripts.dir" 		location="."/>
+    <property name="project.dir" 		location="."/>
+    <property name="scripts.name" 		value="${ant.project.name}" />
+    <property name="scripts.archive" 	value="${ant.project.name}" />
+    <property name="scripts.version" 	value="${THIS_INFO.version}" />
+    <property name="scripts.resource"	value="data/resourcemanager/MDR_org_omg_oti_magicdraw_descriptor.xml"/>
+
+    <echoproperties prefix="md"/>
+    <echoproperties/>
+
+    <target name="all" depends="all.error,all.ok"/>
+
+    <target name="all.error" unless="all.precondition.scala">
+        <echo message="Check the environment variables tested in the target 'all.precondition.scala'"/>
+        <fail/>
+    </target>
+
+    <target name="all.ok" if="all.precondition.scala" depends="extract,zip,install,bundle">
+        <save.script.properties/>
+    </target>
+
+    <fileset id="scripts.profiles" dir="${scripts.dir}/profiles">
+        <include name="**/*.mdzip"/>
+    </fileset>
+
+    <fileset id="scripts.modelLibraries" dir="${scripts.dir}/modelLibraries">
+        <include name="**/*.mdzip"/>
+    </fileset>
+
+    <fileset id="scripts.templates" dir="${scripts.dir}/templates">
+        <include name="**/*.*"/>
+    </fileset>
+
+    <fileset id="scripts.tests" dir="${scripts.dir}/testResources">
+        <include name="**/*.mdzip"/>
+        <include name="**/*.properties"/>
+    </fileset>
+
+    <fileset id="scripts.samples" dir="${scripts.dir}/samples">
+        <include name="**/*.mdzip"/>
+    </fileset>
+
+    <target name="zip">
+        <copy todir="${scripts.dir}/root" verbose="true" failonerror="false">
+            <fileset dir="${scripts.dir}">
+                <include name="data/**/*" />
+            </fileset>
+        </copy>
+
+        <!--
+        Don't clean, this removes what extractArchives has copied!
+        <md.scripts.clean.root
+                scripts.dir="${scripts.dir}"
+                scripts.name="${scripts.name}"/>
+        -->
+
+        <md.scripts.copyTo.root
+                scripts.dir="${scripts.dir}"
+                scripts.name="${scripts.name}">
+            <source-includes>
+                <include name=".classpath"/>
+                <include name="*.sbt"/>
+                <include name="oti.dynamicScripts"/>
+                <include name="project/build.properties"/>
+                <include name="project/*.scala"/>
+                <include name="project/*.sbt"/>
+                <include name="src/**/*.scala"/>
+                <include name="md18Catalog/*"/>
+            </source-includes>
+        </md.scripts.copyTo.root>
+
+        <md.scripts.zip.root
+                scripts.dir="${scripts.dir}"
+                scripts.archive="${scripts.archive}"
+                scripts.version="${scripts.version}"/>
+
+    </target>
+    
+	<macrodef name="copyProjectLibsToDynamicScriptsLibs">
+		<attribute name="fromDir" />
+		<attribute name="toDir" />
+		<sequential>
+			<mkdir dir="root/dynamicScripts/${scripts.name}/lib/@{toDir}" />
+			<copy todir="root/dynamicScripts/${scripts.name}/lib/@{toDir}" verbose="true" preservelastmodified="true">
+				<fileset dir="@{fromDir}">
+					<include name="*" />
+				</fileset>
+			</copy>
+
+			<mkdir dir="root/dynamicScripts/${scripts.name}/lib.srcs/@{toDir}" />
+			<copy todir="root/dynamicScripts/${scripts.name}/lib.srcs/@{toDir}" verbose="true" preservelastmodified="true">
+				<fileset dir="@{fromDir}.srcs">
+					<include name="*" />
+				</fileset>
+			</copy>
+
+			<mkdir dir="root/dynamicScripts/${scripts.name}/lib.javadoc/@{toDir}" />
+			<copy todir="root/dynamicScripts/${scripts.name}/lib.javadoc/@{toDir}" verbose="true" preservelastmodified="true">
+				<fileset dir="@{fromDir}.javadoc">
+					<include name="*" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+
+    <target name="extract">
+        <echoproperties prefix="env"/>
+        <exec executable="${env.JENKINS_HOME}/tools/SBT/sbt"
+              failifexecutionfails="true"
+              failonerror="true"
+              logerror="true"
+              dir=".">
+            <arg value="-java-home"/>
+            <arg value="${env.JAVA8_HOME}"/>
+            <arg value="-DJPL_MBEE_LOCAL_REPOSITORY=${env.JPL_MBEE_LOCAL_REPOSITORY}"/>
+            <arg value="-DMD_INSTALL_DIR=${md.install.dir}"/>
+            <arg value="-batch"/>
+            <arg value="-no-colors"/>
+            <arg value="extractArchives"/>
+        </exec>
+	
+	<copyProjectLibsToDynamicScriptsLibs fromDir="jpl-mbee-common-owlapi-libraries/lib" toDir="owlapi-libs" />
+	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-change-migration/lib" toDir="oti-change-migration" />
+	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-core/lib" toDir="oti-core" />
+	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-magicdraw/lib" toDir="oti-magicdraw" />
+	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-trees/lib" toDir="oti-trees" />
+
+    </target>
+
+    <target name="install">
+        <md.scripts.install.zip
+                scripts.dir="${scripts.dir}"
+                scripts.archive="${scripts.archive}"
+                scripts.version="${scripts.version}"
+                install.dir="${md.install.dir}"/>
+    </target>
+
+    <target name="bundle">
+        <md.zip.all
+                bundle.dest.dir="${scripts.dir}/artifacts"
+                bundle.name="${bundle.name}"
+                bundle.source.dir="${md.install.dir}"/>
+    </target>
+
+</project>

@@ -1,0 +1,13 @@
+.idea
+bin
+lib.javadoc
+lib.srcs
+jpl-mbee-common-owlapi-libraries
+oti-change-migration
+oti-core
+oti-magicdraw
+oti-trees
+project/project
+project/target
+sbt.staging
+target
