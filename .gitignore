@@ -1,7 +1,6 @@
 .idea
 bin
-lib.javadoc
-lib.srcs
+lib*/*
 jpl-mbee-common-owlapi-libraries
 oti-change-migration
 oti-core
