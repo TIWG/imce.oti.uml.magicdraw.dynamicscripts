@@ -7,7 +7,7 @@ import sbt._
 import com.typesafe.sbt.SbtAspectj._
 import com.typesafe.sbt.SbtAspectj.AspectjKeys._
 
-lazy val copyPublishedArtifactLibraries = TaskKey[Unit]("copy-published-artifact-librariess", "Copies published artifact libraries")
+lazy val copyPublishedArtifactLibraries = TaskKey[Unit]("copy-published-artifact-libraries", "Copies published artifact libraries")
 
 lazy val jpl_omg_oti_magicdraw_dynamicscripts = Project("jpl-omg-oti-magicdraw-dynamicscripts", file(".")).
   settings(GitVersioning.buildSettings). // in principle, unnecessary; in practice: doesn't work without this
