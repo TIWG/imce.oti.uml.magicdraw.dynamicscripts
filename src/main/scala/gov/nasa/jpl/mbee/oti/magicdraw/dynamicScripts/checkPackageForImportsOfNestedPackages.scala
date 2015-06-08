@@ -51,7 +51,6 @@ import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import org.omg.oti.api._
 import org.omg.oti.magicdraw.{MagicDrawUML, MagicDrawUMLUtil}
-import org.omg.oti.magicdraw.actions.AddMissingImportFromParentPackage
 
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
@@ -129,8 +128,8 @@ object checkPackageForImportsOfNestedPackages {
     val elementMessages = for {
       pkg <- pkgs ++ pkgs.flatMap( _.allNestedPackages )
       missingImport <- pkg.nonImportedNestedPackages
-      actions = List( AddMissingImportFromParentPackage() )
-    } yield ( ( missingImport.getMagicDrawPackage -> ( s"Add import from parent package, ${pkg.name.get}", actions ) ) )
+      as = List( actions.AddMissingImportFromParentPackage() )
+    } yield ( ( missingImport.getMagicDrawPackage -> ( s"Add import from parent package, ${pkg.name.get}", as ) ) )
 
     if ( elementMessages.isEmpty ) {
       guiLog.log( s"OK" )

@@ -49,7 +49,6 @@ import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import org.omg.oti.api._
 import org.omg.oti.magicdraw.{MagicDrawUML, MagicDrawUMLUtil}
-import org.omg.oti.magicdraw.actions.SelectInContainmentTreeAction
 import org.omg.oti.validation._
 
 import scala.collection.JavaConversions._
@@ -75,7 +74,7 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
 
     checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles(
       p,
-      selection.toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage ) } ) )
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
   }
   
   def doitIncludingNestingPackagesAndAppliedProfiles(
@@ -92,7 +91,7 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
 
     checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles(
       p,
-      selection.toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage ) } ) )
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
   }
 
   def doitExceptNestingPackagesAndAppliedProfiles(
@@ -109,7 +108,7 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
 
     checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles(
       p,
-      selection.toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage ) } ) )
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
   }
 
   def doitIncludingNestingPackagesAndAppliedProfiles(
@@ -126,7 +125,7 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
 
     checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles(
       p,
-      selection.toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage ) } ) )
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
   }
 
   def checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles(
@@ -147,11 +146,11 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
     val elementMessages = ( for {
       pkg <- pkgs
       _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
-      actions = List( SelectInContainmentTreeAction( pkg.getMagicDrawPackage ) )
+      as = List( actions.SelectInContainmentTreeAction( pkg.getMagicDrawPackage ) )
       violation <- rules.findNonAccessibleButReferencedImportablePackabeableElementsExceptNestingPackagesAndAppliedProfiles( pkg )
-    } yield (
+    } yield
       violation.referencedButNotAccessible.getMagicDrawElement ->
-      ( s"unaccessible cross-reference from ${pkg.qualifiedName.get}", actions ) ) ) toMap
+      Tuple2( s"unaccessible cross-reference from ${pkg.qualifiedName.get}", as ) ) toMap
 
     if ( elementMessages.nonEmpty ) {
       guiLog.log( s"Error! -- found ${elementMessages.size} unaccessible cross-references!" )
@@ -186,11 +185,11 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
     val elementMessages = ( for {
       pkg <- pkgs
       _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
-      actions = List( SelectInContainmentTreeAction( pkg.getMagicDrawPackage ) )
+      as = List( actions.SelectInContainmentTreeAction( pkg.getMagicDrawPackage ) )
       violation <- rules.findNonAccessibleButReferencedImportablePackabeableElementsIncludingNestingPackagesAndAppliedProfiles( pkg )
-    } yield (
+    } yield
       violation.referencedButNotAccessible.getMagicDrawElement ->
-      ( s"unaccessible cross-reference from ${pkg.qualifiedName.get}", actions ) ) ) toMap
+      Tuple2( s"unaccessible cross-reference from ${pkg.qualifiedName.get}", as ) ) toMap
 
     if ( elementMessages.nonEmpty ) {
       guiLog.log( s"Error! -- found ${elementMessages.size} unaccessible cross-references!" )
