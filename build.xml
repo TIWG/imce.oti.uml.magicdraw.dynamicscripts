@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="jpl-omg-oti-magicdraw-adapter" basedir=".">
+<project name="jpl-omg-oti-magicdraw-dynamicscripts" basedir=".">
 
     <property name="memorySize" 		value="-Xmx3076M"/>
     <property name="maxPermGenSize"	value="-XX:MaxPermSize=1024M" />
