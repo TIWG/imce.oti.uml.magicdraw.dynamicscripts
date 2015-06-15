@@ -7,35 +7,35 @@ toolbarMenuScripts(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Change XMI:IDs per project migration.xmi'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
 			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.changePackageExtentIDs
 			method: doit )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Open Local Project (skipping local module)'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
 			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.openLocalProjectSkipLocalModule
 			method: doit )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Migrate Package Extent xmi:ids (choose migration file, convertOnlyIncomingReferences=true)'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
 			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.MigrationHelper
 			method: customMigration )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Name Test'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
 			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.nameTest
 			method: doit )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'Play' }
 			name: 'Enumeration'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
 			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.playEnumeration
 			method: doit )
 	})
@@ -47,7 +47,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
@@ -55,7 +55,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/o)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
@@ -63,7 +63,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Inspect Associations (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
@@ -71,7 +71,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Inspect Associations (r/o)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
@@ -86,14 +86,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/o)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
@@ -101,14 +101,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Inspect Associations (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Inspect Associations (r/o)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
@@ -122,14 +122,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set names of ValueTypes within scope of selected package(s) (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.nameValueTypesWithinPackageExtent
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Set names of ValueTypes within selected package(s) scope (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.nameValueTypesWithinPackageExtent
               method: doit
@@ -137,7 +137,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Package extents'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -145,7 +145,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Package extents'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -153,15 +153,23 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set OTI xmi:uuids for Package Extent'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.setOTIUUIDs
+              method: doit
+          )
+          BrowserContextMenuAction(
+              name: 'Analyze Association Variety'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.tiwg.AnalyzeAssociationVariety
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Set OTI xmi:uuids for Package Extent'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
@@ -169,7 +177,7 @@ dynamicScripts(
         	  BrowserContextMenuAction(
               name: 'Migrate Package Extent xmi:ids (convertOnlyIncomingReferences=false)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
               method: doit 
@@ -177,7 +185,7 @@ dynamicScripts(
         	  DiagramContextMenuAction(
               name: 'Migrate Package Extent xmi:ids (convertOnlyIncomingReferences=false)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
               method: doit 
@@ -185,7 +193,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Package'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.generateCatalogURIMappingForBuiltInDocument
               method: doit
@@ -193,7 +201,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -201,7 +209,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -209,7 +217,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Export Selected Packages to OMG TI Canonical XMI'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -217,7 +225,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Export Selected Packages to OMG TI Canonical XMI'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -225,7 +233,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected package references only accessible members (except nesting packages and applied profiles)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitExceptNestingPackagesAndAppliedProfiles
@@ -233,7 +241,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected package references only accessible members (including nesting packages and applied profiles)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitIncludingNestingPackagesAndAppliedProfiles
@@ -241,7 +249,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection for missing imports of nested packages'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkPackageForImportsOfNestedPackages
               method: doit
@@ -249,7 +257,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection can access secondary package selection'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCanAccessSecondaryPackageSelection
               method: doit
@@ -257,7 +265,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection cannot access secondary package selection'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCannotAccessSecondaryPackageSelection
               method: doit
@@ -265,7 +273,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection can access secondary profile selection'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCanAccessSecondaryProfileSelection
               method: doit
@@ -273,7 +281,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection cannot access secondary profile selection'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCannotAccessSecondaryProfileSelection
               method: doit
@@ -281,7 +289,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection does not reference members of secondary package selection'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionDoesNotReferenceMembersOfSecondaryPackageSelection
               method: doit
@@ -295,7 +303,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Model'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.generateCatalogURIMappingForBuiltInDocument
               method: doit
@@ -309,7 +317,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Profile extents'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -317,7 +325,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Package extents'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -325,7 +333,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set OTI xmi:uuids for Profile Extent'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
@@ -333,7 +341,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set OTI xmi:uuids for Profile Extent'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
@@ -341,7 +349,7 @@ dynamicScripts(
         	  BrowserContextMenuAction(
               name: 'Migrate Profile Extent xmi:ids (convertOnlyIncomingReferences=false)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
               method: doit 
@@ -349,7 +357,7 @@ dynamicScripts(
         	  DiagramContextMenuAction(
               name: 'Migrate Profile Extent xmi:ids (convertOnlyIncomingReferences=false)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
               method: doit 
@@ -357,7 +365,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Profile'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.generateCatalogURIMappingForBuiltInDocument
               method: doit
@@ -365,7 +373,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -373,7 +381,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -381,7 +389,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Export Selected Profiles to OMG TI Canonical XMI'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -389,7 +397,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Export Selected Profiles to OMG TI Canonical XMI'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -397,7 +405,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected profile references only accessible members (except nesting packages and applied profiles)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitExceptNestingPackagesAndAppliedProfiles
@@ -405,7 +413,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected profile references only accessible members (including nesting packages and applied profiles)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitIncludingNestingPackagesAndAppliedProfiles
@@ -413,7 +421,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary profile selection for missing imports of nested packages'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.checkPackageForImportsOfNestedPackages
               method: doit
@@ -449,49 +457,57 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::appliedStereotypes'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: appliedStereotypes
+        )
+		EarlyDerivedWidget(
+			name: 'OTI Element::ownedElements'
+			project: jpl.omg.oti.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+            access: r/o
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
+            method: ownedElements
         )
 		EarlyDerivedWidget(
 			name: 'OTI Element::allOwnedElementsWithinPackageScope'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allOwnedElementsWithinPackageScope
         )
 		EarlyDerivedWidget(
 			name: 'OTI Element::packageOrProfileOwner'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: packageOrProfileOwner
         )
 		EarlyDerivedWidget(
 			name: 'OTI Element::allForwardReferencesToElements'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allForwardReferencesToElements
         )
 		EarlyDerivedWidget(
 			name: 'OTI Element::allForwardReferencesToImportablePackageableElements'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allForwardReferencesToImportablePackageableElements
         )
 		EarlyDerivedWidget(
 			name: 'OTI Element::allForwardReferencesFromStereotypeTagProperties'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allForwardReferencesFromStereotypeTagProperties
         )
 	})
@@ -502,25 +518,25 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI NamedElement::allNamespaces'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamedElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamedElementInspectorWidget
             method: allNamespaces
         )
 		EarlyDerivedWidget(
 			name: 'OTI NamedElement::owningPackage'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamedElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamedElementInspectorWidget
             method: owningPackage
         )
 		EarlyDerivedWidget(
 			name: 'OTI NamedElement::allOwningPackages'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamedElementInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamedElementInspectorWidget
             method: allOwningPackages
         )
 	})
@@ -532,33 +548,33 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Property::redefinedProperty'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PropertyInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: redefinedProperty
         )
 		EarlyDerivedWidget(
 			name: 'OTI Property::redefiningdProperty'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PropertyInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: redefiningdProperty
         )
 		EarlyDerivedWidget(
 			name: 'OTI Property::subsettedProperty'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PropertyInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: subsettedProperty
         )
 		EarlyDerivedWidget(
 			name: 'OTI Property::subsettingProperty'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PropertyInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: subsettingProperty
         )
 	})
@@ -570,57 +586,65 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::importedPackages'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamespaceInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: importedPackages
         )
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::allImportedPackagesTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamespaceInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: allImportedPackagesTransitively
-        )        
+        )
+		EarlyDerivedWidget(
+			name: 'OTI Namespace::members'
+			project: jpl.omg.oti.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+            access: r/o
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
+            method: members
+        )
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::importedMembers'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamespaceInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: importedMembers
         )
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::visibleMembers'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamespaceInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: visibleMembers
         )
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::allVisibleMembersTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamespaceInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: allVisibleMembersTransitively
         )
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::allVisibleMembersAccessibleTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamespaceInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: allVisibleMembersAccessibleTransitively
         )
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::forwardReferencesBeyondNamespaceScope'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.NamespaceInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: forwardReferencesBeyondNamespaceScope
         )
     })
@@ -632,17 +656,17 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Classifier::general'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ClassifierInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ClassifierInspectorWidget
             method: general
         )
 		EarlyDerivedWidget(
 			name: 'OTI Classifier::general_classifier'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ClassifierInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ClassifierInspectorWidget
             method: generalClassifier
         )
 	})
@@ -654,9 +678,9 @@ characterization(
 		EarlyDerivedTree(
 			name: 'OTI StructuredClassifier::compositeStructureTree'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StructuredClassifierInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StructuredClassifierInspectorWidget
             method: compositeStructureTree
             columnValueTypes: {
             		{ key: property, typeName: 'Property', typeInfo: String }
@@ -672,81 +696,81 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::baseMetaProperties'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: baseMetaProperties
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::baseMetaPropertiesExceptRedefined'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: baseMetaPropertiesExceptRedefined
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::profile'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: profile
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypes'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypes
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypes'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypes
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getAllSpecializedStereotypes'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getAllSpecializedStereotypes
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypesOutsideProfile'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypesOutsideProfile
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypesWithinProfile'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypesWithinProfile
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getAllSpecializedStereotypesWithinProfile'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getAllSpecializedStereotypesWithinProfile
         )
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypesFromOtherProfiles'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.StereotypeInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypesFromOtherProfiles
         )
 	})
@@ -758,121 +782,121 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::nonImportedNestedPackages'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: nonImportedNestedPackages
         )        
 		EarlyDerivedWidget(
 			name: 'OTI Package::allNestedPackages'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allNestedPackages
         )        
 		EarlyDerivedWidget(
 			name: 'OTI Package::allNestingPackagesTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allNestingPackagesTransitively
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyImportedPackagesIncludingNestingPackagesTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyImportedPackagesIncludingNestingPackagesTransitively
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allApplicableStereotypes'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allApplicableStereotypes
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::containingProfile'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: containingProfile
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyAppliedProfilesExceptNestingPackages'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyAppliedProfilesExceptNestingPackages
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyAppliedProfilesIncludingNestingPackagesTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyAppliedProfilesIncludingNestingPackagesTransitively
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyVisibleMembersTransitivelyAccessibleExceptNestingPackagesAndAppliedProfiles'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyVisibleMembersTransitivelyAccessibleExceptNestingPackagesAndAppliedProfiles
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allIndirectlyAppliedProfilesIncludingNestingPackagesTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allIndirectlyAppliedProfilesIncludingNestingPackagesTransitively
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allForwardReferencesToImportablePackageableElementsFromAllOwnedElementsTransitively'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allForwardReferencesToImportablePackageableElementsFromAllOwnedElementsTransitively
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allIndirectlyVisibleMembersTransitivelyAccessibleFromNestingPackagesAndAppliedProfiles'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allIndirectlyVisibleMembersTransitivelyAccessibleFromNestingPackagesAndAppliedProfiles
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::forwardReferencesToPackagesOrProfiles'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: forwardReferencesToPackagesOrProfiles
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::forwardReferencesBeyondPackageScope'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: forwardReferencesBeyondPackageScope
         )
 		EarlyDerivedWidget(
 			name: 'OTI Package::allPackagesWithinScope'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.PackageInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allPackagesWithinScope
         )
 	})
@@ -884,27 +908,27 @@ characterization(
 		EarlyDerivedProperty(
 			name: 'OTI Profile::allImportedProfiles'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ProfileInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ProfileInspectorWidget
             method: allImportedProfiles
         )
         
 	EarlyDerivedProperty(
 	    name: 'OTI Profile::allNestedProfiles'
 	    project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ProfileInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ProfileInspectorWidget
             method: allNestedProfiles
         )
         
 	EarlyDerivedProperty(
 	    name: 'OTI Profile::allVisibleProfiles'
 	    project: jpl.omg.oti.magicdraw.dynamicscripts
-            dependencies: { jpl.omg.oti.magicdraw.integration }
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
             access: r/o
-            class: org.omg.oti.magicdraw.ui.ProfileInspectorWidget
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ProfileInspectorWidget
             method: allVisibleProfiles
         )
 	})
@@ -916,7 +940,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Invoke DynamicScript as diagram context-menu action for selection'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.invokeDiagramContextMenuActionForSelection
               method: doit
@@ -930,7 +954,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Invoke DynamicScript as main toolbar menu action'
               project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { jpl.omg.oti.magicdraw.integration }
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.invokeMainToolbarMenuAction
               method: doit

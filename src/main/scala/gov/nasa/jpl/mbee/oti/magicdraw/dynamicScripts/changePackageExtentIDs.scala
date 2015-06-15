@@ -78,12 +78,13 @@ object changePackageExtentIDs {
 
     val mdInstallDir = new File( ApplicationEnvironment.getInstallRoot )
     require( mdInstallDir.exists && mdInstallDir.isDirectory )
-    val otiDir = new File( mdInstallDir, "dynamicScripts/org.omg.oti" )
-    require( otiDir.exists && otiDir.isDirectory )
-    val migrationMM = Metamodel( otiDir )
+
+    val otiChangeMigrationDir = new File( mdInstallDir, "dynamicScripts/org.omg.oti.changeMigration/resources" )
+    require( otiChangeMigrationDir.exists && otiChangeMigrationDir.isDirectory )
+    val migrationMM = Metamodel( otiChangeMigrationDir )
 
     val dir = new File( project.getDirectory )
-    require( dir.exists && dir.isDirectory() )
+    require( dir.exists && dir.isDirectory )
     val migrationF = new File( dir, project.getName+".migration.xmi" )
     require( migrationF.exists && migrationF.canRead )
     val migrationURI = URI.createFileURI( migrationF.getAbsolutePath )

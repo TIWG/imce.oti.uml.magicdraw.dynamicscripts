@@ -3,6 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="con" path="gov.nasa.jpl.magicdraw.CLASSPATH_LIB_CONTAINER/,lib/,lib/aspectj/,lib/ds-libs/,lib/graphics/,lib/JPL/,lib/scala-lang/,lib/scala-libs/,lib/scala-graph/,lib/webservice/,dynamicScripts/jpl.omg.oti.magicdraw.integration/lib/oti-change-migration,dynamicScripts/jpl.omg.oti.magicdraw.integration/lib/oti-core,dynamicScripts/jpl.omg.oti.magicdraw.integration/lib/oti-magicdraw,dynamicScripts/jpl.omg.oti.magicdraw.integration/lib/oti-trees,dynamicScripts/jpl.omg.oti.magicdraw.integration/lib/owlapi-libs,plugins/com.nomagic.magicdraw.migration/,plugins/com.nomagic.magicdraw.migrationtransformation/,plugins/com.nomagic.magicdraw.modeltransformations/,plugins/com.nomagic.magicdraw.sysml/,plugins/com.nomagic.magicdraw.sysml/lib/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/lib/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/lib.srcs/,plugins/gov.nasa.jpl.magicdraw.log/,plugins/gov.nasa.jpl.magicdraw.log/lib"/>
+	<classpathentry kind="con" path="gov.nasa.jpl.magicdraw.CLASSPATH_LIB_CONTAINER/,lib/,lib/aspectj/,lib/ds-libs/,lib/graphics/,lib/JPL/,lib/scala-lang/,lib/scala-libs/,lib/scala-graph/,lib/webservice/,plugins/com.nomagic.magicdraw.migration/,plugins/com.nomagic.magicdraw.migrationtransformation/,plugins/com.nomagic.magicdraw.modeltransformations/,plugins/com.nomagic.magicdraw.sysml/,plugins/com.nomagic.magicdraw.sysml/lib/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/lib/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/lib.srcs/,plugins/gov.nasa.jpl.magicdraw.log/,plugins/gov.nasa.jpl.magicdraw.log/lib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jpl-mbee-common-owlapi-libraries"/>
+    <classpathentry combineaccessrules="false" kind="src" path="/org.omg.oti"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.omg.oti.trees"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.omg.oti.changeMigration"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.omg.oti.magicdraw"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

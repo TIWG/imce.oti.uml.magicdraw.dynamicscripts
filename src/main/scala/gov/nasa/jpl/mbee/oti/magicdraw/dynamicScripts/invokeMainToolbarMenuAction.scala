@@ -100,7 +100,7 @@ object invokeMainToolbarMenuAction {
     makeMDIllegalArgumentExceptionValidation(
       p,
       s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
-      Map( triggerElement -> ( "Check the instance specification details", List() ) ),
+      Map( triggerElement -> Tuple2( "Check the instance specification details", List() ) ),
       "*::MagicDrawOTIValidation",
       "*::UnresolvedCrossReference" )
   }
@@ -127,7 +127,7 @@ object invokeMainToolbarMenuAction {
       makeMDIllegalArgumentExceptionValidation(
         p,
         s"*** Ambiguous invocation; there are ${scripts.size} relevant dynamic script actions matching the class/method name criteria ***",
-        Map( invocation -> ( "Check the instance specification details", List() ) ),
+        Map( invocation -> Tuple2( "Check the instance specification details", List() ) ),
         "*::MagicDrawOTIValidation",
         "*::UnresolvedCrossReference" )
 

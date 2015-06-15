@@ -119,7 +119,7 @@ object exportPackageExtents2OTICanonicalXMI {
     import umlUtil._
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf ( { case p: Package => umlPackage( p ) } ) toSet;
+      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
 
     /**
      * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
@@ -145,14 +145,16 @@ object exportPackageExtents2OTICanonicalXMI {
     val defaultOMGCatalogFile =
       new File(
         new File(
-          ApplicationEnvironment.getInstallRoot ).toURI.resolve( "dynamicScripts/org.omg.oti/omgCatalog/omg.local.catalog.xml" ) )
+          ApplicationEnvironment.getInstallRoot ).
+          toURI.resolve( "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml" ) )
     val omgCatalog =
       if ( defaultOMGCatalogFile.exists() ) Seq( defaultOMGCatalogFile )
       else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).toSeq
 
     val defaultMDCatalogFile =
       new File(
-        new File( ApplicationEnvironment.getInstallRoot ).toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/md18Catalog/omg.magicdraw.catalog.xml" ) )
+        new File( ApplicationEnvironment.getInstallRoot ).
+          toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml" ) )
     val mdCatalog =
       if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile )
       else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).toSeq
@@ -223,9 +225,9 @@ object exportPackageExtents2OTICanonicalXMI {
               val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0 ) {
                 def actionPerformed( ev: ActionEvent ): Unit = u.externalReference.selectInContainmentTreeRunnable.run
               }
-              ( u.documentElement.getMagicDrawElement ->
-                ( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
-                  List( a ) ) )
+              u.documentElement.getMagicDrawElement ->
+                Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
+                  List( a ) )
             } toMap;
 
             Success( Some(

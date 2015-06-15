@@ -145,6 +145,10 @@ object inspectAssociations {
     val guiLog = app.getGUILog()
 
     guiLog.log( s" association: ${a.qualifiedName.get}")
+
+    val mdA = umlUtil.umlMagicDrawUMLAssociation(a)
+
+    guiLog.log( s" md association owner: ${mdA.getMagicDrawElement.eContainingFeature}")
     a.getDirectedAssociationEnd match {
       case None =>
         guiLog.log( "Not a directed association! " )
