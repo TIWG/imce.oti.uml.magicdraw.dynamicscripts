@@ -69,6 +69,7 @@
                 scripts.dir="${scripts.dir}"
                 scripts.name="${scripts.name}">
             <source-includes>
+                <exclude name="dependencies"/>
                 <include name=".classpath"/>
                 <include name="**/*.md"/>
                 <include name="**/*.sbt"/>
