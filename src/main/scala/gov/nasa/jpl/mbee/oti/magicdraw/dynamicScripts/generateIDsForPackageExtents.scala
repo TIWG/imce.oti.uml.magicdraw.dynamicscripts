@@ -73,6 +73,7 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.XMLResource
+import org.omg.oti._
 import org.omg.oti.api._
 import org.omg.oti.changeMigration._
 import org.omg.oti.canonicalXMI._
@@ -173,7 +174,7 @@ object generateIDsForPackageExtents {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    val selectedPackages: Set[UMLPackage[Uml]] = selection.toIterator selectByKindOf ( { case p: Package => umlPackage( p ) } ) toSet;
+    val selectedPackages: Set[UMLPackage[Uml]] = selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
 
     /**
      * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
@@ -199,10 +200,12 @@ object generateIDsForPackageExtents {
       case _ => None
     }
     
-    val defaultOMGCatalogFile = new File( new File( ApplicationEnvironment.getInstallRoot ).toURI.resolve( "dynamicScripts/org.omg.oti/omgCatalog/omg.local.catalog.xml" ) )
+    val defaultOMGCatalogFile = new File( new File( ApplicationEnvironment.getInstallRoot ).
+      toURI.resolve( "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml" ) )
     val omgCatalog = if ( defaultOMGCatalogFile.exists() ) Seq( defaultOMGCatalogFile ) else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).toSeq
 
-    val defaultMDCatalogFile = new File( new File( ApplicationEnvironment.getInstallRoot ).toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/md18Catalog/omg.magicdraw.catalog.xml" ) )
+    val defaultMDCatalogFile = new File( new File( ApplicationEnvironment.getInstallRoot ).
+      toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml" ) )
     val mdCatalog = if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile ) else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).toSeq
 
     ( CatalogURIMapper.createCatalogURIMapper( omgCatalog ),
@@ -262,7 +265,7 @@ object generateIDsForPackageExtents {
       ignoreCrossReferencedElementFilter,
       unresolvedElementMapper ) match {
         case Failure( t ) => Failure( t )
-        case Success( ( resolved, unresolved ) ) if ( unresolved.nonEmpty ) =>
+        case Success( ( resolved, unresolved ) ) if unresolved.nonEmpty =>
 
           guiLog.log( s"*** ${unresolved.size} unresolved cross-references ***" )
           val elementMessages = unresolved map { u =>
@@ -270,10 +273,10 @@ object generateIDsForPackageExtents {
             val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0 ) {
               def actionPerformed( ev: ActionEvent ): Unit = u.externalReference.selectInContainmentTreeRunnable.run
             }
-            ( u.documentElement.getMagicDrawElement ->
-              ( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
-                List( a ) ) )
-          } toMap;
+            u.documentElement.getMagicDrawElement ->
+              Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
+                List( a ) )
+          } toMap
 
           Success( Some(
             MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation( p, s"*** ${unresolved.size} unresolved cross-references ***",
@@ -281,7 +284,7 @@ object generateIDsForPackageExtents {
               "*::MagicDrawOTIValidation",
               "*::UnresolvedCrossReference" ).validationDataResults ) )
 
-        case Success( ( resolved, unresolved ) ) if ( unresolved.isEmpty ) =>
+        case Success( ( resolved, unresolved ) ) if unresolved.isEmpty =>
           val idGenerator = MagicDrawIDGenerator( resolved )
           for {
             pkg <- specificationRootPackages
@@ -292,7 +295,23 @@ object generateIDsForPackageExtents {
             ok = idGenerator.getXMI_ID( e )
           } {
             ok match {
-              case Failure( t ) => return Failure( t )
+              case Failure( t: IllegalElementException[MagicDrawUML, _] ) => {
+                val elementMessages = t.element map { u =>
+                  val mdU = u.getMagicDrawElement
+                  val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdU.getHumanType}: ${mdU.getHumanName}", 0 ) {
+                    def actionPerformed( ev: ActionEvent ): Unit = u.selectInContainmentTreeRunnable.run
+                  }
+                  mdU -> Tuple2( t.getMessage, List(a) )
+                } toMap
+
+                Success( Some(
+                  MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
+                    p, s"*** ${unresolved.size} unresolved references ***",
+                    elementMessages,
+                    "*::MagicDrawOTIValidation",
+                    "*::UnresolvedCrossReference" ).validationDataResults ) )
+              }
+              case Failure( t ) => Failure( t )
               case Success( _ ) => ()
             }
           }
@@ -304,11 +323,11 @@ object generateIDsForPackageExtents {
             for { pkg <- specificationRootPackages } {
               guiLog.log( s" => ${pkg.qualifiedName.get}" )
             }
-            ( errors map ( _._1 ) toList ) sortBy ( _.id ) foreach { e =>
+            ( errors.keys toList ) sortBy ( _.id ) foreach { e =>
               val t = errors( e ).failed.get
-              if ( errors.size > 100 ) System.out.println( s" ${e.id} => ${t}" )
+              if ( errors.size > 100 ) System.out.println( s" ${e.id} => $t" )
               else guiLog.addHyperlinkedText(
-                s" <A>${e.id}</A> => ${t}",
+                s" <A>${e.id}</A> => $t",
                 Map( e.id -> e.selectInContainmentTreeRunnable ) )
             }
           }
@@ -324,14 +343,14 @@ object generateIDsForPackageExtents {
 
           val id2element = elementIDs filter
             { case ( e, _ ) => specificationRootPackages.exists( p => p.isAncestorOf( e ) ) } flatMap {
-              case ( e, Success( newID ) ) => Some( ( newID -> e ) )
+              case ( e, Success( newID ) ) => Some( newID -> e )
               case ( _, _ )                => None
-            } toMap;
-          val sortedIDs = id2element.keys.toList.sorted filter { !_.contains( "appliedStereotypeInstance" ) }
+            }
+          val sortedIDs = id2element.keys.toList filter { !_.contains( "appliedStereotypeInstance" ) } sorted
 
-          val otiDir = new File( mdInstallDir, "dynamicScripts/org.omg.oti" )
-          require( otiDir.exists && otiDir.isDirectory )
-          val migrationMM = Metamodel( otiDir )
+          val otiChangeMigrationDir = new File( mdInstallDir, "dynamicScripts/org.omg.oti.changeMigration/resources" )
+          require( otiChangeMigrationDir.exists && otiChangeMigrationDir.isDirectory )
+          val migrationMM = Metamodel( otiChangeMigrationDir )
 
           val old2newMapping = migrationMM.makeOld2NewIDMapping( projectFilename )
           val old2newDeltaMapping = migrationMM.makeOld2NewIDMapping( projectFilename )
@@ -341,7 +360,7 @@ object generateIDsForPackageExtents {
           guiLog.log( s" element2id map has ${sortedIDs.size} entries" )
           val tooLong = sortedIDs.size > 500
           for {
-            n <- 0 until sortedIDs.size
+            n <- sortedIDs.indices
             id = sortedIDs( n )
             e = id2element( id )
           } {
@@ -359,12 +378,12 @@ object generateIDsForPackageExtents {
             }
             if ( ! tooLong ) 
               guiLog.addHyperlinkedText(
-              s" ${n}: <A>${id}</A> => ${oldID}",
+              s" $n: <A>$id</A> => $oldID",
               Map( id -> e.asInstanceOf[MagicDrawUMLElement].selectInContainmentTreeRunnable ) )
           }
 
           val dir = new File( project.getDirectory )
-          require( dir.exists() && dir.isDirectory() )
+          require( dir.exists() && dir.isDirectory )
                     
           val options = Map( XMLResource.OPTION_ENCODING -> "UTF-8" )
 
@@ -380,7 +399,7 @@ object generateIDsForPackageExtents {
           rd.getContents.add( old2newDeltaMapping.eObject )
           rd.save( options )
           
-          guiLog.log( s" Saved migration model at: ${migrationF} " )
+          guiLog.log( s" Saved migration model at: $migrationF " )
 
           val cpanel = new JPanel()
           cpanel.setLayout( new JideBoxLayout( cpanel, BoxLayout.Y_AXIS ) )
@@ -409,9 +428,9 @@ object generateIDsForPackageExtents {
           }
 
           val catalogF = new File( dir, project.getName + ".catalog.xml" )
-          guiLog.log( s"generate full catalog: ${catalogF}" )
+          guiLog.log( s"generate full catalog: $catalogF" )
           val deltaF = new File( dir, project.getName + ".delta.catalog.xml" )
-          guiLog.log( s"generate delta catalog: ${deltaF}" )
+          guiLog.log( s"generate delta catalog: $deltaF" )
 
           val catalogDir = catalogF.getParentFile
           catalogDir.mkdirs()
@@ -425,14 +444,14 @@ object generateIDsForPackageExtents {
           dw.println( """<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">""" )
           
           for {
-            n <- 0 until sortedIDs.size
+            n <- sortedIDs.indices
             newID = sortedIDs( n )
             e = id2element( newID )
             oldID = e.id
           } e.getPackageOwnerWithEffectiveURI match {
             case Some( pkg ) => 
-              pw.println( s"""<uri uri="${curi}#${newID}" name="${pkg.getEffectiveURI.get}#${oldID}"/>""")
-              if (newID != oldID) dw.println( s"""<uri uri="${curi}#${newID}" name="${pkg.getEffectiveURI.get}#${oldID}"/>""")
+              pw.println( s"""<uri uri="$curi#$newID" name="${pkg.getEffectiveURI.get}#$oldID"/>""")
+              if (newID != oldID) dw.println( s"""<uri uri="$curi#$newID" name="${pkg.getEffectiveURI.get}#$oldID"/>""")
             case None => 
               System.out.println(s"*** no owner package with URI found for ${e.id} (metaclass=${e.xmiType.head})")
           }            
@@ -443,8 +462,8 @@ object generateIDsForPackageExtents {
           dw.println( """</catalog>""" )
           dw.close()
 
-          guiLog.log( s"Catalog generated at: ${catalogF}" )
-          guiLog.log( s"Delta Catalog generated at: ${deltaF}" )
+          guiLog.log( s"Catalog generated at: $catalogF" )
+          guiLog.log( s"Delta Catalog generated at: $deltaF" )
 
           Success( None )
       }

@@ -70,13 +70,14 @@
                 scripts.name="${scripts.name}">
             <source-includes>
                 <include name=".classpath"/>
-                <include name="*.sbt"/>
-                <include name="oti.dynamicScripts"/>
+                <include name="**/*.md"/>
+                <include name="**/*.sbt"/>
+                <include name="*.dynamicScripts"/>
                 <include name="project/build.properties"/>
                 <include name="project/*.scala"/>
                 <include name="project/*.sbt"/>
                 <include name="src/**/*.scala"/>
-                <include name="md18Catalog/*"/>
+                <include name="resources/**/*"/>
             </source-includes>
         </md.scripts.copyTo.root>
 
