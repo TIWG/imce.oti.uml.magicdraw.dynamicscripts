@@ -27,7 +27,7 @@ lazy val jpl_omg_oti_magicdraw_dynamicscripts = Project("jpl-omg-oti-magicdraw-d
           if f.ext == "jar"
           dir = a.`type` match {
             case "jar" => base / "lib"
-            case "src" => base / "lib.srcs"
+            case "src" => base / "lib.sources"
             case "doc" => base / "lib.javadoc"
           }
         } {
