@@ -100,7 +100,7 @@ object nameTest {
 
     val selectedElements = getMDBrowserSelectedElements map { e => umlElement( e ) }
     selectedElements foreach { e =>
-      val mdE = e.getMagicDrawElement
+      val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
       
       guiLog.log( s" ID=${e.id}" )
 
@@ -146,7 +146,7 @@ object nameTest {
         metaProperties.foreach{p => System.out.println(s"meta-property: ${p.getQualifiedName}")}
              
         sGeneral.foreach{ sg =>
-          val mdSG = sg.getMagicDrawElement.asInstanceOf[Stereotype]
+          val mdSG = umlMagicDrawUMLElement(sg).getMagicDrawElement.asInstanceOf[Stereotype]
           val gmetaProperties = StereotypesHelper.getExtensionMetaProperty( mdSG, true ) filter { p =>
             val pMetaclass = StereotypesHelper.getClassOfMetaClass( p.getType.asInstanceOf[Uml#Class] )
             eMetaclass == pMetaclass || StereotypesHelper.isSubtypeOf( pMetaclass, eMetaclass )
@@ -159,7 +159,7 @@ object nameTest {
       
       e match { 
         case s: UMLStereotype[Uml] =>
-          val mdS = s.getMagicDrawElement.asInstanceOf[Stereotype]
+          val mdS = umlMagicDrawUMLElement(s).getMagicDrawElement.asInstanceOf[Stereotype]
           val baseClasses1 = StereotypesHelper.getBaseClasses( mdS, false )          
           System.out.println(s" baseClasses1: ${baseClasses1.size}")
           baseClasses1.toList.sortBy(_.getQualifiedName).foreach{p => System.out.println(s"baseClass1: ${p.getQualifiedName}")}

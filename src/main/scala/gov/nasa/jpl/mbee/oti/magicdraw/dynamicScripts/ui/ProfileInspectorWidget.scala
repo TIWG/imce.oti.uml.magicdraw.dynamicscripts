@@ -73,7 +73,7 @@ object ProfileInspectorWidget {
     umlElement( e ) match { 
       case pf: UMLProfile[Uml] =>
         val apf = pf.allImportedProfilesTransitively.toSeq.sortBy { pf => pf.qualifiedName.get }
-        Success( apf.map { pf => ReferenceNodeInfo( pf.name.get, pf.getMagicDrawElement ) } )
+        Success( apf.map { pf => ReferenceNodeInfo( pf.name.get, umlMagicDrawUMLElement(pf).getMagicDrawElement ) } )
         
       case x =>
         Failure( new IllegalArgumentException(s"Not a package; instead got a ${x.xmiType}"))
@@ -91,7 +91,7 @@ object ProfileInspectorWidget {
     umlElement( e ) match { 
       case pf: UMLProfile[Uml] =>
         val apf = pf.allNestedProfilesTransitively.toSeq.sortBy { pf => pf.qualifiedName.get }
-        Success( apf.map { pf => ReferenceNodeInfo( pf.name.get, pf.getMagicDrawElement ) } )
+        Success( apf.map { pf => ReferenceNodeInfo( pf.name.get, umlMagicDrawUMLElement(pf).getMagicDrawElement ) } )
         
       case x =>
         Failure( new IllegalArgumentException(s"Not a package; instead got a ${x.xmiType}"))
@@ -108,7 +108,7 @@ object ProfileInspectorWidget {
     umlElement( e ) match { 
       case pf: UMLProfile[Uml] =>
         val apf = pf.allVisibleProfilesTransitively.toSeq.sortBy { pf => pf.qualifiedName.get }
-        Success( apf.map { pf => ReferenceNodeInfo( pf.name.get, pf.getMagicDrawElement ) } )
+        Success( apf.map { pf => ReferenceNodeInfo( pf.name.get, umlMagicDrawUMLElement(pf).getMagicDrawElement ) } )
         
       case x =>
         Failure( new IllegalArgumentException(s"Not a package; instead got a ${x.xmiType}"))

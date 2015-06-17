@@ -164,7 +164,7 @@ object nameAssociationLinkInstancesWithinPackageExtent {
                   ()
                 case _ =>
                   guiLog.log( s" Link (id=${link.id}) set name to: '${linkName}'")
-                  link.getMagicDrawInstanceSpecification.setName( linkName )
+                  umlMagicDrawUMLInstanceSpecification(link).getMagicDrawInstanceSpecification.setName( linkName )
                   count = count + 1
               }
             case ( Some( sName ), None ) => 

@@ -91,16 +91,16 @@ object invokeDiagramContextMenuActionForSelection {
         ( c.value, m.value ) match {
           case ( Some( className ), Some( methodName ) ) =>
             val invokeTriggerElement = comment.annotatedElement.head
-            val invokeTriggerView = dpe.findPresentationElement( invokeTriggerElement.getMagicDrawElement, null )
+            val invokeTriggerView = dpe.findPresentationElement( umlMagicDrawUMLElement(invokeTriggerElement).getMagicDrawElement, null )
             val peSelection = for {
               e <- comment.annotatedElement
-              pe = dpe.findPresentationElement( e.getMagicDrawElement, null )
+              pe = dpe.findPresentationElement( umlMagicDrawUMLElement(e).getMagicDrawElement, null )
             } yield pe
 
             return invoke(
               p, ev, triggerElement,
               className, methodName,
-              dpe, invokeTriggerView, invokeTriggerElement.getMagicDrawElement, peSelection )
+              dpe, invokeTriggerView, umlMagicDrawUMLElement(invokeTriggerElement).getMagicDrawElement, peSelection )
           case ( _, _ ) =>
             ()
         }

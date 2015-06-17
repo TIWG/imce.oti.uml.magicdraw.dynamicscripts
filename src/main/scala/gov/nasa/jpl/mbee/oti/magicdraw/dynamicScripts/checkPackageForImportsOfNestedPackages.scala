@@ -129,7 +129,7 @@ object checkPackageForImportsOfNestedPackages {
       pkg <- pkgs ++ pkgs.flatMap( _.allNestedPackages )
       missingImport <- pkg.nonImportedNestedPackages
       as = List( actions.AddMissingImportFromParentPackage() )
-    } yield ( ( missingImport.getMagicDrawPackage -> Tuple2( s"Add import from parent package, ${pkg.name.get}", as ) ) )
+    } yield ( umlMagicDrawUMLPackage(missingImport).getMagicDrawPackage -> Tuple2( s"Add import from parent package, ${pkg.name.get}", as ) )
 
     if ( elementMessages.isEmpty ) {
       guiLog.log( s"OK" )

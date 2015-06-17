@@ -108,8 +108,8 @@ object RelationTripleWidgetHelper {
       "sContext" -> ( r.sub.owner match {
         case None => LabelNodeInfo( "<none>" )
         case Some( o ) => o match {
-          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, parent.getMagicDrawElement )
-          case parent                       => ReferenceNodeInfo( parent.id, parent.getMagicDrawElement )
+          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent                       => ReferenceNodeInfo( parent.id, umlMagicDrawUMLElement(parent).getMagicDrawElement )
         }
       } ),
       "subject" ->
@@ -133,15 +133,15 @@ object RelationTripleWidgetHelper {
                 case ( _, Some( name ) ) => name
                 case ( _, _ )            => ne.id
               },
-              r.sub.getMagicDrawElement )
+              umlMagicDrawUMLElement(r.sub).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( e.id, e.getMagicDrawElement )
+            ReferenceNodeInfo( e.id, umlMagicDrawUMLElement(e).getMagicDrawElement )
         } ),
       "sMetaclass" -> LabelNodeInfo( r.sub.xmiType.head ),
       "relation" ->
         ( r match {
           case a: AssociationTriple[Uml, _, _]  => LabelNodeInfo( a.relf.propertyName )
-          case s: StereotypePropertyTriple[Uml] => ReferenceNodeInfo( s"${s.rels.name.get}::${s.relp.name.get}", s.relp.getMagicDrawElement )
+          case s: StereotypePropertyTriple[Uml] => ReferenceNodeInfo( s"${s.rels.name.get}::${s.relp.name.get}", umlMagicDrawUMLElement(s.relp).getMagicDrawElement )
         } ),
       "object" ->
         ( r.obj match {
@@ -164,18 +164,18 @@ object RelationTripleWidgetHelper {
                 case ( _, Some( name ) ) => name
                 case ( _, _ )            => ne.id
               },
-              r.obj.getMagicDrawElement )
+              umlMagicDrawUMLElement(r.obj).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( e.id, e.getMagicDrawElement )
+            ReferenceNodeInfo( e.id, umlMagicDrawUMLElement(e).getMagicDrawElement )
         } ),
       "oMetaclass" -> LabelNodeInfo( r.obj.xmiType.head ),
       "oNamespace" -> ( r.obj.owningNamespace match {
         case None       => LabelNodeInfo( "<none>" )
-        case Some( ns ) => ReferenceNodeInfo( ns.qualifiedName.get, ns.getMagicDrawElement )
+        case Some( ns ) => ReferenceNodeInfo( ns.qualifiedName.get, umlMagicDrawUMLElement(ns).getMagicDrawElement )
       } ),
       "oPackage" -> ( getPackageOrProfileOwner( r.obj ) match {
         case None => LabelNodeInfo( "<none>" )
-        case Some( pkg ) => ReferenceNodeInfo( pkg.qualifiedName.get, pkg.getMagicDrawElement )
+        case Some( pkg ) => ReferenceNodeInfo( pkg.qualifiedName.get, umlMagicDrawUMLElement(pkg).getMagicDrawElement )
       } ) )
   }
 

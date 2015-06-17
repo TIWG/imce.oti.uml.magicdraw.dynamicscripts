@@ -46,6 +46,8 @@ import javax.swing.JLabel
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JTextField
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.MDAPI
+
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.JavaConversions.mapAsJavaMap
@@ -200,16 +202,16 @@ object generateIDsForPackageExtents {
       case _ => None
     }
     
-    val defaultOMGCatalogFile = new File( new File( ApplicationEnvironment.getInstallRoot ).
+    val defaultOMGCatalogFile = new File( new File( MDAPI.getApplicationRoot ).
       toURI.resolve( "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml" ) )
     val omgCatalog = if ( defaultOMGCatalogFile.exists() ) Seq( defaultOMGCatalogFile ) else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).toSeq
 
-    val defaultMDCatalogFile = new File( new File( ApplicationEnvironment.getInstallRoot ).
+    val defaultMDCatalogFile = new File( new File( MDAPI.getApplicationRoot ).
       toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml" ) )
     val mdCatalog = if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile ) else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).toSeq
 
-    ( CatalogURIMapper.createCatalogURIMapper( omgCatalog ),
-      CatalogURIMapper.createCatalogURIMapper( mdCatalog ) ) match {
+    ( CatalogURIMapper.createMapperFromCatalogFiles( omgCatalog ),
+      CatalogURIMapper.createMapperFromCatalogFiles( mdCatalog ) ) match {
         case ( Failure( t ), _ ) => Failure( t )
         case ( _, Failure( t ) ) => Failure( t )
         case ( Success( documentURIMapper ), Success( builtInURIMapper ) ) =>
@@ -269,11 +271,11 @@ object generateIDsForPackageExtents {
 
           guiLog.log( s"*** ${unresolved.size} unresolved cross-references ***" )
           val elementMessages = unresolved map { u =>
-            val mdXRef = u.externalReference.getMagicDrawElement
+            val mdXRef = umlMagicDrawUMLElement(u.externalReference).getMagicDrawElement
             val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0 ) {
-              def actionPerformed( ev: ActionEvent ): Unit = u.externalReference.selectInContainmentTreeRunnable.run
+              def actionPerformed( ev: ActionEvent ): Unit = umlMagicDrawUMLElement(u.externalReference).selectInContainmentTreeRunnable.run
             }
-            u.documentElement.getMagicDrawElement ->
+            umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
               Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
                 List( a ) )
           } toMap
@@ -297,9 +299,9 @@ object generateIDsForPackageExtents {
             ok match {
               case Failure( t: IllegalElementException[MagicDrawUML, _] ) => {
                 val elementMessages = t.element map { u =>
-                  val mdU = u.getMagicDrawElement
+                  val mdU = umlMagicDrawUMLElement(u).getMagicDrawElement
                   val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdU.getHumanType}: ${mdU.getHumanName}", 0 ) {
-                    def actionPerformed( ev: ActionEvent ): Unit = u.selectInContainmentTreeRunnable.run
+                    def actionPerformed( ev: ActionEvent ): Unit = umlMagicDrawUMLElement(u).selectInContainmentTreeRunnable.run
                   }
                   mdU -> Tuple2( t.getMessage, List(a) )
                 } toMap
@@ -328,7 +330,7 @@ object generateIDsForPackageExtents {
               if ( errors.size > 100 ) System.out.println( s" ${e.id} => $t" )
               else guiLog.addHyperlinkedText(
                 s" <A>${e.id}</A> => $t",
-                Map( e.id -> e.selectInContainmentTreeRunnable ) )
+                Map( e.id -> umlMagicDrawUMLElement(e).selectInContainmentTreeRunnable ) )
             }
           }
           else {
@@ -401,69 +403,69 @@ object generateIDsForPackageExtents {
           
           guiLog.log( s" Saved migration model at: $migrationF " )
 
-          val cpanel = new JPanel()
-          cpanel.setLayout( new JideBoxLayout( cpanel, BoxLayout.Y_AXIS ) )
-
-          cpanel.add( new JLabel( s"Enter the URI of ${project.getName} : " ), BorderLayout.BEFORE_LINE_BEGINS )
-
-          val uriField = new JTextField
-          uriField.setText( "http://...." )
-          uriField.setColumns( 80 )
-          uriField.setEditable( true )
-          uriField.setFocusable( true )
-          cpanel.add( uriField )
-
-          cpanel.updateUI()
-
-          val cstatus = JOptionPane.showConfirmDialog(
-            Application.getInstance.getMainFrame,
-            cpanel,
-            "Specify the URI to map the project's URIs to:",
-            JOptionPane.OK_CANCEL_OPTION )
-
-          val curi = augmentString( uriField.getText )
-          if ( cstatus != JOptionPane.OK_OPTION || curi.isEmpty ) {
-            guiLog.log( s"No catalog generated" )
-            return Success( None )
-          }
-
-          val catalogF = new File( dir, project.getName + ".catalog.xml" )
-          guiLog.log( s"generate full catalog: $catalogF" )
-          val deltaF = new File( dir, project.getName + ".delta.catalog.xml" )
-          guiLog.log( s"generate delta catalog: $deltaF" )
-
-          val catalogDir = catalogF.getParentFile
-          catalogDir.mkdirs()
-
-          val pw = new PrintWriter( new FileWriter( catalogF ) )
-          pw.println( """<?xml version='1.0' encoding='UTF-8'?>""" )
-          pw.println( """<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">""" )
-          
-          val dw = new PrintWriter( new FileWriter( deltaF ) )
-          dw.println( """<?xml version='1.0' encoding='UTF-8'?>""" )
-          dw.println( """<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">""" )
-          
-          for {
-            n <- sortedIDs.indices
-            newID = sortedIDs( n )
-            e = id2element( newID )
-            oldID = e.id
-          } e.getPackageOwnerWithEffectiveURI match {
-            case Some( pkg ) => 
-              pw.println( s"""<uri uri="$curi#$newID" name="${pkg.getEffectiveURI.get}#$oldID"/>""")
-              if (newID != oldID) dw.println( s"""<uri uri="$curi#$newID" name="${pkg.getEffectiveURI.get}#$oldID"/>""")
-            case None => 
-              System.out.println(s"*** no owner package with URI found for ${e.id} (metaclass=${e.xmiType.head})")
-          }            
-           
-          pw.println( """</catalog>""" )
-          pw.close()
-
-          dw.println( """</catalog>""" )
-          dw.close()
-
-          guiLog.log( s"Catalog generated at: $catalogF" )
-          guiLog.log( s"Delta Catalog generated at: $deltaF" )
+//          val cpanel = new JPanel()
+//          cpanel.setLayout( new JideBoxLayout( cpanel, BoxLayout.Y_AXIS ) )
+//
+//          cpanel.add( new JLabel( s"Enter the URI of ${project.getName} : " ), BorderLayout.BEFORE_LINE_BEGINS )
+//
+//          val uriField = new JTextField
+//          uriField.setText( "http://...." )
+//          uriField.setColumns( 80 )
+//          uriField.setEditable( true )
+//          uriField.setFocusable( true )
+//          cpanel.add( uriField )
+//
+//          cpanel.updateUI()
+//
+//          val cstatus = JOptionPane.showConfirmDialog(
+//            Application.getInstance.getMainFrame,
+//            cpanel,
+//            "Specify the URI to map the project's URIs to:",
+//            JOptionPane.OK_CANCEL_OPTION )
+//
+//          val curi = augmentString( uriField.getText )
+//          if ( cstatus != JOptionPane.OK_OPTION || curi.isEmpty ) {
+//            guiLog.log( s"No catalog generated" )
+//            return Success( None )
+//          }
+//
+//          val catalogF = new File( dir, project.getName + ".catalog.xml" )
+//          guiLog.log( s"generate full catalog: $catalogF" )
+//          val deltaF = new File( dir, project.getName + ".delta.catalog.xml" )
+//          guiLog.log( s"generate delta catalog: $deltaF" )
+//
+//          val catalogDir = catalogF.getParentFile
+//          catalogDir.mkdirs()
+//
+//          val pw = new PrintWriter( new FileWriter( catalogF ) )
+//          pw.println( """<?xml version='1.0' encoding='UTF-8'?>""" )
+//          pw.println( """<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">""" )
+//
+//          val dw = new PrintWriter( new FileWriter( deltaF ) )
+//          dw.println( """<?xml version='1.0' encoding='UTF-8'?>""" )
+//          dw.println( """<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">""" )
+//
+//          for {
+//            n <- sortedIDs.indices
+//            newID = sortedIDs( n )
+//            e = id2element( newID )
+//            oldID = e.id
+//          } e.getPackageOwnerWithEffectiveURI match {
+//            case Some( pkg ) =>
+//              pw.println( s"""<uri uri="$curi#$newID" name="${pkg.getEffectiveURI.get}#$oldID"/>""")
+//              if (newID != oldID) dw.println( s"""<uri uri="$curi#$newID" name="${pkg.getEffectiveURI.get}#$oldID"/>""")
+//            case None =>
+//              System.out.println(s"*** no owner package with URI found for ${e.id} (metaclass=${e.xmiType.head})")
+//          }
+//
+//          pw.println( """</catalog>""" )
+//          pw.close()
+//
+//          dw.println( """</catalog>""" )
+//          dw.close()
+//
+//          guiLog.log( s"Catalog generated at: $catalogF" )
+//          guiLog.log( s"Delta Catalog generated at: $deltaF" )
 
           Success( None )
       }

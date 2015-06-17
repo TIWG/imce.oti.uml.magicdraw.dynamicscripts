@@ -143,9 +143,9 @@ object setOTIUUIDs {
             pkg <- selectedPackages
             _ = progressStatus.increase()
             _ = progressStatus.setDescription( s"Setting OTI XMI:UUIDs for '${pkg.name.get}'..." )
-            _ = UUIDRegistry.setUUID( pkg.getMagicDrawElement, s"org.omg.${pkg.id}" )
+            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(pkg).getMagicDrawElement, s"org.omg.${pkg.id}" )
             e <- pkg.allOwnedElements
-            _ = UUIDRegistry.setUUID( e.getMagicDrawElement, s"org.omg.${e.id}" )
+            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(e).getMagicDrawElement, s"org.omg.${e.id}" )
           } ()
 
           guiLog.log( s"Done" )

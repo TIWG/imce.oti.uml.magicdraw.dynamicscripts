@@ -132,13 +132,13 @@ object addPackageImportsForNestedPackages {
     
     val allPkgs = pkgs ++ pkgs.flatMap (_.allNestedPackages)
     allPkgs foreach { pkg =>
-      val mdPkg = pkg.getMagicDrawPackage
+      val mdPkg = umlMagicDrawUMLPackage(pkg).getMagicDrawPackage
       val importedPackages = pkg.packageImport.flatMap(_.importedPackage)
       val nestedPackages2Import = pkg.nestedPackage -- importedPackages
       nestedPackages2Import foreach { npkg =>
           val i = f.createPackageImportInstance
           i.setImportingNamespace(mdPkg)
-          i.setImportedPackage(npkg.getMagicDrawPackage)
+          i.setImportedPackage(umlMagicDrawUMLPackage(npkg).getMagicDrawPackage)
         guiLog.log(s"Add import: ${mdPkg.getQualifiedName} => ${npkg.qualifiedName.get}")
       }
     }

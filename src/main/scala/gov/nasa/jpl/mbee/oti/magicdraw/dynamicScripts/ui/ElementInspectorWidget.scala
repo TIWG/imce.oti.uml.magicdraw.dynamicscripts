@@ -71,8 +71,16 @@ object ElementInspectorWidget {
       elementOperationWidget[UMLElement[MagicDrawUML], UMLStereotype[MagicDrawUML]]( 
           derived, e, 
           _.getAppliedStereotypes.keySet,
-          MagicDrawUMLUtil( project ) )  
-          
+          MagicDrawUMLUtil( project ) )
+
+  def appliedStereotypesWithoutMetaclassProperties(
+                          project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+                          ek: MagicDrawElementKindDesignation, e: Element ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+    elementOperationWidget[UMLElement[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+      derived, e,
+      _.getAppliedStereotypesWithoutMetaclassProperties,
+      MagicDrawUMLUtil( project ) )
+
   def allForwardReferencesFromStereotypeTagProperties(
     project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = 
