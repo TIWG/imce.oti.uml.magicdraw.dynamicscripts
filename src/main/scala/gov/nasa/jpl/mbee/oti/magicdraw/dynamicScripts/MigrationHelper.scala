@@ -44,6 +44,8 @@ import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileFilter
 
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.MDAPI
+
 import scala.collection.JavaConversions.mapAsJavaMap
 import scala.language.implicitConversions
 import scala.language.postfixOps
@@ -77,37 +79,29 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
  */
 object MigrationHelper {
 
-  def customMigration(
+  def customMigrationConvertOnlyIncomingReferences(
     project: Project, ev: ActionEvent,
     script: MainToolbarMenuAction ): Try[Option[MagicDrawValidationDataResults]] = {
-
-    val a = Application.getInstance()
-    val guiLog = a.getGUILog()
-    guiLog.clearLog()
-
-    val umlUtil = MagicDrawUMLUtil( project )
-
-    val mdInstallDir = new File( ApplicationEnvironment.getInstallRoot )
-    require( mdInstallDir.exists && mdInstallDir.isDirectory )
-    val otiDir = new File( mdInstallDir, "dynamicScripts/org.omg.oti" )
-    require( otiDir.exists && otiDir.isDirectory )
-    val migrationMM = Metamodel( otiDir )
 
     chooseMigrationFile match {
       case Some( migrationFile ) =>
         require( migrationFile.exists && migrationFile.canRead )
         val migrationURI = URI.createFileURI( migrationFile.getAbsolutePath )
+        migrate(project, migrationURI, convertOnlyIncomingReferences=true)
+      case None =>
+        Success( None )
+    }
+  }
 
-        migrationMM.loadOld2NewIDMappingResource( migrationURI ) match {
-          case Failure( t ) =>
-            Failure( t )
-          case Success( old2newIDmigration ) =>
+  def customMigrationConvertAllReferences(
+                                           project: Project, ev: ActionEvent,
+                                           script: MainToolbarMenuAction ): Try[Option[MagicDrawValidationDataResults]] = {
 
-            applyMigration( project, old2newIDmigration, convertOnlyIncomingReferences=true ) match {
-              case Failure( t ) => Failure( t )
-              case Success( _ ) => Success( None )
-            }
-        }
+    chooseMigrationFile match {
+      case Some( migrationFile ) =>
+        require( migrationFile.exists && migrationFile.canRead )
+        val migrationURI = URI.createFileURI( migrationFile.getAbsolutePath )
+        migrate(project, migrationURI, convertOnlyIncomingReferences=false)
       case None =>
         Success( None )
     }
@@ -133,7 +127,7 @@ object MigrationHelper {
 
     }
 
-    val mdInstallDir = new File( ApplicationEnvironment.getInstallRoot )
+    val mdInstallDir = new File( MDAPI.getApplicationRoot() )
     val fc = new JFileChooser( mdInstallDir ) {
 
       override def getFileSelectionMode: Int = JFileChooser.FILES_ONLY
@@ -154,7 +148,7 @@ object MigrationHelper {
     }
   }
 
-  def applyMigration( project: Project, old2newIDmigration: Old2NewIDMapping, convertOnlyIncomingReferences: Boolean = false ): Try[Unit] = {
+  def applyMigration( project: Project, old2newIDmigration: Old2NewIDMapping, convertOnlyIncomingReferences: Boolean ): Try[Unit] = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog()
@@ -171,7 +165,7 @@ object MigrationHelper {
 
         val migrationPairs = entries flatMap { entry =>
           project.getElementByID( entry.getOldID.get ) match {
-            case oe: Element if ( proxyManager.isElementProxy( oe ) ) =>
+            case oe: Element if proxyManager.isElementProxy( oe ) =>
               project.getElementByID( entry.getNewID.get ) match {
                 case ne: Element => Some( ( oe, ne ) )
                 case _           => None
@@ -218,7 +212,8 @@ object MigrationHelper {
 
   def migrate(
     project: Project,
-    migrationFile: File ): Try[Option[MagicDrawValidationDataResults]] = {
+    migrationURI: URI,
+    convertOnlyIncomingReferences: Boolean ): Try[Option[MagicDrawValidationDataResults]] = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog()
@@ -226,14 +221,11 @@ object MigrationHelper {
 
     val umlUtil = MagicDrawUMLUtil( project )
 
-    val mdInstallDir = new File( ApplicationEnvironment.getInstallRoot )
+    val mdInstallDir = new File( MDAPI.getApplicationRoot() )
     require( mdInstallDir.exists && mdInstallDir.isDirectory )
-    val otiDir = new File( mdInstallDir, "dynamicScripts/org.omg.oti" )
+    val otiDir = new File( mdInstallDir, "dynamicScripts/org.omg.oti.changeMigration/resources" )
     require( otiDir.exists && otiDir.isDirectory )
     val migrationMM = Metamodel( otiDir )
-
-    require( migrationFile.exists && migrationFile.canRead )
-    val migrationURI = URI.createFileURI( migrationFile.getAbsolutePath )
 
     migrationMM.loadOld2NewIDMappingResource( migrationURI ) match {
       case Failure( t ) => Failure( t )
@@ -242,7 +234,7 @@ object MigrationHelper {
 
         if ( ModulesServiceInternal.useLocalModuleWithWizard( iPrimaryProject ) )
 
-          applyMigration( project, old2newIDmigration ) match {
+          applyMigration( project, old2newIDmigration, convertOnlyIncomingReferences ) match {
             case Failure( t ) => Failure( t )
             case Success( _ ) => Success( None )
           }
