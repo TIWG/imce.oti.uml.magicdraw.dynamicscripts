@@ -92,7 +92,13 @@ object changePackageExtentIDs {
     migrationMM.loadOld2NewIDMappingResource( migrationURI ) match {
       case Failure( t ) => Failure( t )
       case Success( old2newIDmigration ) =>
-        val entries = old2newIDmigration.getEntries
+        val entries = old2newIDmigration.getEntries filter { entry =>
+          val difference = for {
+            newID <- entry.getNewID
+            oldID <- entry.getOldID
+          } yield newID != oldID
+          difference.getOrElse(false)
+        }
         guiLog.log( s" Loaded ${entries.size} old2new ID migration entries" )
 
         val resetElements = entries map { entry => project.getElementByID( entry.getOldID.get ) }

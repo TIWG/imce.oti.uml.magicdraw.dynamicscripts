@@ -23,7 +23,14 @@ toolbarMenuScripts(
 			project: jpl.omg.oti.magicdraw.dynamicscripts
             dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
 			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.MigrationHelper
-			method: customMigration )
+			method: customMigrationConvertOnlyIncomingReferences )
+		MainToolbarMenuAction(
+			toolbarMenuPath: { 'OMG > Migration Support' }
+			name: 'Migrate Package Extent xmi:ids (choose migration file, convertOnlyIncomingReferences=false)'
+			project: jpl.omg.oti.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.MigrationHelper
+			method: customMigrationConvertAllReferences )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Name Test'
@@ -173,22 +180,6 @@ dynamicScripts(
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
-          )
-        	  BrowserContextMenuAction(
-              name: 'Migrate Package Extent xmi:ids (convertOnlyIncomingReferences=false)'
-              project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
-              access: r/o
-              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
-              method: doit 
-          )
-        	  DiagramContextMenuAction(
-              name: 'Migrate Package Extent xmi:ids (convertOnlyIncomingReferences=false)'
-              project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
-              access: r/o
-              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
-              method: doit 
           )
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Package'
@@ -345,22 +336,6 @@ dynamicScripts(
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
-          )
-        	  BrowserContextMenuAction(
-              name: 'Migrate Profile Extent xmi:ids (convertOnlyIncomingReferences=false)'
-              project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
-              access: r/o
-              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
-              method: doit 
-          )
-        	  DiagramContextMenuAction(
-              name: 'Migrate Profile Extent xmi:ids (convertOnlyIncomingReferences=false)'
-              project: jpl.omg.oti.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
-              access: r/o
-              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.migratePackageExtentIDs
-              method: doit 
           )
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Profile'
