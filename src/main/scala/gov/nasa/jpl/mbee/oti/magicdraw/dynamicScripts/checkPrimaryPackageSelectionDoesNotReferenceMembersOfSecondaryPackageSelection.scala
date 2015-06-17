@@ -134,7 +134,7 @@ object checkPrimaryPackageSelectionDoesNotReferenceMembersOfSecondaryPackageSele
     guiLog.log(s"OK?: ${shouldBeImported.isEmpty}")
     
     shouldBeImported.foreach { e =>
-      val mdE = e.getMagicDrawElement
+      val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
       val link=s"${mdE.getHumanType}: ${mdE.getHumanName}"
       guiLog.addHyperlinkedText(s" should be imported: <A>${link}</A>", Map(link-> new SelectInContainmentTreeRunnable( mdE ) ) )
     }

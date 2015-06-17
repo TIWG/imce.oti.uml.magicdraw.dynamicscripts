@@ -127,7 +127,7 @@ object checkPrimaryPackageSelectionCannotAccessSecondaryPackageSelection {
     guiLog.log(s"OK?: ${included.isEmpty}")
     
     included.foreach { e =>
-      val mdE = e.getMagicDrawElement
+      val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
       val link=s"${mdE.getHumanType}: ${mdE.getHumanName}"
       guiLog.addHyperlinkedText(s" should not be accessible: <A>${link}</A>", Map(link-> new SelectInContainmentTreeRunnable( mdE ) ) )
     }

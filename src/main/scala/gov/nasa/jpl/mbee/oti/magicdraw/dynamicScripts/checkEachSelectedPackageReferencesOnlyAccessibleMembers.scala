@@ -134,7 +134,7 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
 
     import _umlUtil._
     val app = Application.getInstance()
-    val guiLog = app.getGUILog()
+    val guiLog = app.getGUILog
     guiLog.clearLog()
     
     val rules = new UMLPackageableElementRules[Uml, MagicDrawUMLUtil] {
@@ -146,10 +146,11 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
     val elementMessages = ( for {
       pkg <- pkgs
       _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
-      as = List( actions.SelectInContainmentTreeAction( pkg.getMagicDrawPackage ) )
+      mdPkg = umlMagicDrawUMLPackage(pkg).getMagicDrawPackage
+      as = List( actions.SelectInContainmentTreeAction( mdPkg ) )
       violation <- rules.findNonAccessibleButReferencedImportablePackabeableElementsExceptNestingPackagesAndAppliedProfiles( pkg )
     } yield
-      violation.referencedButNotAccessible.getMagicDrawElement ->
+      umlMagicDrawUMLPackageableElement(violation.referencedButNotAccessible).getMagicDrawElement ->
       Tuple2( s"unaccessible cross-reference from ${pkg.qualifiedName.get}", as ) ) toMap
 
     if ( elementMessages.nonEmpty ) {
@@ -185,10 +186,10 @@ object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
     val elementMessages = ( for {
       pkg <- pkgs
       _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
-      as = List( actions.SelectInContainmentTreeAction( pkg.getMagicDrawPackage ) )
+      as = List( actions.SelectInContainmentTreeAction( umlMagicDrawUMLPackage(pkg).getMagicDrawPackage ) )
       violation <- rules.findNonAccessibleButReferencedImportablePackabeableElementsIncludingNestingPackagesAndAppliedProfiles( pkg )
     } yield
-      violation.referencedButNotAccessible.getMagicDrawElement ->
+      umlMagicDrawUMLPackageableElement(violation.referencedButNotAccessible).getMagicDrawElement ->
       Tuple2( s"unaccessible cross-reference from ${pkg.qualifiedName.get}", as ) ) toMap
 
     if ( elementMessages.nonEmpty ) {

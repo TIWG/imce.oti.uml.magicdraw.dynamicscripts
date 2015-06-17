@@ -463,6 +463,14 @@ characterization(
             method: appliedStereotypes
         )
 		EarlyDerivedWidget(
+			name: 'OTI Element::appliedStereotypesWithoutMetaclassProperties'
+			project: jpl.omg.oti.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+            access: r/o
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
+            method: appliedStereotypesWithoutMetaclassProperties
+        )
+		EarlyDerivedWidget(
 			name: 'OTI Element::ownedElements'
 			project: jpl.omg.oti.magicdraw.dynamicscripts
             dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
@@ -675,6 +683,14 @@ characterization(
 	name='StructuredClassifier (OMG Tool Infrastructure)'
 	[ m: StructuredClassifier ]
 	features {	
+		EarlyDerivedWidget(
+			name: 'OTI StructuredClassifier::allRoles'
+			project: jpl.omg.oti.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+            access: r/o
+            class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui.StructuredClassifierInspectorWidget
+            method: allRoles
+        )
 		EarlyDerivedTree(
 			name: 'OTI StructuredClassifier::compositeStructureTree'
 			project: jpl.omg.oti.magicdraw.dynamicscripts

@@ -96,11 +96,16 @@ object ComputedDerivedWidgetHelper {
       "context" -> ( e.owner match {
         case None => LabelNodeInfo( "<none>" )
         case Some( o ) => o match {
-          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, parent.getMagicDrawElement )
-          case parent                       => ReferenceNodeInfo( parent.id, parent.getMagicDrawElement )
+          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent                       => ReferenceNodeInfo( parent.id, umlMagicDrawUMLElement(parent).getMagicDrawElement )
         }
       } ),
-      "EMF eContainingFeature" -> LabelNodeInfo( umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement.eContainingFeature.getName ),
+      "EMF eContainingFeature" -> {
+        Option.apply(umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement.eContainingFeature) match {
+          case None => LabelNodeInfo("<none>")
+          case Some(f) => LabelNodeInfo(f.getName)
+        }
+      },
       "OTI containing meta-property" -> {
         val meval = e.getContainingMetaPropertyEvaluator.get
         meval match {
@@ -129,9 +134,9 @@ object ComputedDerivedWidgetHelper {
                 case ( _, Some( name ) ) => name
                 case ( _, _ )            => ne.id
               },
-              e.getMagicDrawElement )
+              umlMagicDrawUMLElement(e).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( e.id, e.getMagicDrawElement )
+            ReferenceNodeInfo( e.id, umlMagicDrawUMLElement(e).getMagicDrawElement )
         } ),
       "metaclass" -> LabelNodeInfo( e.xmiType.head ) )
   }

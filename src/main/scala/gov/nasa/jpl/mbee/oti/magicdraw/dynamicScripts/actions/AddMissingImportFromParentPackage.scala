@@ -76,15 +76,15 @@ case class AddMissingImportFromParentPackage()( implicit umlUtil: MagicDrawUMLUt
         import umlUtil._
         val pkg = umlPackage( mdPkg )
         pkg.nestingPackage match {
-          case Some( ppkg ) if ( !ppkg.importedPackages.contains( pkg ) ) =>
+          case Some( ppkg ) if !ppkg.importedPackages.contains( pkg ) =>
 
             val f = Project.getProject( mdPkg ).getElementsFactory
             val i = f.createPackageImportInstance
-            i.setImportingNamespace( ppkg.getMagicDrawPackage )
+            i.setImportingNamespace( umlMagicDrawUMLPackage(ppkg).getMagicDrawPackage )
             i.setImportedPackage( mdPkg )
 
             val app = Application.getInstance()
-            val guiLog = app.getGUILog()
+            val guiLog = app.getGUILog
             guiLog.log( s"Added import from '${ppkg.name.get}' => '${mdPkg.getName}'" )
           case _ =>
             ()

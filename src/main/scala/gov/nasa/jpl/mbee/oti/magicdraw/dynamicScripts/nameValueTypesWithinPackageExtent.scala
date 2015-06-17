@@ -141,7 +141,7 @@ object nameValueTypesWithinPackageExtent {
       dt.name match {
         case Some( VT_NAME_PATTERN(q,u) ) =>
           renames = renames+1
-          dt.getMagicDrawElement.asInstanceOf[MagicDrawUML#DataType].setName(q+"("+u+")")
+          umlMagicDrawUMLElement(dt).getMagicDrawElement.asInstanceOf[MagicDrawUML#DataType].setName(q+"("+u+")")
           
         case _ =>
           skipped = skipped+1

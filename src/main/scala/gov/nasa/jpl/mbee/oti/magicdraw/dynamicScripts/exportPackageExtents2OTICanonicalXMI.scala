@@ -221,11 +221,11 @@ object exportPackageExtents2OTICanonicalXMI {
           else {
             guiLog.log( s"*** ${unresolved.size} unresolved cross-references ***" )
             val elementMessages = unresolved map { u =>
-              val mdXRef = u.externalReference.getMagicDrawElement
+              val mdXRef = umlMagicDrawUMLElement(u.externalReference).getMagicDrawElement
               val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0 ) {
-                def actionPerformed( ev: ActionEvent ): Unit = u.externalReference.selectInContainmentTreeRunnable.run
+                def actionPerformed( ev: ActionEvent ): Unit = umlMagicDrawUMLElement(u.externalReference).selectInContainmentTreeRunnable.run
               }
-              u.documentElement.getMagicDrawElement ->
+              umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
                 Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
                   List( a ) )
             } toMap;

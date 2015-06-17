@@ -36,52 +36,46 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui
+package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils
 
-import java.awt.event.ActionEvent
-import java.awt.event.InputEvent
-import javax.swing.JOptionPane
 import scala.collection.JavaConversions._
 import scala.language.postfixOps
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
-import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.ui.dialogs.specifications.SpecificationDialogManager
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
-import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
-import gov.nasa.jpl.dynamicScripts.magicdraw.DynamicScriptsPlugin
-import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
-import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationComputedComponent
-import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
-import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
-import org.omg.oti.api._
-import org.omg.oti.magicdraw.MagicDrawUML
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
 import com.nomagic.magicdraw.core.Application
-import com.nomagic.uml2.ext.magicdraw.compositestructures.mdinternalstructures.StructuredClassifier
+import com.nomagic.magicdraw.core.ApplicationEnvironment
+import com.nomagic.magicdraw.core.Project
+import com.nomagic.magicdraw.ui.browser.Node
+import com.nomagic.magicdraw.utils.MDLog
+import com.nomagic.magicdraw.validation.ValidationSuiteHelper
+import com.nomagic.uml2.ext.jmi.helpers.ModelHelper
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Classifier
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.EnumerationLiteral
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.InstanceSpecification
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Property
+import org.apache.log4j.Logger
+import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
+import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
+import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.api.UMLProfile
+import org.omg.oti.magicdraw.MagicDrawUML
 
-object StructuredClassifierInspectorWidget {
+object MDAPI {
 
-  import ComputedDerivedWidgetHelper._
-  
-  def allRoles(
-    project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =     
-      elementOperationWidget[UMLStructuredClassifier[MagicDrawUML], UMLConnectableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.allRoles,
-          MagicDrawUMLUtil( project ) )
-          
-  def compositeStructureTree(
-    project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedTree,
-    ek: MagicDrawElementKindDesignation, e: StructuredClassifier ): Try[Seq[( AbstractTreeNodeInfo, Map[String, AbstractTreeNodeInfo] )]] = {
-   
-    val treeInfo = TreeNodeInfo(
-      identifier = s"${e.getQualifiedName}",
-      nested = Seq() )
+  def getMDPluginsLog(): Logger =
+    MDLog.getPluginsLog()
 
-    Success( Seq( ( treeInfo, Map[String, AbstractTreeNodeInfo]() ) ) )
+  def getApplicationRoot(): String =
+    ApplicationEnvironment.getInstallRoot()
+
+  def getPackage( pv: PackageView ) =
+    Option.apply( pv.getPackage )
+
+  def getPrimaryProjectID( p: Project ): String =
+    p.getPrimaryProject.getProjectID
+
+  def getAllProfiles( p: Project )( implicit umlUtil: MagicDrawUMLUtil ): Set[UMLProfile[MagicDrawUML]] = {
+    import umlUtil._
+    StereotypesHelper.getAllProfiles( p ).toSet[MagicDrawUML#Profile]
   }
-    
+
 }
