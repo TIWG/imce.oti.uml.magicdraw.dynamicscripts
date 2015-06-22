@@ -102,7 +102,7 @@ object nameTest {
     selectedElements foreach { e =>
       val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
       
-      guiLog.log( s" ID=${e.id}" )
+      guiLog.log( s"==> ID=${e.id}" )
 
       val tv = e.tagValues
       guiLog.log( s"tv: ${tv.size}" )
@@ -171,6 +171,9 @@ object nameTest {
           val metaProperties = StereotypesHelper.getExtensionMetaProperty( mdS, false ) 
           System.out.println(s" metaProperties: ${metaProperties.size}")
           metaProperties.toList.sortBy(_.getQualifiedName).foreach{p => System.out.println(s"meta property: ${p.getQualifiedName}")}
+
+        case ep: UMLPackage[Uml] =>
+          System.out.println(s"package: ${ep.qualifiedName}; effective URI=${ep.getEffectiveURI}, URI=${ep.URI}")
         case _ => ()
       }
     }

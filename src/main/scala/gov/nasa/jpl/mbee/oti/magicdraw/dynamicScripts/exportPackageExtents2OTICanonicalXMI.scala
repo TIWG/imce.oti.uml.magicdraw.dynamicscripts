@@ -200,7 +200,7 @@ object exportPackageExtents2OTICanonicalXMI {
     import umlUtil._
 
     val a = Application.getInstance()
-    val guiLog = a.getGUILog()
+    val guiLog = a.getGUILog
 
     progressStatus.setCurrent( 0 )
     progressStatus.setMax( 0 )
@@ -228,7 +228,7 @@ object exportPackageExtents2OTICanonicalXMI {
               umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
                 Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
                   List( a ) )
-            } toMap;
+            } toMap
 
             Success( Some(
               MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
