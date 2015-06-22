@@ -403,6 +403,9 @@ object generateIDsForPackageExtents {
           
           guiLog.log( s" Saved migration model at: $migrationF " )
 
+          val unique = idGenerator.checkIDs
+          guiLog.log(s"Unique IDs? ${unique}")
+
 //          val cpanel = new JPanel()
 //          cpanel.setLayout( new JideBoxLayout( cpanel, BoxLayout.Y_AXIS ) )
 //

@@ -46,7 +46,7 @@ toolbarMenuScripts(
 			class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.playEnumeration
 			method: doit )
 	})
-	
+
 dynamicScripts(
       name='OMG Tool Infrastructure'
       [ m: Association ]
@@ -89,7 +89,21 @@ dynamicScripts(
       name='OMG Tool Infrastructure'
       [ m: Association ]
       scripts {
-          
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
           BrowserContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
@@ -125,7 +139,36 @@ dynamicScripts(
 dynamicScripts(
       name='OMG Tool Infrastructure'
       [ m: Package ]
-      scripts {    
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          BrowserContextMenuAction(
+              name: 'Fix Parameter & Property Multiplicities per MOF (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.fixMultiplicities
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Fix Parameter & Property Multiplicities per MOF (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.fixMultiplicities
+              method: doit
+          )
           BrowserContextMenuAction(
               name: 'Set names of ValueTypes within scope of selected package(s) (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
@@ -292,6 +335,21 @@ dynamicScripts(
       [ m: Model ]
       scripts {
           BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Model'
               project: jpl.omg.oti.magicdraw.dynamicscripts
               dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
@@ -304,7 +362,36 @@ dynamicScripts(
 dynamicScripts(
       name='OMG Tool Infrastructure'
       [ m: Profile ]
-      scripts {    
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          BrowserContextMenuAction(
+              name: 'Fix Parameter & Property Multiplicities per MOF (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.fixMultiplicities
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Fix Parameter & Property Multiplicities per MOF (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.fixMultiplicities
+              method: doit
+          )
           BrowserContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Profile extents'
               project: jpl.omg.oti.magicdraw.dynamicscripts
@@ -406,7 +493,22 @@ dynamicScripts(
 dynamicScripts(
       name='OMG Tool Infrastructure'
       [ m: Class ]
-      scripts {    
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
           BrowserContextMenuAction(
               name: 'OTI CompositeStructure Inspector'
               project: jpl.omg.oti.magicdraw.dynamicscripts
@@ -421,6 +523,144 @@ dynamicScripts(
               dependencies: { org.omg.oti, org.omg.oti.trees }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectCompositeStructure
+              method: doit
+          )
+})
+
+
+dynamicScripts(
+      name='OMG Tool Infrastructure'
+      [ m: DataType ]
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          BrowserContextMenuAction(
+              name: 'OTI CompositeStructure Inspector'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectCompositeStructure
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'OTI CompositeStructure Inspector'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectCompositeStructure
+              method: doit
+          )
+})
+
+dynamicScripts(
+      name='OMG Tool Infrastructure'
+      [ m: Enumeration ]
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          BrowserContextMenuAction(
+              name: 'OTI CompositeStructure Inspector'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectCompositeStructure
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'OTI CompositeStructure Inspector'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectCompositeStructure
+              method: doit
+          )
+})
+
+dynamicScripts(
+      name='OMG Tool Infrastructure'
+      [ m: Property ]
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+})
+
+dynamicScripts(
+      name='OMG Tool Infrastructure'
+      [ m: Operation ]
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+})
+
+dynamicScripts(
+      name='OMG Tool Infrastructure'
+      [ m: Parameter ]
+      scripts {
+          BrowserContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
 })
