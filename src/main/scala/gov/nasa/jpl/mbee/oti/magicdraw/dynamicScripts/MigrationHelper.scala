@@ -67,7 +67,7 @@ import com.nomagic.task.RunnableWithProgress
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 
 import org.eclipse.emf.common.util.URI
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 import org.omg.oti.changeMigration.Metamodel
 import org.omg.oti.changeMigration.Old2NewIDMapping
 

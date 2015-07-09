@@ -39,48 +39,54 @@
 package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.actions
 
 import com.nomagic.magicdraw.annotation.Annotation
-import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.openapi.uml.ModelElementsManager
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{LiteralUnlimitedNatural, MultiplicityElement}
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{VisibilityKindEnum, NamedElement, ElementImport, PackageImport}
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
+import org.omg.oti.magicdraw.uml.read._
 
 import scala.language.postfixOps
 
 /**
-* @See MOF 2.5, Section 12.4 EMOF Constraints
-* [32] The values of MultiplicityElement::lowerValue and upperValue must be
-* of kind LiteralInteger and LiteralUnlimitedNatural respectively.
+* @see MOF 2.5, Section 12.4 EMOF Constraints
+* [4] Core::Basic and EMOF does not support visibilities.
+ *      All property visibilities must be explicitly set to public where applicable,
+ *      that is for all NamedElements, ElementImports and PackageImports.
+ *      Furthermore, no alias is allowed for any ElementImport.
+*
+* @see XMI 2.5, Section 9.4.1 EMOF Package
+* [7] CMOF does not support visibilities.
+ *      All property visibilities must be explicitly set to public where applicable,
+ *      that is for all NamedElements, ElementImports, and PackageImports.
+ *      Furthermore, no alias is allowed for any ElementImport.
 */
-case class ReplaceUpperUnlimitedNaturalValue(oldKind: String, newValue: Integer)
-                                            (implicit umlUtil: MagicDrawUMLUtil)
+case class SetVisibilityToPublic()
+(implicit umlUtil: MagicDrawUMLUtil)
   extends MagicDrawValidationDataResults.ValidationAnnotationAction(
-    s"Replace old $oldKind upper value with a LiteralUnlimitedNatural value $newValue",
-    s"Replace old $oldKind upper value with a LiteralUnlimitedNatural value $newValue") {
+    "Set visibility to public",
+    "Set visibility to public") {
 
   def canExecute(annotation: Annotation): Boolean =
     annotation.getTarget match {
-      case mult: MultiplicityElement =>
-        mult.getUpperValue match {
-          case l: LiteralUnlimitedNatural =>
-            l.getValue != newValue
-          case _ =>
-            true
-        }
+      case ne: NamedElement =>
+        ne.getVisibility != VisibilityKindEnum.PUBLIC
+      case ei: ElementImport =>
+        ei.getVisibility != VisibilityKindEnum.PUBLIC
+      case pi: PackageImport =>
+        pi.getVisibility != VisibilityKindEnum.PUBLIC
       case _ =>
         false
     }
 
   def execute(annotation: Annotation): Unit =
     annotation.getTarget match {
-      case mult: MultiplicityElement =>
-        val f = Project.getProject(mult).getElementsFactory
-        val mem = ModelElementsManager.getInstance
-        if (null != mult.getUpperValue)
-          mem.removeElement(mult.getUpperValue)
-        val upper = f.createLiteralUnlimitedNaturalInstance()
-        upper.setValue(newValue)
-        mult.setUpperValue(upper)
+      case ne: NamedElement =>
+        if (ne.getVisibility != VisibilityKindEnum.PUBLIC)
+          ne.setVisibility(VisibilityKindEnum.PUBLIC)
+      case ei: ElementImport =>
+        if (ei.getVisibility != VisibilityKindEnum.PUBLIC)
+          ei.setVisibility(VisibilityKindEnum.PUBLIC)
+      case pi: PackageImport =>
+        if (pi.getVisibility != VisibilityKindEnum.PUBLIC)
+          pi.setVisibility(VisibilityKindEnum.PUBLIC)
       case _ =>
         ()
     }

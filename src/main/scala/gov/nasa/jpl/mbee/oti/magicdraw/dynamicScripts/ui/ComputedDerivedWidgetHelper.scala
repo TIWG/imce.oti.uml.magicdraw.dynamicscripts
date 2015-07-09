@@ -57,8 +57,8 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationCo
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
-import org.omg.oti.api._
-import org.omg.oti.magicdraw._
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml.read._
 import scala.reflect.{ classTag, ClassTag }
 
 

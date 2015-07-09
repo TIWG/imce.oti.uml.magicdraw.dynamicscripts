@@ -49,8 +49,9 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import org.omg.oti.api._
-import org.omg.oti.magicdraw.{MagicDrawUML, MagicDrawUMLUtil}
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
@@ -61,14 +62,15 @@ import scala.util.{Success, Try}
  */
 object checkPackageForImportsOfNestedPackages {
 
-  def doit(
-    p: Project,
+  def doit
+  ( p: Project,
     ev: ActionEvent,
     script: DynamicScriptsTypes.DiagramContextMenuAction,
     dpe: DiagramPresentationElement,
     triggerView: PackageView,
     triggerElement: Profile,
-    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
+    selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     val app = Application.getInstance()
     val guiLog = app.getGUILog()
@@ -77,18 +79,19 @@ object checkPackageForImportsOfNestedPackages {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    val selectedPackages = selection.toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage ) } )
+    val selectedPackages = selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) }
     checkPackageForImportsOfNestedPackages( p, selectedPackages )
   }
 
-  def doit(
-    p: Project,
+  def doit
+  ( p: Project,
     ev: ActionEvent,
     script: DynamicScriptsTypes.DiagramContextMenuAction,
     dpe: DiagramPresentationElement,
     triggerView: PackageView,
     triggerElement: Package,
-    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
+    selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     val app = Application.getInstance()
     val guiLog = app.getGUILog()
@@ -97,30 +100,36 @@ object checkPackageForImportsOfNestedPackages {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    val selectedPackages = selection.toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage ) } )
+    val selectedPackages = selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) }
     checkPackageForImportsOfNestedPackages( p, selectedPackages )
   }
 
-  def doit(
-    p: Project, ev: ActionEvent,
+  def doit
+  ( p: Project, ev: ActionEvent,
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree, node: Node,
-    pkg: Package, selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] = {
+    pkg: Package, selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    val selectedPackages = selection.toSet selectByKindOf ( { case pkg: Package => umlPackage( pkg ) } )
+    val selectedPackages = selection.toSet selectByKindOf { case pkg: Package => umlPackage( pkg ) }
     checkPackageForImportsOfNestedPackages( p, selectedPackages )
   }
 
-  def checkPackageForImportsOfNestedPackages(
-    p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )( implicit umlUtil: MagicDrawUMLUtil ): Try[Option[MagicDrawValidationDataResults]] = {
+  def checkPackageForImportsOfNestedPackages
+  ( p: Project,
+    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
+  ( implicit umlUtil: MagicDrawUMLUtil )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     import umlUtil._
+
+    val otiV = OTIMagicDrawValidation(p)
+
     val app = Application.getInstance()
-    val guiLog = app.getGUILog()
+    val guiLog = app.getGUILog
     guiLog.clearLog()
 
     guiLog.log( s"Checking ${pkgs.size} package(s)..." )
@@ -128,21 +137,15 @@ object checkPackageForImportsOfNestedPackages {
     val elementMessages = for {
       pkg <- pkgs ++ pkgs.flatMap( _.allNestedPackages )
       missingImport <- pkg.nonImportedNestedPackages
-      as = List( actions.AddMissingImportFromParentPackage() )
-    } yield ( umlMagicDrawUMLPackage(missingImport).getMagicDrawPackage -> Tuple2( s"Add import from parent package, ${pkg.name.get}", as ) )
+      vInfo = otiV.constructValidationInfo(
+        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+        Some(s"Add import from parent package, ${pkg.name.get}"),
+        List( actions.AddMissingImportFromParentPackage() )).get
+    } yield
+      umlMagicDrawUMLPackage(missingImport).getMagicDrawPackage -> List(vInfo)
 
-    if ( elementMessages.isEmpty ) {
-      guiLog.log( s"OK" )
-      Success( None )
-    }
-    else {
-      guiLog.log( s"Found ${elementMessages.size} missing imports!" )
-      makeMDIllegalArgumentExceptionValidation(
-        p,
-        s"*** ${elementMessages.size} missing imports of nested packages ***",
-        elementMessages.toMap[Element, ( String, List[NMAction] )],
-        "*::MagicDrawOTIValidation",
-        "*::UnresolvedCrossReference" )
-    }
+    otiV.makeMDIllegalArgumentExceptionValidation(
+      "Validate for missing imports of nested packages",
+      elementMessages.toMap)
   }
 }

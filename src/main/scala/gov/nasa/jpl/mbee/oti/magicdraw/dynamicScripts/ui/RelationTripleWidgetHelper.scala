@@ -57,14 +57,17 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationCo
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
-import org.omg.oti._
-import org.omg.oti.api._
-import org.omg.oti.magicdraw._
+import org.omg.oti.uml._
+import org.omg.oti.uml.read.api._
+import org.omg.oti.uml.read.operations._
+import org.omg.oti.magicdraw.uml.read._
 import scala.reflect.{ classTag, ClassTag }
 
 object RelationTripleWidgetHelper {
 
-  def makeComputedDerivedTreeForRelationTriple( derived: DynamicScriptsTypes.ComputedDerivedWidget ): DynamicScriptsTypes.ComputedDerivedTree =
+  def makeComputedDerivedTreeForRelationTriple
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget )
+  : DynamicScriptsTypes.ComputedDerivedTree =
     DynamicScriptsTypes.ComputedDerivedTree(
       derived.name, derived.icon, derived.context, derived.access,
       derived.className, derived.methodName, derived.refresh,
@@ -102,14 +105,19 @@ object RelationTripleWidgetHelper {
           typeName = DynamicScriptsTypes.HName( "oPackage" ),
           typeInfo = DynamicScriptsTypes.StringTypeDesignation() ) ) ) )
 
-  def createRowForRelationTriple( r: RelationTriple[MagicDrawUML] )( implicit umlUtil: MagicDrawUMLUtil ): Map[String, AbstractTreeNodeInfo] = {
+  def createRowForRelationTriple
+  ( r: RelationTriple[MagicDrawUML] )
+  ( implicit umlUtil: MagicDrawUMLUtil )
+  : Map[String, AbstractTreeNodeInfo] = {
     import umlUtil._
     Map(
       "sContext" -> ( r.sub.owner match {
         case None => LabelNodeInfo( "<none>" )
         case Some( o ) => o match {
-          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
-          case parent                       => ReferenceNodeInfo( parent.id, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent: UMLNamedElement[Uml] =>
+            ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent =>
+            ReferenceNodeInfo( parent.id, umlMagicDrawUMLElement(parent).getMagicDrawElement )
         }
       } ),
       "subject" ->
@@ -140,8 +148,11 @@ object RelationTripleWidgetHelper {
       "sMetaclass" -> LabelNodeInfo( r.sub.xmiType.head ),
       "relation" ->
         ( r match {
-          case a: AssociationTriple[Uml, _, _]  => LabelNodeInfo( a.relf.propertyName )
-          case s: StereotypePropertyTriple[Uml] => ReferenceNodeInfo( s"${s.rels.name.get}::${s.relp.name.get}", umlMagicDrawUMLElement(s.relp).getMagicDrawElement )
+          case a: AssociationTriple[Uml, _, _]  =>
+            LabelNodeInfo( a.relf.propertyName )
+          case s: StereotypePropertyTriple[Uml] =>
+            ReferenceNodeInfo(
+              s"${s.rels.name.get}::${s.relp.name.get}", umlMagicDrawUMLElement(s.relp).getMagicDrawElement )
         } ),
       "object" ->
         ( r.obj match {
@@ -170,20 +181,27 @@ object RelationTripleWidgetHelper {
         } ),
       "oMetaclass" -> LabelNodeInfo( r.obj.xmiType.head ),
       "oNamespace" -> ( r.obj.owningNamespace match {
-        case None       => LabelNodeInfo( "<none>" )
-        case Some( ns ) => ReferenceNodeInfo( ns.qualifiedName.get, umlMagicDrawUMLElement(ns).getMagicDrawElement )
+        case None       =>
+          LabelNodeInfo( "<none>" )
+        case Some( ns ) =>
+          ReferenceNodeInfo( ns.qualifiedName.get, umlMagicDrawUMLElement(ns).getMagicDrawElement )
       } ),
       "oPackage" -> ( getPackageOrProfileOwner( r.obj ) match {
-        case None => LabelNodeInfo( "<none>" )
-        case Some( pkg ) => ReferenceNodeInfo( pkg.qualifiedName.get, umlMagicDrawUMLElement(pkg).getMagicDrawElement )
+        case None =>
+          LabelNodeInfo( "<none>" )
+        case Some( pkg ) =>
+          ReferenceNodeInfo( pkg.qualifiedName.get, umlMagicDrawUMLElement(pkg).getMagicDrawElement )
       } ) )
   }
 
-  def createGroupTableUIPanelForRelationTriples(
-    derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    pes: Iterable[RelationTriple[MagicDrawUML]] )( implicit util: MagicDrawUMLUtil ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+  def createGroupTableUIPanelForRelationTriples
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    pes: Iterable[RelationTriple[MagicDrawUML]] )
+  ( implicit util: MagicDrawUMLUtil )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
 
-    val rows: Seq[Map[String, AbstractTreeNodeInfo]] = pes map ( createRowForRelationTriple( _ ) ) toSeq
+    val rows: Seq[Map[String, AbstractTreeNodeInfo]] =
+      pes map RelationTripleWidgetHelper.createRowForRelationTriple toSeq
 
     val ui = GroupTableNodeUI(
       makeComputedDerivedTreeForRelationTriple( derived ),
@@ -194,27 +212,29 @@ object RelationTripleWidgetHelper {
 
     val validationAnnotations = rows flatMap
       ( _.values ) flatMap
-      ( AbstractTreeNodeInfo.collectAnnotationsRecursively( _ ) ) toSeq
+      AbstractTreeNodeInfo.collectAnnotationsRecursively
 
     Success( ( ui.panel, validationAnnotations ) )
   }
 
-  def packageRelationTripleWidget(
-    derived: DynamicScriptsTypes.ComputedDerivedWidget,
+  def packageRelationTripleWidget
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
     mdPkg: MagicDrawUML#Package,
-    f: Function1[UMLPackage[MagicDrawUML], Try[Set[RelationTriple[MagicDrawUML]]]],
-    util: MagicDrawUMLUtil ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+    f: UMLPackage[MagicDrawUML] => Try[Set[RelationTriple[MagicDrawUML]]],
+    util: MagicDrawUMLUtil )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
     f( util.umlPackage( mdPkg ) ) match {
       case Failure( t ) => Failure( t )
       case Success( triples ) =>
         createGroupTableUIPanelForRelationTriples( derived, triples )( util )
     }
 
-  def namespaceRelationTripleWidget(
-    derived: DynamicScriptsTypes.ComputedDerivedWidget,
+  def namespaceRelationTripleWidget
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
     mdNs: MagicDrawUML#Namespace,
-    f: Function1[UMLNamespace[MagicDrawUML], Try[Set[RelationTriple[MagicDrawUML]]]],
-    util: MagicDrawUMLUtil ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+    f: UMLNamespace[MagicDrawUML] => Try[Set[RelationTriple[MagicDrawUML]]],
+    util: MagicDrawUMLUtil )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
     f( util.umlNamespace( mdNs ) ) match {
       case Failure( t ) => Failure( t )
       case Success( triples ) =>

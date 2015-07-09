@@ -45,23 +45,23 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
-import org.omg.oti._
-import org.omg.oti.api._
-import org.omg.oti.magicdraw.{MagicDrawUML, MagicDrawUMLUtil}
+import org.omg.oti.uml._
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.language.postfixOps
 import scala.util.Try
 
 object ElementInspectorWidget {
 
+  import AppliedStereotypeWidgetHelper._
   import ComputedDerivedWidgetHelper._
 
   def appliedStereotypes
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element): Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+    appliedStereotypeInstanceWidget[UMLElement[MagicDrawUML]](
       derived, e,
-      _.getAppliedStereotypes.keySet,
       MagicDrawUMLUtil(project))
 
   def appliedStereotypesWithoutMetaclassProperties

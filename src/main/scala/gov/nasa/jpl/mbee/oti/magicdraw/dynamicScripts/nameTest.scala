@@ -52,10 +52,10 @@ import com.nomagic.magicdraw.uml.actions.SelectInContainmentTreeRunnable
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
-import org.omg.oti._
-import org.omg.oti.api._
-import org.omg.oti.operations._
-import org.omg.oti.magicdraw._
+import org.omg.oti.uml._
+import org.omg.oti.uml.read.api._
+import org.omg.oti.uml.read.operations._
+import org.omg.oti.magicdraw.uml.read._
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import org.omg.oti.changeMigration.Metamodel
@@ -79,7 +79,6 @@ import com.nomagic.magicdraw.actions.ActionsID
 import com.nomagic.magicdraw.actions.ActionsProvider
 import gov.nasa.jpl.magicdraw.enhanced.migration.LocalModuleMigrationInterceptor
 import javax.swing.filechooser.FileFilter
-import org.omg.oti.api.UMLStereotype
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Stereotype
 
@@ -103,14 +102,6 @@ object nameTest {
       val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
       
       guiLog.log( s"==> ID=${e.id}" )
-
-      val tv = e.tagValues
-      guiLog.log( s"tv: ${tv.size}" )
-      tv foreach {
-        case ( tvp, tvv ) =>
-          guiLog.log( s" => ${tvp.qualifiedName.get}: ${tvv}" )
-
-      }
   
       val mdIS = Option.apply( mdE.getAppliedStereotypeInstance ) 
       guiLog.log( s" mdID=${mdE.getID}: mdIS=${mdIS.isDefined} =${mdIS}" )
