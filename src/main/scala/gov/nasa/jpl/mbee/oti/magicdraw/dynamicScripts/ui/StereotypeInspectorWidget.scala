@@ -55,9 +55,9 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDe
 import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationComputedComponent
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
-import org.omg.oti.api._
-import org.omg.oti.magicdraw.MagicDrawUML
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 import com.nomagic.magicdraw.core.Application
 
 object StereotypeInspectorWidget {
@@ -80,7 +80,7 @@ object StereotypeInspectorWidget {
     implicit val umlUtil = MagicDrawUMLUtil( project )
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProperty[MagicDrawUML]](
       derived, e,
-      ( _.baseMetaPropertiesExceptRedefined.toList.sortBy(_.qualifiedName.get) ),
+      _.baseMetaPropertiesExceptRedefined.toList.sortBy(_.qualifiedName.get),
       umlUtil )
   }
   
@@ -89,7 +89,7 @@ object StereotypeInspectorWidget {
     ek: MagicDrawElementKindDesignation, e: Element ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProfile[MagicDrawUML]](
       derived, e,
-      ( _.profile.toSet ),
+      _.profile.toSet,
       MagicDrawUMLUtil( project ) )
 
   def getSpecializedStereotypes(
@@ -98,7 +98,7 @@ object StereotypeInspectorWidget {
     implicit val umlUtil = MagicDrawUMLUtil( project )
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
       derived, e,
-      ( org.omg.oti.getSpecializedStereotypes( _ ) ),
+      org.omg.oti.uml.getSpecializedStereotypes( _ ),
       umlUtil )
   }
   
@@ -108,7 +108,7 @@ object StereotypeInspectorWidget {
     implicit val umlUtil = MagicDrawUMLUtil( project )
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
       derived, e,
-      ( org.omg.oti.getSpecializedStereotypesOutsideProfile( _ ) ),
+      org.omg.oti.uml.getSpecializedStereotypesOutsideProfile( _ ),
       umlUtil )
   }
   
@@ -118,7 +118,7 @@ object StereotypeInspectorWidget {
     implicit val umlUtil = MagicDrawUMLUtil( project )
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
       derived, e,
-      ( org.omg.oti.getSpecializedStereotypesWithinProfile( _ ) ),
+      org.omg.oti.uml.getSpecializedStereotypesWithinProfile( _ ),
       umlUtil )
   }
   
@@ -128,7 +128,7 @@ object StereotypeInspectorWidget {
     implicit val umlUtil = MagicDrawUMLUtil( project )
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
       derived, e,
-      ( org.omg.oti.getAllSpecializedStereotypes( _ ) ),
+      org.omg.oti.uml.getAllSpecializedStereotypes( _ ),
       umlUtil )
   }
   
@@ -138,7 +138,7 @@ object StereotypeInspectorWidget {
     implicit val umlUtil = MagicDrawUMLUtil( project )
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
       derived, e,
-      ( org.omg.oti.getAllSpecializedStereotypesWithinProfile( _ ) ),
+      org.omg.oti.uml.getAllSpecializedStereotypesWithinProfile( _ ),
       umlUtil )
   }
   def getSpecializedStereotypesFromOtherProfiles(
@@ -147,7 +147,7 @@ object StereotypeInspectorWidget {
     implicit val umlUtil = MagicDrawUMLUtil( project )
     elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
       derived, e,
-      ( org.omg.oti.getSpecializedStereotypesFromOtherProfiles( _ ) ),
+      org.omg.oti.uml.getSpecializedStereotypesFromOtherProfiles( _ ),
       umlUtil )
   }
 }

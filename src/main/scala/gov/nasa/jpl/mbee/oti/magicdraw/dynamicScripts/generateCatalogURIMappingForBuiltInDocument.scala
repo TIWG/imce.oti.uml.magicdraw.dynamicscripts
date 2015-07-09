@@ -56,8 +56,8 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 
-import org.omg.oti.api._
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
@@ -67,34 +67,37 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
  */
 object generateCatalogURIMappingForBuiltInDocument {
 
-  def doit(
-    project: Project,
+  def doit
+  ( project: Project,
     ev: ActionEvent,
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree,
     node: Node,
     pkg: Profile,
-    selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] =
+    selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] =
     doit( project, ev, script, tree, node, pkg.asInstanceOf[Package], selection )
 
-  def doit(
-    project: Project,
+  def doit
+  ( project: Project,
     ev: ActionEvent,
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree,
     node: Node,
     pkg: Model,
-    selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] =
+    selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] =
     doit( project, ev, script, tree, node, pkg.asInstanceOf[Package], selection )
 
-  def doit(
-    p: Project,
+  def doit
+  ( p: Project,
     ev: ActionEvent,
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree,
     node: Node,
     top: Package,
-    selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] = {
+    selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog()

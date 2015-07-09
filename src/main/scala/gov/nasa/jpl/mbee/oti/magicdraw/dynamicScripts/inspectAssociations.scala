@@ -53,7 +53,7 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Association
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import org.omg.oti.changeMigration.Metamodel
@@ -74,8 +74,8 @@ import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement
 import com.nomagic.magicdraw.uml.symbols.paths.AssociationView
 import com.nomagic.magicdraw.uml.symbols.PresentationElement
 
-import org.omg.oti.api._
-import org.omg.oti.magicdraw.MagicDrawUML
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
 
 /**
  * @author Nicolas.F.Rouquette@jpl.nasa.gov

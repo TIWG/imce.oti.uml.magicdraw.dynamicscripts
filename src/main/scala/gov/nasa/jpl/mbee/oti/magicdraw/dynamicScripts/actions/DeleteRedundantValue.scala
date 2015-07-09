@@ -42,9 +42,9 @@ import com.nomagic.magicdraw.annotation.Annotation
 import com.nomagic.magicdraw.openapi.uml.ModelElementsManager
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.MultiplicityElement
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import org.omg.oti.MetaPropertyReference
-import org.omg.oti.api.{UMLMultiplicityElement, UMLValueSpecification}
-import org.omg.oti.magicdraw.{MagicDrawUML, MagicDrawUMLUtil}
+import org.omg.oti.uml.MetaPropertyReference
+import org.omg.oti.uml.read.api.{UMLMultiplicityElement, UMLValueSpecification}
+import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.language.postfixOps
 

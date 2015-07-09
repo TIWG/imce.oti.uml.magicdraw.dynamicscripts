@@ -52,7 +52,7 @@ import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import org.eclipse.emf.common.util.URI
 import org.omg.oti.changeMigration.Metamodel
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import scala.collection.JavaConversions.{mapAsJavaMap, seqAsJavaList}
 import scala.language.{implicitConversions, postfixOps}

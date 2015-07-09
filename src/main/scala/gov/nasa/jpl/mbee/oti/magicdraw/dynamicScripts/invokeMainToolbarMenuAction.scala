@@ -40,7 +40,9 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts
 
 import java.awt.event.ActionEvent
 
-import scala.collection.JavaConversions.asJavaCollection
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
+
+import scala.collection.JavaConversions._
 import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.util.Success
@@ -54,8 +56,9 @@ import com.nomagic.magicdraw.uml.symbols.shapes.InstanceSpecificationView
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.InstanceSpecification
 
-import org.omg.oti.api._
-import org.omg.oti.magicdraw._
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml._
+import org.omg.oti.magicdraw.uml.read._
 
 import gov.nasa.jpl.dynamicScripts._
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes._
@@ -79,6 +82,8 @@ object invokeMainToolbarMenuAction {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
+    val otiV = OTIMagicDrawValidation(p)
+
     val dsInstance = umlInstanceSpecification( triggerElement )
     for {
       classNames <- dsInstance.getValuesOfFeatureSlot( "className" )
@@ -97,12 +102,16 @@ object invokeMainToolbarMenuAction {
         ()
     }
 
-    makeMDIllegalArgumentExceptionValidation(
-      p,
-      s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
-      Map( triggerElement -> Tuple2( "Check the instance specification details", List() ) ),
-      "*::MagicDrawOTIValidation",
-      "*::UnresolvedCrossReference" )
+    for {
+      vInfo <- otiV.constructValidationInfo(
+        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+        Some("Check the instance specification details"),
+        Nil)
+      result <- otiV.makeMDIllegalArgumentExceptionValidation(
+        s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
+        Map(triggerElement -> List(vInfo)))
+    } yield result
+
   }
 
   def invoke(
@@ -113,23 +122,28 @@ object invokeMainToolbarMenuAction {
 
     import umlUtil._
 
-    val dsPlugin = DynamicScriptsPlugin.getInstance
-    val reg: DynamicScriptsRegistry = dsPlugin.getDynamicScriptsRegistry
+    val otiV = OTIMagicDrawValidation(p)
+
+    val dsPlugin = DynamicScriptsPlugin.getInstance()
+    val reg: DynamicScriptsRegistry = dsPlugin.getDynamicScriptsRegistry()
 
     val scripts = for {
       ( _, menus ) <- reg.toolbarMenuPathActions
       menu <- menus
       script <- menu.scripts
-      if ( script.className.jname == className && script.methodName.sname == methodName )
+      if script.className.jname == className && script.methodName.sname == methodName
     } yield script
 
     if ( scripts.size != 1 )
-      makeMDIllegalArgumentExceptionValidation(
-        p,
-        s"*** Ambiguous invocation; there are ${scripts.size} relevant dynamic script actions matching the class/method name criteria ***",
-        Map( invocation -> Tuple2( "Check the instance specification details", List() ) ),
-        "*::MagicDrawOTIValidation",
-        "*::UnresolvedCrossReference" )
+      for {
+        vInfo <- otiV.constructValidationInfo(
+          otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+          Some("Check the instance specification details"),
+          Nil)
+        result <- otiV.makeMDIllegalArgumentExceptionValidation(
+          s"*** Ambiguous invocation; there are ${scripts.size} relevant dynamic script actions matching the class/method name criteria ***",
+          Map(invocation -> List(vInfo)))
+      } yield result
 
     else {
       val script = scripts.head

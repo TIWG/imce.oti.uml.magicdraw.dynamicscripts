@@ -39,48 +39,39 @@
 package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.actions
 
 import com.nomagic.magicdraw.annotation.Annotation
-import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.openapi.uml.ModelElementsManager
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{LiteralUnlimitedNatural, MultiplicityElement}
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.AggregationKindEnum
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Property
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
+import org.omg.oti.magicdraw.uml.read._
 
 import scala.language.postfixOps
 
 /**
-* @See MOF 2.5, Section 12.4 EMOF Constraints
-* [32] The values of MultiplicityElement::lowerValue and upperValue must be
-* of kind LiteralInteger and LiteralUnlimitedNatural respectively.
+* @see MOF 2.5, Section 12.4 EMOF Constraints
+* [28] A Property typed by a kind of DataType must have aggregation = none.
+*
+* @see XMI 2.5, Section 9.4.1 EMOF Package
+* [28] A Property typed by a kind of DataType must have aggregation = none.
 */
-case class ReplaceUpperUnlimitedNaturalValue(oldKind: String, newValue: Integer)
-                                            (implicit umlUtil: MagicDrawUMLUtil)
+case class SetPropertyAggregationToNone()
+(implicit umlUtil: MagicDrawUMLUtil)
   extends MagicDrawValidationDataResults.ValidationAnnotationAction(
-    s"Replace old $oldKind upper value with a LiteralUnlimitedNatural value $newValue",
-    s"Replace old $oldKind upper value with a LiteralUnlimitedNatural value $newValue") {
+    "Set Property aggregation to none",
+    "Set Property aggregation to none") {
 
   def canExecute(annotation: Annotation): Boolean =
     annotation.getTarget match {
-      case mult: MultiplicityElement =>
-        mult.getUpperValue match {
-          case l: LiteralUnlimitedNatural =>
-            l.getValue != newValue
-          case _ =>
-            true
-        }
+      case p: Property =>
+        p.getDatatype != null && p.getAggregation != AggregationKindEnum.NONE
       case _ =>
         false
     }
 
   def execute(annotation: Annotation): Unit =
     annotation.getTarget match {
-      case mult: MultiplicityElement =>
-        val f = Project.getProject(mult).getElementsFactory
-        val mem = ModelElementsManager.getInstance
-        if (null != mult.getUpperValue)
-          mem.removeElement(mult.getUpperValue)
-        val upper = f.createLiteralUnlimitedNaturalInstance()
-        upper.setValue(newValue)
-        mult.setUpperValue(upper)
+      case p: Property =>
+        if (p.getDatatype != null && p.getAggregation != AggregationKindEnum.NONE)
+          p.setAggregation(AggregationKindEnum.NONE)
       case _ =>
         ()
     }

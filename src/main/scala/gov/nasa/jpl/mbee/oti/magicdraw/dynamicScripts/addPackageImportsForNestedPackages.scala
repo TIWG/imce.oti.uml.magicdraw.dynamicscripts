@@ -48,8 +48,8 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import org.omg.oti.api._
-import org.omg.oti.magicdraw.{MagicDrawUML, MagicDrawUMLUtil}
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}

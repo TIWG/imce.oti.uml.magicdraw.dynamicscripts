@@ -44,7 +44,7 @@ import com.nomagic.magicdraw.core.Project
 import com.nomagic.magicdraw.openapi.uml.ModelElementsManager
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{LiteralInteger, MultiplicityElement}
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import scala.language.postfixOps
 

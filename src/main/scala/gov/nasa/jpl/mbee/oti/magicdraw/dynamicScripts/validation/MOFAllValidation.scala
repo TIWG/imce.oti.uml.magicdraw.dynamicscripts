@@ -36,56 +36,77 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts
+package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation
 
 import java.awt.event.ActionEvent
 
 import com.nomagic.magicdraw.core.{Application, Project}
-import com.nomagic.magicdraw.uml.actions.SelectInContainmentTreeRunnable
-import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
+import com.nomagic.magicdraw.ui.browser.{Node, Tree}
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
+import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
+import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.read.api._
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
 
-/**
- * Select 1 package and N profiles in a diagram.
- * Invoke this dynamic script from the context menu of the package.
- * 
- * @author Nicolas.F.Rouquette@jpl.nasa.gov
- */
-object checkPrimaryPackageSelectionCanAccessSecondaryProfileSelection {
+object MOFAllValidation {
 
-  def doit(
-    p: Project,
+  def doit
+  ( p: Project, ev: ActionEvent,
+    script: DynamicScriptsTypes.BrowserContextMenuAction,
+    tree: Tree, node: Node,
+    pkg: Profile, selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    implicit val umlUtil = MagicDrawUMLUtil( p )
+    import umlUtil._
+
+    val selectedPackages: Set[UMLPackage[Uml]] =
+      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+
+    doit(p, selectedPackages)
+  }
+
+  def doit
+  ( p: Project, ev: ActionEvent,
+    script: DynamicScriptsTypes.BrowserContextMenuAction,
+    tree: Tree, node: Node,
+    top: Package, selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    implicit val umlUtil = MagicDrawUMLUtil( p )
+    import umlUtil._
+
+    val selectedPackages: Set[UMLPackage[Uml]] =
+      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+
+    doit(p, selectedPackages)
+  }
+
+  def doit
+  ( p: Project,
     ev: ActionEvent,
     script: DynamicScriptsTypes.DiagramContextMenuAction,
     dpe: DiagramPresentationElement,
     triggerView: PackageView,
     triggerElement: Profile,
-    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
-    
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog()
-    guiLog.clearLog()
+    selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
-    val umlUtil = MagicDrawUMLUtil( p )
+    implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
-    
-    val secondaryPackages = (selection.toSet - triggerView).toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage) } )
-    
-    checkPrimaryPackageSelectionCanAccessSecondaryProfileSelection( umlUtil, triggerElement, secondaryPackages )
-    
-    Success( None )
+
+    doit(
+      p,
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
   }
-      
+
   def doit(
     p: Project,
     ev: ActionEvent,
@@ -94,42 +115,47 @@ object checkPrimaryPackageSelectionCanAccessSecondaryProfileSelection {
     triggerView: PackageView,
     triggerElement: Package,
     selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
-    
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog()
-    guiLog.clearLog()
 
-    val umlUtil = MagicDrawUMLUtil( p )
+    implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
-    
-    val secondaryPackages = (selection.toSet - triggerView).toSet selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage) } )
-    
-    checkPrimaryPackageSelectionCanAccessSecondaryProfileSelection( umlUtil, triggerElement, secondaryPackages )
-    
-    Success( None )
+
+    doit(
+      p,
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
   }
-      
-      
-  def checkPrimaryPackageSelectionCanAccessSecondaryProfileSelection(
-      umlUtil: MagicDrawUMLUtil, 
-      primaryPkg: UMLPackage[MagicDrawUML], 
-      secondaryProfilesOrPackages: Iterable[UMLPackage[MagicDrawUML]] ): Unit = {
-    
-    import umlUtil._
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog()
 
-    val primaryAccessible = primaryPkg.allIndirectlyAppliedProfilesIncludingNestingPackagesTransitively.flatMap(_.allVisibleMembersTransitively)
-    val secondaryContents = secondaryProfilesOrPackages.flatMap (_.allOwnedElements.selectByKindOf { case pe: UMLPackageableElement[Uml] => pe } toSet) toSet
-    val secondaryVisible = secondaryProfilesOrPackages.flatMap (_.allVisibleMembersTransitively) toSet
-    
-    val excluded = (secondaryContents & secondaryVisible) -- primaryAccessible
-    guiLog.log(s"OK?: ${excluded.isEmpty}")
-        
-    excluded.foreach { e =>
-      val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
-      val link=s"${mdE.getHumanType}: ${mdE.getHumanName}"
-      guiLog.addHyperlinkedText(s" should be accessible: <A>${link}</A>", Map(link-> new SelectInContainmentTreeRunnable( mdE ) ) )
-    }
+  def doit
+  ( p: Project,
+    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
+  ( implicit _umlUtil: MagicDrawUMLUtil )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    for {
+      vo <- MOFDefaultValueValidation.doit(p, pkgs)
+      v <- vo
+    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+
+    for {
+      vo <- MOFMultiplicityValidation.doit(p, pkgs)
+      v <- vo
+    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+
+    for {
+      vo <- MOFNamedElementValidation.doit(p, pkgs)
+      v <- vo
+    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+
+    for {
+      vo <- MOFTypedElementValidation.doit(p, pkgs)
+      v <- vo
+    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+
+    for {
+      vo <- MOFVisibilityValidation.doit(p, pkgs)
+      v <- vo
+    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+
+    Success(None)
+
   }
 }

@@ -47,7 +47,7 @@ import com.nomagic.magicdraw.openapi.uml.ModelElementsManager
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.InstanceSpecification
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import org.omg.oti.magicdraw.MagicDrawUMLUtil
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 import com.nomagic.magicdraw.core.Application
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 

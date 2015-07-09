@@ -40,142 +40,157 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts
 
 import java.awt.event.ActionEvent
 
-import scala.collection.JavaConversions.asJavaCollection
-import scala.language.implicitConversions
-import scala.language.postfixOps
-import scala.util.Success
-import scala.util.Try
-
 import com.nomagic.magicdraw.core.Project
 import com.nomagic.magicdraw.openapi.uml.SessionManager
-import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement
-import com.nomagic.magicdraw.uml.symbols.PresentationElement
+import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
 import com.nomagic.magicdraw.uml.symbols.shapes.InstanceSpecificationView
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.InstanceSpecification
-
-import org.omg.oti.api._
-import org.omg.oti.magicdraw._
-
-import gov.nasa.jpl.dynamicScripts._
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, InstanceSpecification}
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes._
+import gov.nasa.jpl.dynamicScripts._
 import gov.nasa.jpl.dynamicScripts.magicdraw._
 import gov.nasa.jpl.dynamicScripts.magicdraw.actions._
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
+import org.omg.oti.magicdraw.uml.read._
+import org.omg.oti.uml.read.api._
+
+import scala.collection.JavaConversions.asJavaCollection
+import scala.language.{implicitConversions, postfixOps}
+import scala.util.{Success, Try}
 
 /**
  * @author Nicolas.F.Rouquette@jpl.nasa.gov
  */
 object invokeDiagramContextMenuActionForSelection {
 
-  def doit(
-    p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: InstanceSpecificationView,
-    triggerElement: InstanceSpecification,
-    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
+  def doit
+  (p: Project,
+   ev: ActionEvent,
+   script: DynamicScriptsTypes.DiagramContextMenuAction,
+   dpe: DiagramPresentationElement,
+   triggerView: InstanceSpecificationView,
+   triggerElement: InstanceSpecification,
+   selection: java.util.Collection[PresentationElement])
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
+    implicit val umlUtil = MagicDrawUMLUtil(p)
     import umlUtil._
 
-    val dsInstance = umlInstanceSpecification( triggerElement )
+    val otiV = OTIMagicDrawValidation(p)
+
+    val dsInstance = umlInstanceSpecification(triggerElement)
     for {
       comment <- dsInstance.ownedComment
       commentBody <- comment.body
       if commentBody == "selection"
-      classNames <- dsInstance.getValuesOfFeatureSlot( "className" )
-      methodNames <- dsInstance.getValuesOfFeatureSlot( "methodName" )
-    } ( classNames.toList, methodNames.toList ) match {
-      case ( List( c: UMLLiteralString[Uml] ), List( m: UMLLiteralString[Uml] ) ) =>
-        ( c.value, m.value ) match {
-          case ( Some( className ), Some( methodName ) ) =>
+      classNames <- dsInstance.getValuesOfFeatureSlot("className")
+      methodNames <- dsInstance.getValuesOfFeatureSlot("methodName")
+    } (classNames.toList, methodNames.toList) match {
+      case (List(c: UMLLiteralString[Uml]), List(m: UMLLiteralString[Uml])) =>
+        (c.value, m.value) match {
+          case (Some(className), Some(methodName)) =>
             val invokeTriggerElement = comment.annotatedElement.head
-            val invokeTriggerView = dpe.findPresentationElement( umlMagicDrawUMLElement(invokeTriggerElement).getMagicDrawElement, null )
+            val invokeTriggerView =
+              dpe.findPresentationElement(umlMagicDrawUMLElement(invokeTriggerElement).getMagicDrawElement, null)
             val peSelection = for {
               e <- comment.annotatedElement
-              pe = dpe.findPresentationElement( umlMagicDrawUMLElement(e).getMagicDrawElement, null )
+              pe = dpe.findPresentationElement(umlMagicDrawUMLElement(e).getMagicDrawElement, null)
             } yield pe
 
             return invoke(
               p, ev, triggerElement,
               className, methodName,
-              dpe, invokeTriggerView, umlMagicDrawUMLElement(invokeTriggerElement).getMagicDrawElement, peSelection )
-          case ( _, _ ) =>
+              dpe, invokeTriggerView, umlMagicDrawUMLElement(invokeTriggerElement).getMagicDrawElement, peSelection)
+          case (_, _) =>
             ()
         }
-      case ( _, _ ) =>
+      case (_, _) =>
         ()
     }
 
-    makeMDIllegalArgumentExceptionValidation(
-      p,
-      s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
-      Map( triggerElement -> Tuple2( "Check the instance specification details", List() ) ),
-      "*::MagicDrawOTIValidation",
-      "*::UnresolvedCrossReference" )
+    for {
+      vInfo <- otiV.constructValidationInfo(
+        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+        Some("Check the instance specification details"),
+        Nil)
+      result <- otiV.makeMDIllegalArgumentExceptionValidation(
+        s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
+        Map(triggerElement -> List(vInfo)))
+    } yield result
+
   }
 
-  def invoke(
-    p: Project,
-    ev: ActionEvent,
-    invocation: InstanceSpecification,
-    className: String, methodName: String,
-    dpe: DiagramPresentationElement,
-    invokeTriggerView: PresentationElement,
-    invokeTriggerElement: Element,
-    selection: Iterable[PresentationElement] )( implicit umlUtil: MagicDrawUMLUtil ): Try[Option[MagicDrawValidationDataResults]] = {
+  def invoke
+  (p: Project,
+   ev: ActionEvent,
+   invocation: InstanceSpecification,
+   className: String, methodName: String,
+   dpe: DiagramPresentationElement,
+   invokeTriggerView: PresentationElement,
+   invokeTriggerElement: Element,
+   selection: Iterable[PresentationElement])
+  (implicit umlUtil: MagicDrawUMLUtil)
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     import umlUtil._
 
+    val otiV = OTIMagicDrawValidation(p)
+
     val dsPlugin = DynamicScriptsPlugin.getInstance
     val actions = dsPlugin.getRelevantMetaclassActions(
-      invokeTriggerElement.mofMetaclassName,
-      {
-        case d: DiagramContextMenuAction =>
-          d.className.jname == className && d.methodName.sname == methodName
-        case _ =>
-          false
-      } )
+    invokeTriggerElement.mofMetaclassName, {
+      case d: DiagramContextMenuAction =>
+        d.className.jname == className && d.methodName.sname == methodName
+      case _ =>
+        false
+    })
 
-    if ( actions.size != 1 )
-      makeMDIllegalArgumentExceptionValidation(
-        p,
-        s"*** Ambiguous invocation; there are ${actions.size} relevant dynamic script actions matching the class/method name criteria ***",
-        Map( invocation -> Tuple2( "Check the instance specification details", List() ) ),
-        "*::MagicDrawOTIValidation",
-        "*::UnresolvedCrossReference" )
-
+    if (actions.size != 1) {
+      for {
+        vInfo <- otiV.constructValidationInfo(
+          otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+          Some("Check the instance specification details"),
+          Nil)
+        result <- otiV.makeMDIllegalArgumentExceptionValidation(
+          s"*** Ambiguous invocation; there are ${actions.size} relevant dynamic script actions matching the class/method name criteria ***",
+          Map(invocation -> List(vInfo)))
+      } yield result
+    }
     else {
       val scripts = actions.head._2
-      if ( scripts.size != 1 )
-        makeMDIllegalArgumentExceptionValidation(
-          p,
-          s"*** Ambiguous invocation; there are ${scripts.size} relevant dynamic script actions matching the class/method name criteria ***",
-          Map( invocation -> Tuple2( "Check the instance specification details", List() ) ),
-          "*::MagicDrawOTIValidation",
-          "*::UnresolvedCrossReference" )
-
+      if (scripts.size != 1) {
+        for {
+          vInfo <- otiV.constructValidationInfo(
+            otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+            Some("Check the instance specification details"),
+            Nil)
+          result <- otiV.makeMDIllegalArgumentExceptionValidation(
+            s"*** Ambiguous invocation; there are ${actions.size} relevant dynamic script actions matching the class/method name criteria ***",
+            Map(invocation -> List(vInfo)))
+        } yield result
+      }
       else scripts.head match {
         case d: DiagramContextMenuAction =>
           val action = DynamicDiagramContextMenuActionForTriggerAndSelection(
             p, dpe,
             invokeTriggerView, invokeTriggerElement, selection,
-            d, null, null )
+            d, null, null)
           val sm = SessionManager.getInstance
-          if ( sm.isSessionCreated(p) )
+          if (sm.isSessionCreated(p))
             sm.closeSession(p)
-            
-          action.actionPerformed( ev )
-          Success( None )
+
+          action.actionPerformed(ev)
+          Success(None)
 
         case d: DynamicActionScript =>
-          makeMDIllegalArgumentExceptionValidation(
-            p,
-            s"*** Invocation error: expected a DiagramContextMenuAction, got: ${d.prettyPrint( "  " )}",
-            Map( invocation -> Tuple2( "Check the instance specification details", List() ) ),
-            "*::MagicDrawOTIValidation",
-            "*::UnresolvedCrossReference" )
+          for {
+            vInfo <- otiV.constructValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+              Some("Check the instance specification details"),
+              Nil)
+            result <- otiV.makeMDIllegalArgumentExceptionValidation(
+              s"*** Invocation error: expected a DiagramContextMenuAction, got: ${d.prettyPrint("  ")}",
+              Map(invocation -> List(vInfo)))
+          } yield result
       }
     }
   }
