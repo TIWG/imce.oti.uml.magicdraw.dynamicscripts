@@ -43,6 +43,7 @@ import javax.swing.filechooser.FileFilter
 import javax.swing.{JFileChooser, SwingUtilities}
 
 import com.nomagic.magicdraw.core.{Application, ApplicationEnvironment, Project}
+import com.nomagic.magicdraw.ui.browser.BrowserTabTree
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.utils.MDLog
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
@@ -64,6 +65,9 @@ object MDAPI {
 
   def getApplicationInstallDir(): File =
     new File(ApplicationEnvironment.getInstallRoot)
+
+  def getProjectActiveBrowserTabTree( p: Project ): BrowserTabTree =
+    p.getBrowser.getActiveTree
 
   def getPackage(pv: PackageView) =
     Option.apply(pv.getPackage)

@@ -57,14 +57,14 @@ import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.read.operations._
 import org.omg.oti.magicdraw.uml.read._
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
-import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
+import gov.nasa.jpl.dynamicScripts.magicdraw.{ClassLoaderHelper, DynamicScriptsPlugin, MagicDrawValidationDataResults}
 import org.omg.oti.changeMigration.Metamodel
 import com.nomagic.magicdraw.core.ApplicationEnvironment
 import java.io.File
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.XMLResource
 import scala.util.Failure
-import com.nomagic.magicdraw.uml.UUIDRegistry
+import com.nomagic.magicdraw.uml.{ClassTypes, UUIDRegistry}
 import com.nomagic.magicdraw.core.utils.ChangeElementID
 import com.nomagic.task.RunnableWithProgress
 import com.nomagic.task.ProgressStatus
@@ -72,7 +72,9 @@ import com.nomagic.magicdraw.ui.MagicDrawProgressStatusRunner
 import com.nomagic.magicdraw.core.ProjectUtilitiesInternal
 import java.util.UUID
 import com.nomagic.ci.persistence.local.spi.localproject.LocalPrimaryProject
-import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes.MainToolbarMenuAction
+import gov.nasa.jpl.dynamicScripts._
+import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes._
+import gov.nasa.jpl.dynamicScripts.magicdraw.browser._
 import com.nomagic.magicdraw.core.project.ProjectsManager
 import javax.swing.JFileChooser
 import com.nomagic.magicdraw.actions.ActionsID
@@ -96,7 +98,7 @@ object nameTest {
 
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
-
+    val dsp = DynamicScriptsPlugin.getInstance()
     val selectedElements = getMDBrowserSelectedElements map { e => umlElement( e ) }
     selectedElements foreach { e =>
       val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
@@ -166,6 +168,33 @@ object nameTest {
         case ep: UMLPackage[Uml] =>
           System.out.println(s"package: ${ep.qualifiedName}; effective URI=${ep.getEffectiveURI}, URI=${ep.URI}")
         case _ => ()
+      }
+
+      val mName = ClassTypes.getShortName( mdE.getClassType() )
+
+      def dynamicScriptMenuFilter( das: DynamicActionScript ): Boolean =
+        das match {
+          case c: BrowserContextMenuAction =>
+            val available = ClassLoaderHelper.isDynamicActionScriptAvailable( c )
+            c.context match {
+              case cp: ProjectContext =>
+                if (cp.project.jname == "gov.nasa.jpl.magicdraw.omf.exporter") {
+                  System.out.println(c)
+                  System.out.println(s"avail? $available")
+                }
+            }
+            available
+          case _ =>
+            false
+        }
+
+      System.out.println(s"\n\n")
+      val mActions = dsp.getRelevantMetaclassActions( mName, dynamicScriptMenuFilter )
+      System.out.println(s"\n\nmActions: ${mActions.size}")
+      for {
+        mAction <- mActions
+      } {
+        System.out.println(mAction)
       }
     }
 
