@@ -1,41 +1,40 @@
 /*
  *
- *  License Terms
+ * License Terms
  *
- *  Copyright (c) 2014-2015, California Institute of Technology ("Caltech").
- *  U.S. Government sponsorship acknowledged.
+ * Copyright (c) 2014-2015, California Institute of Technology ("Caltech").
+ * U.S. Government sponsorship acknowledged.
  *
- *  All rights reserved.
+ * All rights reserved.
  *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions are
- *  met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
  *
+ * *   Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- *   *   Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
+ * *   Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
  *
- *   *   Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the
- *       distribution.
+ * *   Neither the name of Caltech nor its operating division, the Jet
+ *    Propulsion Laboratory, nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software
+ *    without specific prior written permission.
  *
- *   *   Neither the name of Caltech nor its operating division, the Jet
- *       Propulsion Laboratory, nor the names of its contributors may be
- *       used to endorse or promote products derived from this software
- *       without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- *  IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- *  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- *  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
- *  OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- *  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- *  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts
 
@@ -54,9 +53,9 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawValidationDataResults}
-import org.omg.oti.api._
-import org.omg.oti.canonicalXMI.{CatalogURIMapper, DocumentSet}
-import org.omg.oti.magicdraw.{MagicDrawUML, MagicDrawUMLUtil}
+import org.omg.oti.uml.read.api._
+import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, DocumentSet}
+import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.collection.JavaConversions.{asJavaCollection, collectionAsScalaIterable}
 import scala.language.{implicitConversions, postfixOps}
@@ -120,7 +119,7 @@ object exportPackageExtents2OTICanonicalXMI {
     import umlUtil._
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf ( { case p: Package => umlPackage( p ) } ) toSet;
+      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
 
     /**
      * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
@@ -146,14 +145,16 @@ object exportPackageExtents2OTICanonicalXMI {
     val defaultOMGCatalogFile =
       new File(
         new File(
-          ApplicationEnvironment.getInstallRoot ).toURI.resolve( "dynamicScripts/org.omg.oti/omgCatalog/omg.local.catalog.xml" ) )
+          ApplicationEnvironment.getInstallRoot ).
+          toURI.resolve( "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml" ) )
     val omgCatalog =
       if ( defaultOMGCatalogFile.exists() ) Seq( defaultOMGCatalogFile )
       else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).toSeq
 
     val defaultMDCatalogFile =
       new File(
-        new File( ApplicationEnvironment.getInstallRoot ).toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/md18Catalog/omg.magicdraw.catalog.xml" ) )
+        new File( ApplicationEnvironment.getInstallRoot ).
+          toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml" ) )
     val mdCatalog =
       if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile )
       else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).toSeq
@@ -199,7 +200,7 @@ object exportPackageExtents2OTICanonicalXMI {
     import umlUtil._
 
     val a = Application.getInstance()
-    val guiLog = a.getGUILog()
+    val guiLog = a.getGUILog
 
     progressStatus.setCurrent( 0 )
     progressStatus.setMax( 0 )
@@ -220,14 +221,14 @@ object exportPackageExtents2OTICanonicalXMI {
           else {
             guiLog.log( s"*** ${unresolved.size} unresolved cross-references ***" )
             val elementMessages = unresolved map { u =>
-              val mdXRef = u.externalReference.getMagicDrawElement
+              val mdXRef = umlMagicDrawUMLElement(u.externalReference).getMagicDrawElement
               val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0 ) {
-                def actionPerformed( ev: ActionEvent ): Unit = u.externalReference.selectInContainmentTreeRunnable.run
+                def actionPerformed( ev: ActionEvent ): Unit = umlMagicDrawUMLElement(u.externalReference).selectInContainmentTreeRunnable.run
               }
-              ( u.documentElement.getMagicDrawElement ->
-                ( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
-                  List( a ) ) )
-            } toMap;
+              umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
+                Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
+                  List( a ) )
+            } toMap
 
             Success( Some(
               MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
@@ -237,7 +238,7 @@ object exportPackageExtents2OTICanonicalXMI {
                 "*::UnresolvedCrossReference" ).validationDataResults ) )
           }
 
-          resolved.serialize( valueSpecificationTagConverter = DocumentSet.serializeValueSpecificationAsTagValue[Uml] _ ) match {
+          resolved.serialize match {
             case Success( _ ) =>
               progressStatus.increase()
               guiLog.log( s"Graph: ${resolved.g}" )

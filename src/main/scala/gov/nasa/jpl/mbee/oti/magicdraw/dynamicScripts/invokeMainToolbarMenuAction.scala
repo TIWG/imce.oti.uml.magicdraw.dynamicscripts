@@ -1,47 +1,48 @@
 /*
  *
- *  License Terms
+ * License Terms
  *
- *  Copyright (c) 2014-2015, California Institute of Technology ("Caltech").
- *  U.S. Government sponsorship acknowledged.
+ * Copyright (c) 2014-2015, California Institute of Technology ("Caltech").
+ * U.S. Government sponsorship acknowledged.
  *
- *  All rights reserved.
+ * All rights reserved.
  *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions are
- *  met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
  *
+ * *   Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- *   *   Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
+ * *   Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
  *
- *   *   Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the
- *       distribution.
+ * *   Neither the name of Caltech nor its operating division, the Jet
+ *    Propulsion Laboratory, nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software
+ *    without specific prior written permission.
  *
- *   *   Neither the name of Caltech nor its operating division, the Jet
- *       Propulsion Laboratory, nor the names of its contributors may be
- *       used to endorse or promote products derived from this software
- *       without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- *  IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- *  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- *  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
- *  OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- *  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- *  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts
 
 import java.awt.event.ActionEvent
 
-import scala.collection.JavaConversions.asJavaCollection
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
+
+import scala.collection.JavaConversions._
 import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.util.Success
@@ -55,8 +56,9 @@ import com.nomagic.magicdraw.uml.symbols.shapes.InstanceSpecificationView
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.InstanceSpecification
 
-import org.omg.oti.api._
-import org.omg.oti.magicdraw._
+import org.omg.oti.uml.read.api._
+import org.omg.oti.magicdraw.uml._
+import org.omg.oti.magicdraw.uml.read._
 
 import gov.nasa.jpl.dynamicScripts._
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes._
@@ -80,6 +82,8 @@ object invokeMainToolbarMenuAction {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
+    val otiV = OTIMagicDrawValidation(p)
+
     val dsInstance = umlInstanceSpecification( triggerElement )
     for {
       classNames <- dsInstance.getValuesOfFeatureSlot( "className" )
@@ -98,12 +102,16 @@ object invokeMainToolbarMenuAction {
         ()
     }
 
-    makeMDIllegalArgumentExceptionValidation(
-      p,
-      s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
-      Map( triggerElement -> ( "Check the instance specification details", List() ) ),
-      "*::MagicDrawOTIValidation",
-      "*::UnresolvedCrossReference" )
+    for {
+      vInfo <- otiV.constructValidationInfo(
+        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+        Some("Check the instance specification details"),
+        Nil)
+      result <- otiV.makeMDIllegalArgumentExceptionValidation(
+        s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
+        Map(triggerElement -> List(vInfo)))
+    } yield result
+
   }
 
   def invoke(
@@ -114,23 +122,28 @@ object invokeMainToolbarMenuAction {
 
     import umlUtil._
 
-    val dsPlugin = DynamicScriptsPlugin.getInstance
-    val reg: DynamicScriptsRegistry = dsPlugin.getDynamicScriptsRegistry
+    val otiV = OTIMagicDrawValidation(p)
+
+    val dsPlugin = DynamicScriptsPlugin.getInstance()
+    val reg: DynamicScriptsRegistry = dsPlugin.getDynamicScriptsRegistry()
 
     val scripts = for {
       ( _, menus ) <- reg.toolbarMenuPathActions
       menu <- menus
       script <- menu.scripts
-      if ( script.className.jname == className && script.methodName.sname == methodName )
+      if script.className.jname == className && script.methodName.sname == methodName
     } yield script
 
     if ( scripts.size != 1 )
-      makeMDIllegalArgumentExceptionValidation(
-        p,
-        s"*** Ambiguous invocation; there are ${scripts.size} relevant dynamic script actions matching the class/method name criteria ***",
-        Map( invocation -> ( "Check the instance specification details", List() ) ),
-        "*::MagicDrawOTIValidation",
-        "*::UnresolvedCrossReference" )
+      for {
+        vInfo <- otiV.constructValidationInfo(
+          otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+          Some("Check the instance specification details"),
+          Nil)
+        result <- otiV.makeMDIllegalArgumentExceptionValidation(
+          s"*** Ambiguous invocation; there are ${scripts.size} relevant dynamic script actions matching the class/method name criteria ***",
+          Map(invocation -> List(vInfo)))
+      } yield result
 
     else {
       val script = scripts.head

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="jpl-omg-oti-magicdraw-adapter" basedir=".">
+<project name="jpl.omg.oti.magicdraw.dynamicscripts" basedir=".">
 
     <property name="memorySize" 		value="-Xmx3076M"/>
     <property name="maxPermGenSize"	value="-XX:MaxPermSize=1024M" />
@@ -26,7 +26,7 @@
         <fail/>
     </target>
 
-    <target name="all.ok" if="all.precondition.scala" depends="extract,zip,install,bundle">
+    <target name="all.ok" if="all.precondition.scala" depends="publish,zip,install,bundle">
         <save.script.properties/>
     </target>
 
@@ -69,14 +69,16 @@
                 scripts.dir="${scripts.dir}"
                 scripts.name="${scripts.name}">
             <source-includes>
+                <exclude name="dependencies"/>
                 <include name=".classpath"/>
-                <include name="*.sbt"/>
-                <include name="oti.dynamicScripts"/>
+                <include name="**/*.md"/>
+                <include name="**/*.sbt"/>
+                <include name="*.dynamicScripts"/>
                 <include name="project/build.properties"/>
                 <include name="project/*.scala"/>
                 <include name="project/*.sbt"/>
                 <include name="src/**/*.scala"/>
-                <include name="md18Catalog/*"/>
+                <include name="resources/**/*"/>
             </source-includes>
         </md.scripts.copyTo.root>
 
@@ -86,35 +88,8 @@
                 scripts.version="${scripts.version}"/>
 
     </target>
-    
-	<macrodef name="copyProjectLibsToDynamicScriptsLibs">
-		<attribute name="fromDir" />
-		<attribute name="toDir" />
-		<sequential>
-			<mkdir dir="root/dynamicScripts/${scripts.name}/lib/@{toDir}" />
-			<copy todir="root/dynamicScripts/${scripts.name}/lib/@{toDir}" verbose="true" preservelastmodified="true">
-				<fileset dir="@{fromDir}">
-					<include name="*" />
-				</fileset>
-			</copy>
 
-			<mkdir dir="root/dynamicScripts/${scripts.name}/lib.srcs/@{toDir}" />
-			<copy todir="root/dynamicScripts/${scripts.name}/lib.srcs/@{toDir}" verbose="true" preservelastmodified="true">
-				<fileset dir="@{fromDir}.srcs">
-					<include name="*" />
-				</fileset>
-			</copy>
-
-			<mkdir dir="root/dynamicScripts/${scripts.name}/lib.javadoc/@{toDir}" />
-			<copy todir="root/dynamicScripts/${scripts.name}/lib.javadoc/@{toDir}" verbose="true" preservelastmodified="true">
-				<fileset dir="@{fromDir}.javadoc">
-					<include name="*" />
-				</fileset>
-			</copy>
-		</sequential>
-	</macrodef>
-
-    <target name="extract">
+    <target name="publish">
         <echoproperties prefix="env"/>
         <exec executable="${env.JENKINS_HOME}/tools/SBT/sbt"
               failifexecutionfails="true"
@@ -127,15 +102,8 @@
             <arg value="-DMD_INSTALL_DIR=${md.install.dir}"/>
             <arg value="-batch"/>
             <arg value="-no-colors"/>
-            <arg value="extractArchives"/>
+            <arg value="copyPublishedArtifactLibraries"/>
         </exec>
-	
-	<copyProjectLibsToDynamicScriptsLibs fromDir="jpl-mbee-common-owlapi-libraries/lib" toDir="owlapi-libs" />
-	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-change-migration/lib" toDir="oti-change-migration" />
-	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-core/lib" toDir="oti-core" />
-	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-magicdraw/lib" toDir="oti-magicdraw" />
-	<copyProjectLibsToDynamicScriptsLibs fromDir="oti-trees/lib" toDir="oti-trees" />
-
     </target>
 
     <target name="install">
