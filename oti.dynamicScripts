@@ -83,6 +83,14 @@ dynamicScripts(
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
           )
+          DiagramContextMenuAction(
+              name: 'Apply Browser-selected Stereotype to Diagram Selection (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.modeling.ApplySelectedStereotype
+              method: doit
+          )
       })
       
 dynamicScripts(
@@ -132,6 +140,20 @@ dynamicScripts(
               dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/o
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectAssociations
+              method: doit
+          )
+    })
+
+dynamicScripts(
+      name='OMG Tool Infrastructure'
+      [ m: AssociationClass ]
+      scripts {
+          DiagramContextMenuAction(
+              name: 'Apply Browser-selected Stereotype to Diagram Selection (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.modeling.ApplySelectedStereotype
               method: doit
           )
     })
@@ -677,6 +699,22 @@ dynamicScripts(
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.inspectCompositeStructure
               method: doit
           )
+          DiagramContextMenuAction(
+              name: 'Apply Browser-selected Stereotype to Diagram Selection (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.modeling.ApplySelectedStereotype
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Make Diagram selection owned by single Browser-selection (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.modeling.ChangeOwner
+              method: doit
+          )
 })
 
 
@@ -771,6 +809,14 @@ dynamicScripts(
               dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
               access: r/w
               class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.overrideIdentity
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Apply Browser-selected Stereotype to Diagram Selection (r/w)'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.magicdraw }
+              access: r/w
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.modeling.ApplySelectedStereotype
               method: doit
           )
 })
