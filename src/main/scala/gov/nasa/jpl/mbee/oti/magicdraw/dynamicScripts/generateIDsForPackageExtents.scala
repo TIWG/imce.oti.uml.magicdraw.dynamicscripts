@@ -66,6 +66,7 @@ import org.omg.oti.uml.canonicalXMI._
 import org.omg.oti.uml.read.api._
 
 import scala.collection.JavaConversions.{asJavaCollection, collectionAsScalaIterable, mapAsJavaMap}
+import scala.reflect.runtime.universe._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 
@@ -230,7 +231,7 @@ object generateIDsForPackageExtents {
    builtInURIMapper: CatalogURIMapper,
    ignoreCrossReferencedElementFilter: Function1[UMLElement[MagicDrawUML], Boolean],
    unresolvedElementMapper: Function1[UMLElement[MagicDrawUML], Option[UMLElement[MagicDrawUML]]])
-  (implicit umlUtil: MagicDrawUMLUtil)
+  (implicit umlUtil: MagicDrawUMLUtil, tag: TypeTag[IllegalElementException[MagicDrawUML, UMLElement[MagicDrawUML]]])
   : Try[Option[MagicDrawValidationDataResults]] = {
     import umlUtil._
 
@@ -285,6 +286,7 @@ object generateIDsForPackageExtents {
         } {
           ok match {
             case Failure(f) =>
+
               f match {
                 case t: IllegalElementException[MagicDrawUML, _] =>
                   val elementMessages = t.element map { u =>
