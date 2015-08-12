@@ -159,8 +159,8 @@ object exportPackageExtents2OTICanonicalXMI {
       if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile )
       else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).toSeq
 
-    ( CatalogURIMapper.createCatalogURIMapper( omgCatalog ),
-      CatalogURIMapper.createCatalogURIMapper( mdCatalog ) ) match {
+    ( CatalogURIMapper.createMapperFromCatalogFiles( omgCatalog ),
+      CatalogURIMapper.createMapperFromCatalogFiles( mdCatalog ) ) match {
         case ( Failure( t ), _ ) => Failure( t )
         case ( _, Failure( t ) ) => Failure( t )
         case ( Success( documentURIMapper ), Success( builtInURIMapper ) ) =>
@@ -220,15 +220,18 @@ object exportPackageExtents2OTICanonicalXMI {
           val result = if ( unresolved.isEmpty ) Success( None )
           else {
             guiLog.log( s"*** ${unresolved.size} unresolved cross-references ***" )
-            val elementMessages = unresolved map { u =>
+            val elementMessages = unresolved.map { u =>
               val mdXRef = umlMagicDrawUMLElement(u.externalReference).getMagicDrawElement
-              val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0 ) {
-                def actionPerformed( ev: ActionEvent ): Unit = umlMagicDrawUMLElement(u.externalReference).selectInContainmentTreeRunnable.run
+              val a = new NMAction(s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${
+                mdXRef.getHumanName
+              }", 0) {
+                def actionPerformed(ev: ActionEvent): Unit = umlMagicDrawUMLElement(u.externalReference)
+                                                             .selectInContainmentTreeRunnable.run
               }
               umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
-                Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
-                  List( a ) )
-            } toMap
+              Tuple2(s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
+                     List(a))
+                                                 }.toMap
 
             Success( Some(
               MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
