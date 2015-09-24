@@ -237,11 +237,11 @@ object exportPackageExtents2OTICanonicalXMI {
     .flatMap { case (( resolved, unresolved )) =>
 
           val result = if ( unresolved.isEmpty ) Success( None )
-          else resolved match {
+          else resolved.ds match {
 
-            case mdResolvedDS: MagicDrawDocumentSet =>
+            case mdDS: MagicDrawDocumentSet =>
 
-              implicit val mdIdGenerator = MagicDrawIDGenerator(resolved.ds)
+              implicit val mdIdGenerator = MagicDrawIDGenerator(mdDS)
 
               guiLog.log(s"*** ${
                 unresolved.size
