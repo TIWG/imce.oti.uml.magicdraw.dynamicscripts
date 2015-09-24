@@ -54,6 +54,8 @@ import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawValidationDataResults}
 import org.omg.oti.uml.read.api._
+import scala.collection.immutable._
+import scala.collection.Iterator
 import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, DocumentSet}
 import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
@@ -119,7 +121,10 @@ object exportPackageExtents2OTICanonicalXMI {
     import umlUtil._
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+      .toIterable
+      .selectByKindOf { case p: Package => umlPackage( p ) }
+      .to[Set]
 
     /**
      * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
@@ -136,7 +141,9 @@ object exportPackageExtents2OTICanonicalXMI {
         false
     }
 
-    def unresolvedElementMapper( e: UMLElement[Uml] ): Option[UMLElement[Uml]] = e.id match {
+    def unresolvedElementMapper( e: UMLElement[Uml] ): Option[UMLElement[Uml]] =
+      e.toolSpecific_id
+      .fold[Option[UMLElement[Uml]]](None) {
       case "_UML_" => Some( MDBuiltInUML.scope )
       case "_StandardProfile_" => Some( MDBuiltInStandardProfile.scope )
       case _ => None
@@ -149,7 +156,7 @@ object exportPackageExtents2OTICanonicalXMI {
           toURI.resolve( "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml" ) )
     val omgCatalog =
       if ( defaultOMGCatalogFile.exists() ) Seq( defaultOMGCatalogFile )
-      else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).toSeq
+      else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).to[Seq]
 
     val defaultMDCatalogFile =
       new File(
@@ -157,10 +164,10 @@ object exportPackageExtents2OTICanonicalXMI {
           toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml" ) )
     val mdCatalog =
       if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile )
-      else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).toSeq
+      else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).to[Seq]
 
-    ( CatalogURIMapper.createMapperFromCatalogFiles( omgCatalog ),
-      CatalogURIMapper.createMapperFromCatalogFiles( mdCatalog ) ) match {
+    ( CatalogURIMapper.createMapperFromCatalogFiles( omgCatalog.to[Seq] ),
+      CatalogURIMapper.createMapperFromCatalogFiles( mdCatalog.to[Seq] ) ) match {
         case ( Failure( t ), _ ) => Failure( t )
         case ( _, Failure( t ) ) => Failure( t )
         case ( Success( documentURIMapper ), Success( builtInURIMapper ) ) =>
