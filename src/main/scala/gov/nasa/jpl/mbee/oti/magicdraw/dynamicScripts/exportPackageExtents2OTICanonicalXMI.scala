@@ -56,8 +56,10 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawVal
 import org.omg.oti.uml.read.api._
 import scala.collection.immutable._
 import scala.collection.Iterator
-import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, DocumentSet}
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import org.omg.oti.uml.xmi._
+import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, DocumentEdge, DocumentSet}
+import org.omg.oti.magicdraw.uml.read._
 
 import scala.collection.JavaConversions.{asJavaCollection, collectionAsScalaIterable}
 import scala.language.{implicitConversions, postfixOps}
@@ -196,14 +198,16 @@ object exportPackageExtents2OTICanonicalXMI {
       }
   }
 
-  def exportPackageExtents(
-    progressStatus: ProgressStatus,
+  def exportPackageExtents
+  ( progressStatus: ProgressStatus,
     p: Project,
     specificationRootPackages: Set[UMLPackage[MagicDrawUML]],
     documentURIMapper: CatalogURIMapper,
     builtInURIMapper: CatalogURIMapper,
     ignoreCrossReferencedElementFilter: Function1[UMLElement[MagicDrawUML], Boolean],
-    unresolvedElementMapper: Function1[UMLElement[MagicDrawUML], Option[UMLElement[MagicDrawUML]]] )( implicit umlUtil: MagicDrawUMLUtil ): Try[Option[MagicDrawValidationDataResults]] = {
+    unresolvedElementMapper: Function1[UMLElement[MagicDrawUML], Option[UMLElement[MagicDrawUML]]] )
+  ( implicit umlUtil: MagicDrawUMLUtil )
+  : Try[Option[MagicDrawValidationDataResults]] = {
     import umlUtil._
 
     val a = Application.getInstance()
@@ -214,49 +218,82 @@ object exportPackageExtents2OTICanonicalXMI {
     progressStatus.setMax( 1 )
     progressStatus.setLocked( true )
 
-    DocumentSet.constructDocumentSetCrossReferenceGraph(
+    val mdBuiltIns: Set[BuiltInDocument[Uml]] =
+      Set( MDBuiltInPrimitiveTypes, MDBuiltInUML, MDBuiltInStandardProfile )
+
+    val mdBuiltInEdges: Set[DocumentEdge[Document[Uml]]] =
+      Set( MDBuiltInUML2PrimitiveTypes, MDBuiltInStandardProfile2UML )
+
+    implicit val mdDocOps = new MagicDrawDocumentOps()
+
+    DocumentSet.constructDocumentSetCrossReferenceGraph[Uml](
       specificationRootPackages,
       documentURIMapper, builtInURIMapper,
-      builtInDocuments = Set( MDBuiltInPrimitiveTypes, MDBuiltInUML, MDBuiltInStandardProfile ),
-      builtInDocumentEdges = Set( MDBuiltInUML2PrimitiveTypes, MDBuiltInStandardProfile2UML ),
+      builtInDocuments = mdBuiltIns,
+      builtInDocumentEdges = mdBuiltInEdges,
       ignoreCrossReferencedElementFilter,
-      unresolvedElementMapper ) match {
-        case Failure( t ) => Failure( t )
-        case Success( ( resolved, unresolved ) ) =>
+      unresolvedElementMapper,
+      aggregate = MagicDrawDocumentSetAggregate() )
+    .flatMap { case (( resolved, unresolved )) =>
 
           val result = if ( unresolved.isEmpty ) Success( None )
-          else {
-            guiLog.log( s"*** ${unresolved.size} unresolved cross-references ***" )
-            val elementMessages = unresolved.map { u =>
-              val mdXRef = umlMagicDrawUMLElement(u.externalReference).getMagicDrawElement
-              val a = new NMAction(s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${
-                mdXRef.getHumanName
-              }", 0) {
-                def actionPerformed(ev: ActionEvent): Unit = umlMagicDrawUMLElement(u.externalReference)
-                                                             .selectInContainmentTreeRunnable.run
+          else resolved match {
+
+            case mdResolvedDS: MagicDrawDocumentSet =>
+
+              implicit val mdIdGenerator = MagicDrawIDGenerator(resolved.ds)
+
+              guiLog.log(s"*** ${
+                unresolved.size
+              } unresolved cross-references ***")
+
+              val elementMessages =
+                unresolved.map {
+                u =>
+                  val mdXRef = umlMagicDrawUMLElement(u.externalReference).getMagicDrawElement
+                  val a = new NMAction(s"Select${
+                    u.hashCode
+                  }", s"Select ${
+                    mdXRef.getHumanType
+                  }: ${
+                    mdXRef.getHumanName
+                  }", 0) {
+                    def actionPerformed(ev: ActionEvent): Unit = umlMagicDrawUMLElement(u.externalReference)
+                      .selectInContainmentTreeRunnable.run
+                  }
+                  umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
+                    Tuple2(s"cross-reference to: ${
+                      mdXRef.getHumanType
+                    }: ${
+                      mdXRef.getHumanName
+                    } (ID=${
+                      mdXRef.getID
+                    })",
+                      List(a))
+              }.toMap
+
+              Success(Some(
+                MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
+                  p, s"*** ${
+                    unresolved.size
+                  } unresolved cross-references ***",
+                  elementMessages,
+                  "*::MagicDrawOTIValidation",
+                  "*::UnresolvedCrossReference").validationDataResults))
+
+
+              resolved.serialize match {
+                case Success(_) =>
+                  progressStatus.increase()
+                  guiLog.log(s"Graph: ${
+                    resolved.g
+                  }")
+                  guiLog.log(s"Done...")
+                  result
+
+                case Failure(t) =>
+                  Failure(t)
               }
-              umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
-              Tuple2(s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
-                     List(a))
-                                                 }.toMap
-
-            Success( Some(
-              MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
-                p, s"*** ${unresolved.size} unresolved cross-references ***",
-                elementMessages,
-                "*::MagicDrawOTIValidation",
-                "*::UnresolvedCrossReference" ).validationDataResults ) )
-          }
-
-          resolved.serialize match {
-            case Success( _ ) =>
-              progressStatus.increase()
-              guiLog.log( s"Graph: ${resolved.g}" )
-              guiLog.log( s"Done..." )
-              result
-
-            case Failure( t ) =>
-              Failure( t )
           }
       }
   }
