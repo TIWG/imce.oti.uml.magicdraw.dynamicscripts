@@ -5,14 +5,15 @@ import sbt._
 
 lazy val copyPublishedArtifactLibraries = TaskKey[Unit]("copy-published-artifact-libraries", "Copies published artifact libraries")
 
-lazy val jpl_omg_oti_magicdraw_dynamicscripts = Project("jpl-omg-oti-magicdraw-dynamicscripts", file(".")).
-  settings(GitVersioning.buildSettings). // in principle, unnecessary; in practice: doesn't work without this
-  enablePlugins(MBEEGitPlugin, MBEEMagicDrawEclipseClasspathPlugin).
-  settings(MBEEPlugin.mbeeDynamicScriptsProjectResourceSettings(Some("jpl.omg.oti.magicdraw.dynamicscripts"))).
-  settings(MBEEPlugin.mbeeAspectJSettings).
-  settings(
+lazy val jpl_omg_oti_magicdraw_dynamicscripts = Project("jpl-omg-oti-magicdraw-dynamicscripts", file("."))
+  .settings(GitVersioning.buildSettings) // in principle, unnecessary; in practice: doesn't work without this
+  .enablePlugins(MBEEGitPlugin, MBEEMagicDrawEclipseClasspathPlugin)
+  .settings(MBEEPlugin.mbeeDynamicScriptsProjectResourceSettings(Some("jpl.omg.oti.magicdraw.dynamicscripts")))
+  .settings(MBEEPlugin.mbeeAspectJSettings).
+  .settings(
     MBEEKeys.mbeeLicenseYearOrRange := "2014-2015",
     MBEEKeys.mbeeOrganizationInfo := MBEEPlugin.MBEEOrganizations.imce,
+    MBEEKeys.targetJDK := MBEEKeys.jdk17.value,
 
     classDirectory in Compile := baseDirectory.value / "bin",
 
