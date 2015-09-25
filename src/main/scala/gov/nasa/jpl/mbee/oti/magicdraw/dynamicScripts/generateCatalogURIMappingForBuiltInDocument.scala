@@ -121,21 +121,20 @@ object generateCatalogURIMappingForBuiltInDocument {
           case "http://www.omg.org/spec/UML/20131001/StandardProfile" => 
             (pURI, MDBuiltInStandardProfile.documentURL.toString)
           case x => 
-              return Failure( new IllegalArgumentException( s"Unrecognized package with built-in URI: ${x}" ) )
+              return Failure( new IllegalArgumentException( s"Unrecognized package with built-in URI: $x" ) )
         }
     }
 
     val rewrites =
-      pkg.ownedType flatMap { t =>
-      t match {
+      pkg.ownedType.flatMap { 
         case pt: UMLPrimitiveType[Uml] => 
-          Iterable( s"""<uri uri="${otiURI}#${pt.name.get}" name="${otiURI}#${pt.id}"/>""" )
+          Iterable( s"""<uri uri="$otiURI#${pt.name.get}" name="$otiURI#${pt.toolSpecific_id}"/>""" )
         case s: UMLStereotype[Uml] => 
-          Iterable( s"""<uri uri="${otiURI}#${s.name.get}" name="${otiURI}#${s.id}"/>""" ) ++          
+          Iterable( s"""<uri uri="$otiURI#${s.name.get}" name="$otiURI#${s.toolSpecific_id}"/>""" ) ++          
           (for { 
             baseProperty <- s.baseMetaPropertiesExceptRedefined
             baseID = s"${s.name.get}_${baseProperty.name.get}"
-          } yield s"""<uri uri="${otiURI}#${baseID}" name="${otiURI}#${baseProperty.id}"/>""")
+          } yield s"""<uri uri="$otiURI#$baseID" name="$otiURI#${baseProperty.toolSpecific_id}"/>""")
           
         case ex: UMLExtension[Uml] => 
           val ee = ex.ownedEnd.head
@@ -144,20 +143,18 @@ object generateCatalogURIMappingForBuiltInDocument {
           val oti_extensionID = base+"_"+end
           val oti_endID = oti_extensionID+"-extension_"+end
           Iterable( 
-              s"""<uri uri="${otiURI}#${oti_extensionID}" name="${otiURI}#${ex.id}"/>""",
-              s"""<uri uri="${otiURI}#${oti_endID}" name="${otiURI}#${ee.id}"/>""" 
+              s"""<uri uri="$otiURI#$oti_extensionID" name="$otiURI#${ex.toolSpecific_id}"/>""",
+              s"""<uri uri="$otiURI#$oti_endID" name="$otiURI#${ee.toolSpecific_id}"/>""" 
               )
           
         case c: UMLClass[Uml] => 
-          Iterable( s"""<uri uri="${otiURI}#${c.name.get}" name="${otiURI}#${c.id}"/>""" )
+          Iterable( s"""<uri uri="$otiURI#${c.name.get}" name="$otiURI#${c.toolSpecific_id}"/>""" )
           
         case _ =>
           Iterable()
       }
 
-    }
-
-    val builtInRewrites = Iterable( s"""<uri uri="${otiURI}#_0" name="${otiURI}#${pkg.id}"/>""" ) ++ rewrites
+    val builtInRewrites = Iterable( s"""<uri uri="$otiURI#_0" name="$otiURI#${pkg.toolSpecific_id}"/>""" ) ++ rewrites
           
     builtInRewrites.foreach { rewrite => System.out.println(rewrite) }
     

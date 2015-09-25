@@ -53,9 +53,10 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawValidationDataResults}
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils._
+
 import org.omg.oti.uml.read.api._
 import scala.collection.immutable._
-import scala.collection.Iterator
 import org.omg.oti.uml.xmi._
 import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, DocumentEdge, DocumentSet}
@@ -116,7 +117,7 @@ object exportPackageExtents2OTICanonicalXMI {
     selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] = {
 
     val a = Application.getInstance()
-    val guiLog = a.getGUILog()
+    val guiLog = a.getGUILog
     guiLog.clearLog()
 
     implicit val umlUtil = MagicDrawUMLUtil( p )
@@ -128,51 +129,9 @@ object exportPackageExtents2OTICanonicalXMI {
       .selectByKindOf { case p: Package => umlPackage( p ) }
       .to[Set]
 
-    /**
-     * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
-     */
-    def ignoreCrossReferencedElementFilter( e: UMLElement[Uml] ): Boolean = e match {
-
-      case ne: UMLNamedElement[Uml] =>
-        val neQName = ne.qualifiedName.get
-          DynamicScriptsPlugin.wildCardMatch( neQName, "UML Standard Profile::MagicDraw Profile::*" ) ||
-          DynamicScriptsPlugin.wildCardMatch( neQName, "*OMG*" ) ||
-          DynamicScriptsPlugin.wildCardMatch( neQName, "Specifications::SysML.profileAnnotations::*" )
-
-      case e =>
-        false
-    }
-
-    def unresolvedElementMapper( e: UMLElement[Uml] ): Option[UMLElement[Uml]] =
-      e.toolSpecific_id
-      .fold[Option[UMLElement[Uml]]](None) {
-      case "_UML_" => Some( MDBuiltInUML.scope )
-      case "_StandardProfile_" => Some( MDBuiltInStandardProfile.scope )
-      case _ => None
-    }
-    
-    val defaultOMGCatalogFile =
-      new File(
-        new File(
-          ApplicationEnvironment.getInstallRoot ).
-          toURI.resolve( "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml" ) )
-    val omgCatalog =
-      if ( defaultOMGCatalogFile.exists() ) Seq( defaultOMGCatalogFile )
-      else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).to[Seq]
-
-    val defaultMDCatalogFile =
-      new File(
-        new File( ApplicationEnvironment.getInstallRoot ).
-          toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml" ) )
-    val mdCatalog =
-      if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile )
-      else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).to[Seq]
-
-    ( CatalogURIMapper.createMapperFromCatalogFiles( omgCatalog.to[Seq] ),
-      CatalogURIMapper.createMapperFromCatalogFiles( mdCatalog.to[Seq] ) ) match {
-        case ( Failure( t ), _ ) => Failure( t )
-        case ( _, Failure( t ) ) => Failure( t )
-        case ( Success( documentURIMapper ), Success( builtInURIMapper ) ) =>
+    MDAPI
+    .getMDCatalogs()
+    .flatMap { case (documentURIMapper, builtInURIMapper) =>
 
           var result: Option[Try[Option[MagicDrawValidationDataResults]]] = None
           val runnable = new RunnableWithProgress() {
@@ -183,8 +142,8 @@ object exportPackageExtents2OTICanonicalXMI {
                   progressStatus,
                   p, selectedPackages,
                   documentURIMapper, builtInURIMapper,
-                  ignoreCrossReferencedElementFilter,
-                  unresolvedElementMapper ) )
+                  ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
+                  unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil)) )
 
           }
 
@@ -236,12 +195,22 @@ object exportPackageExtents2OTICanonicalXMI {
       aggregate = MagicDrawDocumentSetAggregate() )
     .flatMap { case (( resolved, unresolved )) =>
 
-          val result = if ( unresolved.isEmpty ) Success( None )
-          else resolved.ds match {
+       implicit val mdIdGenerator: MagicDrawIDGenerator = MagicDrawIDGenerator(resolved)
+
+          if ( unresolved.isEmpty ) {
+            resolved.serialize.flatMap { _ =>
+              Try[Option[MagicDrawValidationDataResults]]({
+                progressStatus.increase()
+                guiLog.log(s"Graph: ${
+                  resolved.g
+                }")
+                guiLog.log(s"Done...")
+                None
+              })
+            }
+          } else resolved.ds match {
 
             case mdDS: MagicDrawDocumentSet =>
-
-              implicit val mdIdGenerator = MagicDrawIDGenerator(mdDS)
 
               guiLog.log(s"*** ${
                 unresolved.size
@@ -282,18 +251,6 @@ object exportPackageExtents2OTICanonicalXMI {
                   "*::UnresolvedCrossReference").validationDataResults))
 
 
-              resolved.serialize match {
-                case Success(_) =>
-                  progressStatus.increase()
-                  guiLog.log(s"Graph: ${
-                    resolved.g
-                  }")
-                  guiLog.log(s"Done...")
-                  result
-
-                case Failure(t) =>
-                  Failure(t)
-              }
           }
       }
   }

@@ -41,6 +41,8 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import javax.swing.JOptionPane
+import org.omg.oti.uml.xmi.IDGenerator
+
 import scala.collection.JavaConversions._
 import scala.language.postfixOps
 import scala.util.Failure
@@ -64,20 +66,24 @@ object ClassifierInspectorWidget {
 
   import ComputedDerivedWidgetHelper._
   
-  def general(
-    project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =     
+  def general
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    ek: MagicDrawElementKindDesignation, e: Element )
+  ( implicit idg: IDGenerator[MagicDrawUML])
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
       elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]]( 
           derived, e, 
-          (_.general), 
+          _.general,
           MagicDrawUMLUtil( project ) )
     
-  def generalClassifier(
-    project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =     
+  def generalClassifier
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    ek: MagicDrawElementKindDesignation, e: Element )
+  ( implicit idg: IDGenerator[MagicDrawUML])
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
       elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]]( 
           derived, e, 
-          (_.general_classifier), 
+          _.general_classifier,
           MagicDrawUMLUtil( project ) )
     
 }

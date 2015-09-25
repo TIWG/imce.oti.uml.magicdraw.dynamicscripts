@@ -47,15 +47,83 @@ import com.nomagic.magicdraw.ui.browser.BrowserTabTree
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.utils.MDLog
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
+import gov.nasa.jpl.dynamicScripts.magicdraw.DynamicScriptsPlugin
 import org.apache.log4j.Logger
+
+
+import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.magicdraw.uml.read._
+import org.omg.oti.uml.canonicalXMI.CatalogURIMapper
+import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.uml.read.api._
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.collection.JavaConversions._
+import scala.collection.immutable._
 import scala.language.postfixOps
 import scala.util._
 
 object MDAPI {
+
+
+  /**
+   * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
+   */
+  def ignoreCrossReferencedElementFilter( e: UMLElement[MagicDrawUML] ): Boolean = {
+    e match {
+      case ne: UMLNamedElement[MagicDrawUML] =>
+        ne.qualifiedName
+          .fold[Boolean](false) { neQName =>
+          DynamicScriptsPlugin.wildCardMatch(neQName, "UML Standard Profile::MagicDraw Profile::*") ||
+            DynamicScriptsPlugin.wildCardMatch(neQName, "*OMG*") ||
+            DynamicScriptsPlugin.wildCardMatch(neQName, "Specifications::SysML.profileAnnotations::*")
+        }
+
+      case e =>
+        false
+    }
+  }
+
+  def unresolvedElementMapper
+  (umlUtil: MagicDrawUMLUtil)
+  ( e: UMLElement[MagicDrawUML] )
+  : Option[UMLElement[MagicDrawUML]] =
+    e.toolSpecific_id.fold[Option[UMLElement[MagicDrawUML]]](None) {
+      case "_UML_" => Some( umlUtil.MDBuiltInUML.scope )
+      case "_StandardProfile_" => Some( umlUtil.MDBuiltInStandardProfile.scope )
+      case _ => None
+    }
+
+  def getMDCatalogs
+  (omgCatalogResourcePath: String = "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml",
+   mdCatalogResourcePath: String = "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml")
+  : Try[(CatalogURIMapper, CatalogURIMapper)] = {
+
+    val defaultOMGCatalogFile =
+      new File(
+        new File(
+          ApplicationEnvironment.getInstallRoot).
+          toURI.resolve(omgCatalogResourcePath))
+    val omgCatalog =
+      if (defaultOMGCatalogFile.exists()) Seq(defaultOMGCatalogFile)
+      else MagicDrawFileChooser.chooseCatalogFile("Select the OMG UML 2.5 *.catalog.xml file").to[Seq]
+
+    val defaultMDCatalogFile =
+      new File(
+        new File(ApplicationEnvironment.getInstallRoot).
+          toURI.resolve(mdCatalogResourcePath))
+    val mdCatalog =
+      if (defaultMDCatalogFile.exists()) Seq(defaultMDCatalogFile)
+      else MagicDrawFileChooser.chooseCatalogFile("Select the MagicDraw UML 2.5 *.catalog.xml file").to[Seq]
+
+    CatalogURIMapper.createMapperFromCatalogFiles(omgCatalog.to[Seq])
+    .flatMap { omgCatalogMapper =>
+      CatalogURIMapper.createMapperFromCatalogFiles(mdCatalog.to[Seq])
+        .flatMap { mdCatalogMapper =>
+        Success((omgCatalogMapper, mdCatalogMapper))
+      }
+    }
+
+  }
 
   def getMDPluginsLog(): Logger =
     MDLog.getPluginsLog()

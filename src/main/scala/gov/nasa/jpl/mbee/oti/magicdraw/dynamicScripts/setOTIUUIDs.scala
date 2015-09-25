@@ -132,7 +132,11 @@ object setOTIUUIDs {
 
         try {
 
-          val selectedPackages: Set[UMLPackage[Uml]] = selection.toIterator selectByKindOf ( { case p: Package => umlPackage( p ) } ) toSet
+          val selectedPackages: Set[UMLPackage[Uml]] =
+            selection
+            .toIterable
+            .selectByKindOf { case p: Package => umlPackage( p ) }
+            .to[Set]
 
           progressStatus.setCurrent( 0 )
           progressStatus.setMax( 0 )
@@ -146,9 +150,9 @@ object setOTIUUIDs {
             _ = progressStatus.setDescription( s"Using $uuidPrefix to prefix OTI XMI:IDs for '${pkg.name.get}'..." )
             _ = guiLog.log( s"Using $uuidPrefix to prefix OTI XMI:IDs for '${pkg.name.get}'..." )
             _ = System.out.println( s"Using $uuidPrefix to prefix OTI XMI:IDs for '${pkg.name.get}'..." )
-            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(pkg).getMagicDrawElement, s"$uuidPrefix.${pkg.id}" )
+            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(pkg).getMagicDrawElement, s"$uuidPrefix.${pkg.toolSpecific_id}" )
             e <- pkg.allOwnedElements
-            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(e).getMagicDrawElement, s"$uuidPrefix.${e.id}" )
+            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(e).getMagicDrawElement, s"$uuidPrefix.${e.toolSpecific_id}" )
           } ()
 
           guiLog.log( s"Done" )

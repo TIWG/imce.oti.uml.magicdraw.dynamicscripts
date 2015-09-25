@@ -100,7 +100,10 @@ object ApplySelectedStereotype {
     }
 
     val selectedElements =
-      selection.toIterator selectByKindOf { case pe: PresentationElement => umlElement( pe.getElement ) } toList
+      selection
+      .toIterable
+      .selectByKindOf { case pe: PresentationElement => umlElement( pe.getElement ) }
+      .to[List]
 
     selectedElements foreach { e =>
       val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement

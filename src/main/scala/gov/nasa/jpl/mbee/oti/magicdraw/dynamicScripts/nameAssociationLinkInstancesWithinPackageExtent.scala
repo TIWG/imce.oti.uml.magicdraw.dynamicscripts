@@ -98,21 +98,26 @@ object nameAssociationLinkInstancesWithinPackageExtent {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
     
-    val selectedAssociations = selection.toIterator selectByKindOf ( { case a: AssociationView => umlAssociation( a.getAssociation ) } ) toList;
+    val selectedAssociations = 
+      selection
+      .toIterable
+      .selectByKindOf { case a: AssociationView => umlAssociation( a.getAssociation ) } 
+      .to[List]
     
     selectedAssociations foreach ( nameAssociationLinkInstances( umlUtil, _ ) )
 
     Success( None )
   }
   
-  def doit(
-    p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.BrowserContextMenuAction,
-    tree: Tree,
-    node: Node,
-    top: Association,
-    selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] = {
+  def doit
+  (p: Project,
+   ev: ActionEvent,
+   script: DynamicScriptsTypes.BrowserContextMenuAction, 
+   tree: Tree,
+   node: Node,
+   top: Association,
+   selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog()
@@ -121,14 +126,19 @@ object nameAssociationLinkInstancesWithinPackageExtent {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    val selectedAssociations = selection.toIterator selectByKindOf ( { case a: Uml#Association => umlAssociation( a ) } )
+    val selectedAssociations = 
+      selection
+      .toIterable
+      .selectByKindOf { case a: Uml#Association => umlAssociation( a ) }
 
     selectedAssociations foreach ( nameAssociationLinkInstances( umlUtil, _ ) )
 
     Success( None )
   }
 
-  def nameAssociationLinkInstances( umlUtil: MagicDrawUMLUtil, a: UMLAssociation[MagicDrawUML] ): Unit = {
+  def nameAssociationLinkInstances
+  ( umlUtil: MagicDrawUMLUtil, a: UMLAssociation[MagicDrawUML] )
+  : Unit = {
     import umlUtil._
     val app = Application.getInstance()
     val guiLog = app.getGUILog()
@@ -147,11 +157,23 @@ object nameAssociationLinkInstancesWithinPackageExtent {
         val prefix = a.name.get + "("
         links foreach { link =>
           val slots = link.slot
-          val sourceSlot = slots.find( _.definingFeature == Some( sourceEnd ) ) getOrElse { throw new IllegalArgumentException( s"Broken Link ${a.name.get} from '${sourceEnd.name}' to '${targetEnd.name}'" ) }
+          val sourceSlot = 
+            slots
+            .find( _.definingFeature == Some( sourceEnd ) )
+            .getOrElse { 
+              throw new IllegalArgumentException( 
+                s"Broken Link ${a.name.get} from '${sourceEnd.name}' to '${targetEnd.name}'" ) 
+            }
           val sourceInstance = sourceSlot.value.head match {
             case iv: UMLInstanceValue[Uml] => iv.instance.get
           }
-          val targetSlot = slots.find( _.definingFeature == Some( targetEnd ) ) getOrElse { throw new IllegalArgumentException( s"Broken Link ${a.name.get} from '${sourceEnd.name}' to '${targetEnd.name}'" ) }
+          val targetSlot = 
+            slots
+            .find( _.definingFeature == Some( targetEnd ) )
+            .getOrElse { 
+              throw new IllegalArgumentException( 
+                s"Broken Link ${a.name.get} from '${sourceEnd.name}' to '${targetEnd.name}'" ) 
+            }
           val targetInstance = targetSlot.value.head match {
             case iv: UMLInstanceValue[Uml] => iv.instance.get
           }
@@ -160,19 +182,19 @@ object nameAssociationLinkInstancesWithinPackageExtent {
               val linkName = prefix + sName + "," + tName + ")"
               link.name match {
                 case Some( lName ) if ( lName == linkName ) => 
-                  guiLog.log( s" Link (id=${link.id}) - already named!: '${linkName}'")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - already named!: '${linkName}'")
                   ()
                 case _ =>
-                  guiLog.log( s" Link (id=${link.id}) set name to: '${linkName}'")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) set name to: '${linkName}'")
                   umlMagicDrawUMLInstanceSpecification(link).getMagicDrawInstanceSpecification.setName( linkName )
                   count = count + 1
               }
             case ( Some( sName ), None ) => 
-                  guiLog.log( s" Link (id=${link.id}) - source named: '${sName}' but target is unnamed! (id=${targetInstance.id})")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - source named: '${sName}' but target is unnamed! (id=${targetInstance.toolSpecific_id.get})")
             case ( None, Some( tName ) ) => 
-                  guiLog.log( s" Link (id=${link.id}) - target named: '${tName}' but source is unnamed! (id=${sourceInstance.id})")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - target named: '${tName}' but source is unnamed! (id=${sourceInstance.toolSpecific_id.get})")
             case ( None, None ) =>
-                  guiLog.log( s" Link (id=${link.id}) - source is unnamed: (id=${sourceInstance.id}) target is unnamed: (id=${sourceInstance.id})")              
+                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - source is unnamed: (id=${sourceInstance.toolSpecific_id.get}) target is unnamed: (id=${sourceInstance.toolSpecific_id.get})")              
           }
         }
 

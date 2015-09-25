@@ -98,7 +98,11 @@ object inspectAssociations {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
     
-    val selectedAssociations = selection.toIterator selectByKindOf ( { case a: AssociationView => umlAssociation( a.getAssociation ) } ) toList;
+    val selectedAssociations =
+      selection
+      .toIterable
+      .selectByKindOf { case a: AssociationView => umlAssociation( a.getAssociation ) }
+      .to[List]
     
     selectedAssociations foreach { a =>      
       a.memberEnd.toList match {
@@ -128,7 +132,12 @@ object inspectAssociations {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    val selectedAssociations = selection.toIterator selectByKindOf ( { case a: Uml#Association => umlAssociation( a ) } ) toList;
+    val selectedAssociations =
+      selection
+      .toIterable
+      .selectByKindOf { case a: Uml#Association => umlAssociation( a ) }
+      .to[List]
+
     selectedAssociations foreach { a =>
       a.ownedEnd.toList match {
         case end1 :: end2 :: Nil => inspectAssociation( umlUtil, a, end1, end2 )

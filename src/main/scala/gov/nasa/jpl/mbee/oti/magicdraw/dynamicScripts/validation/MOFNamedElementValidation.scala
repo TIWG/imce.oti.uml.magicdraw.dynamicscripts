@@ -55,6 +55,7 @@ import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.validation._
 
+import scala.collection.immutable._
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
@@ -85,7 +86,10 @@ object MOFNamedElementValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -105,7 +109,10 @@ object MOFNamedElementValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }

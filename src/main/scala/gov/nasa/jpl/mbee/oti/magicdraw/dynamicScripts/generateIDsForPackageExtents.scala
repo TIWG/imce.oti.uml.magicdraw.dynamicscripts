@@ -55,7 +55,7 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawValidationDataResults}
-import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.MDAPI
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils._
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.XMLResource
 import org.omg.oti.changeMigration._
@@ -64,7 +64,12 @@ import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml._
 import org.omg.oti.uml.canonicalXMI._
 import org.omg.oti.uml.read.api._
+import org.omg.oti.uml.xmi._
+import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.uml.canonicalXMI._
+import org.omg.oti.magicdraw.uml.read._
 
+import scala.collection.immutable._
 import scala.collection.JavaConversions.{asJavaCollection, collectionAsScalaIterable, mapAsJavaMap}
 import scala.reflect.runtime.universe._
 import scala.language.{implicitConversions, postfixOps}
@@ -75,41 +80,46 @@ import scala.util.{Failure, Success, Try}
  */
 object generateIDsForPackageExtents {
 
-  def doit(
-            p: Project, ev: ActionEvent,
-            script: DynamicScriptsTypes.BrowserContextMenuAction,
-            tree: Tree, node: Node,
-            pkg: Package, selection: java.util.Collection[Element]): Try[Option[MagicDrawValidationDataResults]] =
+  def doit
+  (p: Project, ev: ActionEvent,
+   script: DynamicScriptsTypes.BrowserContextMenuAction,
+   tree: Tree, node: Node,
+   pkg: Package, selection: java.util.Collection[Element])
+  : Try[Option[MagicDrawValidationDataResults]] =
     doit(p, ev, selection)
 
-  def doit(
-            p: Project, ev: ActionEvent,
-            script: DynamicScriptsTypes.BrowserContextMenuAction,
-            tree: Tree, node: Node,
-            pkg: Profile, selection: java.util.Collection[Element]): Try[Option[MagicDrawValidationDataResults]] =
+  def doit
+  (p: Project, ev: ActionEvent,
+   script: DynamicScriptsTypes.BrowserContextMenuAction,
+   tree: Tree, node: Node,
+   pkg: Profile, selection: java.util.Collection[Element])
+  : Try[Option[MagicDrawValidationDataResults]] =
     doit(p, ev, selection)
 
-  def doit(
-            p: Project, ev: ActionEvent,
-            script: DynamicScriptsTypes.DiagramContextMenuAction,
-            dpe: DiagramPresentationElement,
-            triggerView: PackageView,
-            triggerElement: Package,
-            selection: java.util.Collection[PresentationElement]): Try[Option[MagicDrawValidationDataResults]] =
+  def doit
+  (p: Project, ev: ActionEvent,
+   script: DynamicScriptsTypes.DiagramContextMenuAction,
+   dpe: DiagramPresentationElement,
+   triggerView: PackageView,
+   triggerElement: Package,
+   selection: java.util.Collection[PresentationElement])
+  : Try[Option[MagicDrawValidationDataResults]] =
     doit(p, ev, selection flatMap { case pv: PackageView => Some(pv.getPackage) })
 
-  def doit(
-            p: Project, ev: ActionEvent,
-            script: DynamicScriptsTypes.DiagramContextMenuAction,
-            dpe: DiagramPresentationElement,
-            triggerView: PackageView,
-            triggerElement: Profile,
-            selection: java.util.Collection[PresentationElement]): Try[Option[MagicDrawValidationDataResults]] =
+  def doit
+  (p: Project, ev: ActionEvent,
+   script: DynamicScriptsTypes.DiagramContextMenuAction,
+   dpe: DiagramPresentationElement,
+   triggerView: PackageView,
+   triggerElement: Profile,
+   selection: java.util.Collection[PresentationElement])
+  : Try[Option[MagicDrawValidationDataResults]] =
     doit(p, ev, selection flatMap { case pv: PackageView => Some(pv.getPackage) })
 
-  def doit(
-            p: Project, ev: ActionEvent,
-            selection: java.util.Collection[Element]): Try[Option[MagicDrawValidationDataResults]] = {
+  def doit
+  (p: Project, ev: ActionEvent,
+   selection: java.util.Collection[Element])
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog()
@@ -155,48 +165,19 @@ object generateIDsForPackageExtents {
       return Success(None)
     }
 
+    implicit val mdDocOps = new MagicDrawDocumentOps()
+
     implicit val umlUtil = MagicDrawUMLUtil(p)
     import umlUtil._
 
-    val selectedPackages: Set[UMLPackage[Uml]] = selection.toIterator selectByKindOf { case p: Package => umlPackage(p) } toSet
+    val selectedPackages: Set[UMLPackage[Uml]] =
+      selection.toIterable
+      .selectByKindOf { case p: Package => umlPackage(p) }
+      .to[Set]
 
-    /**
-     * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
-     */
-    def ignoreCrossReferencedElementFilter(e: UMLElement[Uml]): Boolean = e match {
-
-      case i: UMLImage[Uml] =>
-        true
-
-      case ne: UMLNamedElement[Uml] =>
-        val neQName = ne.qualifiedName.get
-        DynamicScriptsPlugin.wildCardMatch(neQName, "UML Standard Profile::MagicDraw Profile::*") ||
-          DynamicScriptsPlugin.wildCardMatch(neQName, "*OMG*") ||
-          DynamicScriptsPlugin.wildCardMatch(neQName, "Specifications::SysML.profileAnnotations::*")
-
-      case e =>
-        false
-    }
-
-    def unresolvedElementMapper(e: UMLElement[Uml]): Option[UMLElement[Uml]] = e.id match {
-      case "_UML_" => Some(MDBuiltInUML.scope)
-      case "_StandardProfile_" => Some(MDBuiltInStandardProfile.scope)
-      case _ => None
-    }
-
-    val defaultOMGCatalogFile = new File(new File(MDAPI.getApplicationRoot).
-      toURI.resolve("dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml"))
-    val omgCatalog = if (defaultOMGCatalogFile.exists()) Seq(defaultOMGCatalogFile) else chooseCatalogFile("Select the OMG UML 2.5 *.catalog.xml file").toSeq
-
-    val defaultMDCatalogFile = new File(new File(MDAPI.getApplicationRoot).
-      toURI.resolve("dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml"))
-    val mdCatalog = if (defaultMDCatalogFile.exists()) Seq(defaultMDCatalogFile) else chooseCatalogFile("Select the MagicDraw UML 2.5 *.catalog.xml file").toSeq
-
-    (CatalogURIMapper.createMapperFromCatalogFiles(omgCatalog),
-      CatalogURIMapper.createMapperFromCatalogFiles(mdCatalog)) match {
-      case (Failure(t), _) => Failure(t)
-      case (_, Failure(t)) => Failure(t)
-      case (Success(documentURIMapper), Success(builtInURIMapper)) =>
+    MDAPI
+      .getMDCatalogs()
+      .flatMap { case (documentURIMapper, builtInURIMapper) =>
 
         var result: Option[Try[Option[MagicDrawValidationDataResults]]] = None
         val runnable = new RunnableWithProgress() {
@@ -208,8 +189,8 @@ object generateIDsForPackageExtents {
                 p, mdInstallDir, projectFilename,
                 selectedPackages,
                 documentURIMapper, builtInURIMapper,
-                ignoreCrossReferencedElementFilter,
-                unresolvedElementMapper))
+                ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
+                unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil)) )
 
         }
 
@@ -231,27 +212,41 @@ object generateIDsForPackageExtents {
    builtInURIMapper: CatalogURIMapper,
    ignoreCrossReferencedElementFilter: Function1[UMLElement[MagicDrawUML], Boolean],
    unresolvedElementMapper: Function1[UMLElement[MagicDrawUML], Option[UMLElement[MagicDrawUML]]])
-  (implicit umlUtil: MagicDrawUMLUtil, tag: TypeTag[IllegalElementException[MagicDrawUML, UMLElement[MagicDrawUML]]])
+  (implicit umlUtil: MagicDrawUMLUtil,
+    mdTag: TypeTag[IllegalElementException[MagicDrawUML, _]],
+    tag: TypeTag[IllegalElementException[MagicDrawUML, UMLElement[MagicDrawUML]]])
   : Try[Option[MagicDrawValidationDataResults]] = {
     import umlUtil._
 
     val a = Application.getInstance()
-    val guiLog = a.getGUILog()
+    val guiLog = a.getGUILog
 
     progressStatus.setCurrent(0)
     progressStatus.setMax(0)
     progressStatus.setMax(specificationRootPackages.size + 1)
     progressStatus.setLocked(true)
+    val mdBuiltIns: Set[BuiltInDocument[Uml]] =
+      Set( MDBuiltInPrimitiveTypes, MDBuiltInUML, MDBuiltInStandardProfile )
 
-    DocumentSet.constructDocumentSetCrossReferenceGraph(
+    val mdBuiltInEdges: Set[DocumentEdge[Document[Uml]]] =
+      Set( MDBuiltInUML2PrimitiveTypes, MDBuiltInStandardProfile2UML )
+
+    implicit val mdDocOps = new MagicDrawDocumentOps()
+
+    DocumentSet.constructDocumentSetCrossReferenceGraph[Uml](
       specificationRootPackages,
       documentURIMapper, builtInURIMapper,
-      builtInDocuments = Set(MDBuiltInPrimitiveTypes, MDBuiltInUML, MDBuiltInStandardProfile),
-      builtInDocumentEdges = Set(MDBuiltInUML2PrimitiveTypes, MDBuiltInStandardProfile2UML),
+      builtInDocuments = mdBuiltIns,
+      builtInDocumentEdges = mdBuiltInEdges,
       ignoreCrossReferencedElementFilter,
-      unresolvedElementMapper) match {
-      case Failure(t) => Failure(t)
-      case Success((resolved, unresolved)) if unresolved.nonEmpty =>
+      unresolvedElementMapper,
+      aggregate = MagicDrawDocumentSetAggregate() )
+      .flatMap { case (( resolved, unresolved )) =>
+
+      implicit val mdIdGenerator: MagicDrawIDGenerator = MagicDrawIDGenerator(resolved)
+
+      val unresolvedResult: Option[MagicDrawValidationDataResults] =
+        if ( unresolved.nonEmpty ) {
 
         guiLog.log(s"*** ${unresolved.size} unresolved cross-references ***")
         val elementMessages = unresolved map { u =>
@@ -260,61 +255,39 @@ object generateIDsForPackageExtents {
             s"Select${u.hashCode}",
             s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0) {
             def actionPerformed(ev: ActionEvent): Unit =
-              umlMagicDrawUMLElement(u.externalReference).selectInContainmentTreeRunnable.run
+              umlMagicDrawUMLElement(u.externalReference).selectInContainmentTreeRunnable.run()
           }
           umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
             Tuple2(s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
               List(a))
         } toMap
 
-        Success(Some(
+        Some(
           MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
             p, s"*** ${unresolved.size} unresolved cross-references ***",
             elementMessages,
             "*::MagicDrawOTIValidation",
-            "*::UnresolvedCrossReference").validationDataResults))
+            "*::UnresolvedCrossReference").validationDataResults)
 
-      case Success((resolved, unresolved)) if unresolved.isEmpty =>
+      } else
+        None
+
         val idGenerator = MagicDrawIDGenerator(resolved)
-        for {
+        val mdErrors = for {
           pkg <- specificationRootPackages
           _ = progressStatus.increase()
           _ = progressStatus.setDescription(s"Generating OTI Canonical XMI:IDs for '${pkg.name.get}'...")
           _ = System.out.println(s"Generating OTI Canonical XMI:IDs for '${pkg.name.get}'...")
           e <- pkg.allOwnedElements
-          ok = idGenerator.getXMI_ID(e)
-        } {
-          ok match {
-            case Failure(f) =>
-
-              f match {
-                case t: IllegalElementException[MagicDrawUML, _] =>
-                  val elementMessages = t.element map { u =>
-                    val mdU = umlMagicDrawUMLElement (u).getMagicDrawElement
-                    val a =
-                      new NMAction (
-                        s"Select${u.hashCode}",
-                        s"Select ${mdU.getHumanType}: ${mdU.getHumanName}",
-                        0) {
-                          def actionPerformed (ev: ActionEvent): Unit =
-                            umlMagicDrawUMLElement (u).selectInContainmentTreeRunnable.run
-                        }
-                    mdU -> Tuple2 (t.getMessage, List (a) )
-                  } toMap
-
-                  Success (Some (
-                    MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation (
-                      p,
-                      s"*** ${unresolved.size} unresolved references ***",
-                      elementMessages,
-                      "*::MagicDrawOTIValidation",
-                      "*::UnresolvedCrossReference").validationDataResults) )
-
-                case _ => Failure(f)
-              }
-            case Success(_) => ()
-          }
-        }
+          mdError = idGenerator
+            .getXMI_ID(e)
+            .transform[Option[IllegalElementException[MagicDrawUML, _]]](
+            s = { (_: String) => Success(None) },
+            f = {
+              case t: IllegalElementException[MagicDrawUML, _] => Success(Some(t))
+              case _ => Success(None)
+            })
+        } yield mdError
 
         val elementIDs = idGenerator.getElement2IDMap
         val errors = elementIDs filter (_._2.isFailure)
@@ -323,12 +296,12 @@ object generateIDsForPackageExtents {
           for {pkg <- specificationRootPackages} {
             guiLog.log(s" => ${pkg.qualifiedName.get}")
           }
-          (errors.keys toList) sortBy (_.id) foreach { e =>
+          (errors.keys toList) sortBy (_.toolSpecific_id) foreach { e =>
             val t = errors(e).failed.get
-            if (errors.size > 100) System.out.println(s" ${e.id} => $t")
+            if (errors.size > 100) System.out.println(s" ${e.toolSpecific_id} => $t")
             else guiLog.addHyperlinkedText(
-              s" <A>${e.id}</A> => $t",
-              Map(e.id -> umlMagicDrawUMLElement(e).selectInContainmentTreeRunnable))
+              s" <A>${e.toolSpecific_id}</A> => $t",
+              Map(e.toolSpecific_id.get -> umlMagicDrawUMLElement(e).selectInContainmentTreeRunnable))
           }
         }
         else {
@@ -367,7 +340,7 @@ object generateIDsForPackageExtents {
           id = sortedIDs(n)
           e = id2element(id)
         } {
-          val oldID = e.id
+          val oldID = e.toolSpecific_id.get
           val old2newEntry = migrationMM.makeOld2NewIDEntry
           old2newEntry.setOldID(oldID)
           old2newEntry.setNewID(id)
@@ -404,8 +377,8 @@ object generateIDsForPackageExtents {
 
         guiLog.log(s" Saved migration model at: $migrationF ")
 
-        val unique = idGenerator.checkIDs
-        guiLog.log(s"Unique IDs? ${unique}")
+        val unique = idGenerator.checkIDs()
+        guiLog.log(s"Unique IDs? $unique")
 
         //          val cpanel = new JPanel()
         //          cpanel.setLayout( new JideBoxLayout( cpanel, BoxLayout.Y_AXIS ) )
@@ -471,7 +444,29 @@ object generateIDsForPackageExtents {
         //          guiLog.log( s"Catalog generated at: $catalogF" )
         //          guiLog.log( s"Delta Catalog generated at: $deltaF" )
 
-        Success(None)
+        // val elementMessages = t.element map { u =>
+//        val mdU = umlMagicDrawUMLElement (u).getMagicDrawElement
+//      val a =
+//        new NMAction (
+//          s"Select${u.hashCode}",
+//          s"Select ${mdU.getHumanType}: ${mdU.getHumanName}",
+//          0) {
+//          def actionPerformed (ev: ActionEvent): Unit =
+//            umlMagicDrawUMLElement (u).selectInContainmentTreeRunnable.run
+//        }
+//      mdU -> Tuple2 (t.getMessage, List (a) )
+//    } toMap
+//
+//    Success (Some (
+//      MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation (
+//        p,
+//        s"*** ${unresolved.size} unresolved references ***",
+//        elementMessages,
+//        "*::MagicDrawOTIValidation",
+//        "*::UnresolvedCrossReference").validationDataResults) )
+
+
+    Success(None)
     }
   }
 

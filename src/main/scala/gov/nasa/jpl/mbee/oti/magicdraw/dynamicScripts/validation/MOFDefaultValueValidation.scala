@@ -98,7 +98,10 @@ object MOFDefaultValueValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage(p) } toSet
+      selection
+      .toIterable
+      .selectByKindOf { case p: Package => umlPackage(p) }
+      .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -118,7 +121,10 @@ object MOFDefaultValueValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage(p) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }

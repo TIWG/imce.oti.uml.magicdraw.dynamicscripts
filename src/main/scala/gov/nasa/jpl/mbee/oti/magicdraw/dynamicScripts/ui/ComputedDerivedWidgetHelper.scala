@@ -41,7 +41,11 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import javax.swing.JOptionPane
+import org.omg.oti.uml.xmi.IDGenerator
+
 import scala.collection.JavaConversions._
+import scala.collection.immutable._
+import scala.collection.Iterable
 import scala.language.postfixOps
 import scala.util.Failure
 import scala.util.Success
@@ -64,7 +68,9 @@ import scala.reflect.{ classTag, ClassTag }
 
 object ComputedDerivedWidgetHelper {
 
-  def makeComputedDerivedTreeForPackageNameMetaclass( derived: DynamicScriptsTypes.ComputedDerivedWidget ): DynamicScriptsTypes.ComputedDerivedTree =
+  def makeComputedDerivedTreeForPackageNameMetaclass
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget )
+  : DynamicScriptsTypes.ComputedDerivedTree =
     DynamicScriptsTypes.ComputedDerivedTree(
       derived.name, derived.icon, derived.context, derived.access,
       derived.className, derived.methodName, derived.refresh,
@@ -90,14 +96,17 @@ object ComputedDerivedWidgetHelper {
           typeName = DynamicScriptsTypes.HName( "metaclass" ),
           typeInfo = DynamicScriptsTypes.StringTypeDesignation() ) ) ) )
 
-  def createRowForElement( e: UMLElement[MagicDrawUML] )( implicit umlUtil: MagicDrawUMLUtil ): Map[String, AbstractTreeNodeInfo] = {
+  def createRowForElement
+  ( e: UMLElement[MagicDrawUML] )
+  ( implicit umlUtil: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
+  : Map[String, AbstractTreeNodeInfo] = {
     import umlUtil._
     Map(
       "context" -> ( e.owner match {
         case None => LabelNodeInfo( "<none>" )
         case Some( o ) => o match {
           case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
-          case parent                       => ReferenceNodeInfo( parent.id, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent                       => ReferenceNodeInfo( parent.toolSpecific_id.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
         }
       } ),
       "EMF eContainingFeature" -> {
@@ -125,27 +134,29 @@ object ComputedDerivedWidgetHelper {
                 case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
                 case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.id}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
                 }
                 case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.id}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
                 }
                 case ( _, Some( name ) ) => name
-                case ( _, _ )            => ne.id
+                case ( _, _ )            => ne.toolSpecific_id.get
               },
               umlMagicDrawUMLElement(e).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( e.id, umlMagicDrawUMLElement(e).getMagicDrawElement )
+            ReferenceNodeInfo( e.toolSpecific_id.get, umlMagicDrawUMLElement(e).getMagicDrawElement )
         } ),
       "metaclass" -> LabelNodeInfo( e.xmiType.head ) )
   }
 
-  def createGroupTableUIPanelForElements[U <: UMLElement[MagicDrawUML]](
-    derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    pes: Iterable[U] )( implicit util: MagicDrawUMLUtil ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+  def createGroupTableUIPanelForElements[U <: UMLElement[MagicDrawUML]]
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    pes: Iterable[U] )
+  ( implicit util: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
 
-    val rows: Seq[Map[String, AbstractTreeNodeInfo]] = pes map ( createRowForElement( _ ) ) toSeq
+    val rows: Seq[Map[String, AbstractTreeNodeInfo]] = pes.map ( createRowForElement ).to[Seq]
 
     val ui = GroupTableNodeUI(
       makeComputedDerivedTreeForPackageNameMetaclass( derived ),
@@ -161,16 +172,18 @@ object ComputedDerivedWidgetHelper {
     Success( ( ui.panel, validationAnnotations ) )
   }
 
-  def elementOperationWidget[U <: UMLElement[MagicDrawUML], V <: UMLElement[MagicDrawUML]](
-    derived: DynamicScriptsTypes.ComputedDerivedWidget,
+  def elementOperationWidget[U <: UMLElement[MagicDrawUML], V <: UMLElement[MagicDrawUML]]
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
     mdE: MagicDrawUML#Element,
     f: U => Iterable[V],
-    util: MagicDrawUMLUtil )( implicit uTag: ClassTag[U] ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+    util: MagicDrawUMLUtil )
+  ( implicit uTag: ClassTag[U], idg: IDGenerator[MagicDrawUML] )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
       val e = util.umlElement( mdE )
       val uClass = uTag.runtimeClass
       require (uClass != null)
       if ( uClass.isInstance( e ) ) 
-        createGroupTableUIPanelForElements[V]( derived, f( e.asInstanceOf[U] ) )( util )
+        createGroupTableUIPanelForElements[V]( derived, f( e.asInstanceOf[U] ) )( util, idg )
       else 
         Failure( new IllegalArgumentException(s"${mdE.getHumanType}: ${mdE.getID} is not a kind of ${uClass.getName}"))
   }

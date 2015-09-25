@@ -103,7 +103,7 @@ object nameTest {
     selectedElements foreach { e =>
       val mdE = umlMagicDrawUMLElement(e).getMagicDrawElement
       
-      guiLog.log( s"==> ID=${e.id}" )
+      guiLog.log( s"==> ID=${e.toolSpecific_id}" )
   
       val mdIS = Option.apply( mdE.getAppliedStereotypeInstance ) 
       guiLog.log( s" mdID=${mdE.getID}: mdIS=${mdIS.isDefined} =${mdIS}" )

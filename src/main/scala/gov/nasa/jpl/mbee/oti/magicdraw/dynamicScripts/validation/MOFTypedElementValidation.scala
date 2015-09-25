@@ -51,10 +51,16 @@ import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.actions._
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.MDAPI
+
+import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.magicdraw.uml.read._
+import org.omg.oti.uml.canonicalXMI._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.validation._
+import org.omg.oti.uml.xmi._
 
+import scala.collection.immutable._
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
@@ -95,7 +101,10 @@ object MOFTypedElementValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -115,7 +124,10 @@ object MOFTypedElementValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -172,6 +184,19 @@ object MOFTypedElementValidation {
 
     import _umlUtil._
 
+
+    MDAPI
+      .getMDCatalogs()
+      .flatMap { case (documentURIMapper, builtInURIMapper) =>
+
+      MagicDrawDocumentSet.createMagicDrawProjectDocumentSet(
+        documentURIMapper, builtInURIMapper,
+        MDAPI.ignoreCrossReferencedElementFilter,
+        MDAPI.unresolvedElementMapper(_umlUtil))
+        .flatMap {
+        case (_, rds, _, _) =>
+
+          implicit val idg: IDGenerator[MagicDrawUML] = MagicDrawIDGenerator(rds)
     val otiV = OTIMagicDrawValidation(p)
 
     val elementMessages = scala.collection.mutable.HashMap[
@@ -226,5 +251,8 @@ object MOFTypedElementValidation {
       "EMOF [1,22,23,28,29,30] & CMOF [2,22,23,28,29,30] TypedElement Validation",
       elementMessages.toMap)
 
+      }
+
+    }
   }
 }

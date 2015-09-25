@@ -41,6 +41,8 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import javax.swing.JOptionPane
+import org.omg.oti.uml.xmi.IDGenerator
+
 import scala.collection.JavaConversions._
 import scala.language.postfixOps
 import scala.util.Failure
@@ -65,17 +67,21 @@ object StructuredClassifierInspectorWidget {
 
   import ComputedDerivedWidgetHelper._
   
-  def allRoles(
-    project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element ): Try[( java.awt.Component, Seq[ValidationAnnotation] )] =     
+  def allRoles
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    ek: MagicDrawElementKindDesignation, e: Element )
+  ( implicit idg: IDGenerator[MagicDrawUML])
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
       elementOperationWidget[UMLStructuredClassifier[MagicDrawUML], UMLConnectableElement[MagicDrawUML]]( 
           derived, e, 
           _.allRoles,
           MagicDrawUMLUtil( project ) )
           
-  def compositeStructureTree(
-    project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedTree,
-    ek: MagicDrawElementKindDesignation, e: StructuredClassifier ): Try[Seq[( AbstractTreeNodeInfo, Map[String, AbstractTreeNodeInfo] )]] = {
+  def compositeStructureTree
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedTree,
+    ek: MagicDrawElementKindDesignation, e: StructuredClassifier )
+  ( implicit idg: IDGenerator[MagicDrawUML])
+  : Try[Seq[( AbstractTreeNodeInfo, Map[String, AbstractTreeNodeInfo] )]] = {
    
     val treeInfo = TreeNodeInfo(
       identifier = s"${e.getQualifiedName}",

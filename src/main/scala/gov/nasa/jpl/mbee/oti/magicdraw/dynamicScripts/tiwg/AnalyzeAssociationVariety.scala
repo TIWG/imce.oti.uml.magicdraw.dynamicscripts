@@ -91,9 +91,10 @@ object AnalyzeAssociationVariety {
     import umlUtil._
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf {
-        case p: Package => umlPackage(p)
-      } toSet
+      selection
+      .toIterable
+      .selectByKindOf { case p: Package => umlPackage(p) }
+      .to[Set]
 
     val allPackages = selectedPackages.flatMap(_.allNestedPackages)
 
