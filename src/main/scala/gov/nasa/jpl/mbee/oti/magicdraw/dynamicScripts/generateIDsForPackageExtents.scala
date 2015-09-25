@@ -165,10 +165,10 @@ object generateIDsForPackageExtents {
       return Success(None)
     }
 
-    implicit val mdDocOps = new MagicDrawDocumentOps()
-
     implicit val umlUtil = MagicDrawUMLUtil(p)
     import umlUtil._
+
+    implicit val mdDocOps = new MagicDrawDocumentOps()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
       selection.toIterable

@@ -53,7 +53,7 @@ import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.MDAPI
 import org.omg.oti.uml.xmi._
 import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.magicdraw.uml.write.MagicDrawUMLUpdate
-import org.omg.oti.uml.canonicalXMI.{UnresolvedElementCrossReference, ResolvedDocumentSet, CatalogURIMapper}
+import org.omg.oti.uml.canonicalXMI._
 import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.uml.read.api._
 
@@ -86,6 +86,7 @@ object ChangeOwner {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
+    implicit val documentOps = new MagicDrawDocumentOps()
     val upd = MagicDrawUMLUpdate(umlUtil)
 
     val newOwner = MDUML.getBrowserTreeSelection() match {

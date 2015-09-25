@@ -184,6 +184,7 @@ object MOFTypedElementValidation {
 
     import _umlUtil._
 
+    implicit val documentOps = new MagicDrawDocumentOps()
 
     MDAPI
       .getMDCatalogs()
