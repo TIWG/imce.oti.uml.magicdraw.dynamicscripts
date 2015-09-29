@@ -86,6 +86,10 @@ object ChangeOwner {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
+    // @todo populate...
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
+
     implicit val documentOps = new MagicDrawDocumentOps()
     val upd = MagicDrawUMLUpdate(umlUtil)
 
@@ -112,6 +116,7 @@ object ChangeOwner {
         MagicDrawDocumentSet
         .createMagicDrawProjectDocumentSet(
             documentURIMapper, builtInURIMapper,
+            otiCharacterizations,
             ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
             unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil))
         .transform[Option[MagicDrawValidationDataResults]](

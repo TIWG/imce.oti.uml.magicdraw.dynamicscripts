@@ -177,6 +177,10 @@ object exportPackageExtents2OTICanonicalXMI {
     progressStatus.setMax( 1 )
     progressStatus.setLocked( true )
 
+    // @todo populate...
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
+
     val mdBuiltIns: Set[BuiltInDocument[Uml]] =
       Set( MDBuiltInPrimitiveTypes, MDBuiltInUML, MDBuiltInStandardProfile )
 

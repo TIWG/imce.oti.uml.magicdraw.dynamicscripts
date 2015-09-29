@@ -168,6 +168,9 @@ object generateIDsForPackageExtents {
     implicit val umlUtil = MagicDrawUMLUtil(p)
     import umlUtil._
 
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
+
     implicit val mdDocOps = new MagicDrawDocumentOps()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
@@ -225,6 +228,11 @@ object generateIDsForPackageExtents {
     progressStatus.setMax(0)
     progressStatus.setMax(specificationRootPackages.size + 1)
     progressStatus.setLocked(true)
+
+    // @todo populate...
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
+
     val mdBuiltIns: Set[BuiltInDocument[Uml]] =
       Set( MDBuiltInPrimitiveTypes, MDBuiltInUML, MDBuiltInStandardProfile )
 

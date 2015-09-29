@@ -184,14 +184,19 @@ object MOFTypedElementValidation {
 
     import _umlUtil._
 
+    // @todo populate...
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
+
     implicit val documentOps = new MagicDrawDocumentOps()
 
     MDAPI
       .getMDCatalogs()
       .flatMap { case (documentURIMapper, builtInURIMapper) =>
 
-      MagicDrawDocumentSet.createMagicDrawProjectDocumentSet(
+      MagicDrawDocumentSet.createMagicDrawProjectDocumentSet  (
         documentURIMapper, builtInURIMapper,
+        otiCharacterizations,
         MDAPI.ignoreCrossReferencedElementFilter,
         MDAPI.unresolvedElementMapper(_umlUtil))
         .flatMap {

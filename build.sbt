@@ -17,8 +17,6 @@ lazy val jpl_omg_oti_magicdraw_dynamicscripts = Project("jpl-omg-oti-magicdraw-d
 
     classDirectory in Compile := baseDirectory.value / "bin",
 
-    unmanagedClasspath in Compile <++= unmanagedJars in Compile,
-
     copyPublishedArtifactLibraries <<= publish,
 
     copyPublishedArtifactLibraries <<= (baseDirectory, packagedArtifacts, streams) map {
