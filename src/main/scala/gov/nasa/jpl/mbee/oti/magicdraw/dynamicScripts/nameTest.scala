@@ -89,15 +89,18 @@ import com.nomagic.uml2.ext.magicdraw.mdprofiles.Stereotype
  */
 object nameTest {
 
-  def doit( p: Project, ev: ActionEvent, script: MainToolbarMenuAction ): Try[Option[MagicDrawValidationDataResults]] = {
+  def doit( p: Project, ev: ActionEvent, script: MainToolbarMenuAction )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
     val a = Application.getInstance()
     val ap = ActionsProvider.getInstance
-    val guiLog = a.getGUILog()
+    val guiLog = a.getGUILog
     guiLog.clearLog()
 
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
+    implicit val otiCharacterizations: Option[Map[UMLPackage[Uml], UMLComment[Uml]]] = None
+
     val dsp = DynamicScriptsPlugin.getInstance()
     val selectedElements = getMDBrowserSelectedElements map { e => umlElement( e ) }
     selectedElements foreach { e =>
@@ -106,7 +109,7 @@ object nameTest {
       guiLog.log( s"==> ID=${e.toolSpecific_id}" )
   
       val mdIS = Option.apply( mdE.getAppliedStereotypeInstance ) 
-      guiLog.log( s" mdID=${mdE.getID}: mdIS=${mdIS.isDefined} =${mdIS}" )
+      guiLog.log( s" mdID=${mdE.getID}: mdIS=${mdIS.isDefined} =$mdIS" )
 
       mdIS match {
         case None =>
@@ -121,7 +124,7 @@ object nameTest {
             v = umlValueSpecification( s.getValue ).toSeq
           } {
             guiLog.log( s" => ${p.qualifiedName.get}: ${s.getValue}" )
-            guiLog.log( s" => ${p.qualifiedName.get}: ${v}" )
+            guiLog.log( s" => ${p.qualifiedName.get}: $v" )
           }
       }
       
@@ -135,7 +138,9 @@ object nameTest {
           eMetaclass == pMetaclass || StereotypesHelper.isSubtypeOf( pMetaclass, eMetaclass )
         }
         val sGeneral = getAllGeneralStereotypes( s ).toList.sortBy(_.qualifiedName.get)   
-        System.out.println(s"Applied: ${s.qualifiedName.get} with ${metaProperties.size} meta-properties, ${sGeneral.size} general stereotypes")
+        System.out.println(
+          s"Applied: ${s.qualifiedName.get} with "+
+          s"${metaProperties.size} meta-properties, ${sGeneral.size} general stereotypes")
         metaProperties.foreach{p => System.out.println(s"meta-property: ${p.getQualifiedName}")}
              
         sGeneral.foreach{ sg =>
@@ -155,22 +160,25 @@ object nameTest {
           val mdS = umlMagicDrawUMLElement(s).getMagicDrawElement.asInstanceOf[Stereotype]
           val baseClasses1 = StereotypesHelper.getBaseClasses( mdS, false )          
           System.out.println(s" baseClasses1: ${baseClasses1.size}")
-          baseClasses1.toList.sortBy(_.getQualifiedName).foreach{p => System.out.println(s"baseClass1: ${p.getQualifiedName}")}
+          baseClasses1.toList.sortBy(_.getQualifiedName)
+            .foreach{p => System.out.println(s"baseClass1: ${p.getQualifiedName}")}
           
           val baseClasses2 = StereotypesHelper.getBaseClasses( mdS, true ) 
           System.out.println(s" baseClasses2: ${baseClasses2.size}")
-          baseClasses2.toList.sortBy(_.getQualifiedName).foreach{p => System.out.println(s"baseClass2: ${p.getQualifiedName}")}
+          baseClasses2.toList.sortBy(_.getQualifiedName)
+            .foreach{p => System.out.println(s"baseClass2: ${p.getQualifiedName}")}
           
           val metaProperties = StereotypesHelper.getExtensionMetaProperty( mdS, false ) 
           System.out.println(s" metaProperties: ${metaProperties.size}")
-          metaProperties.toList.sortBy(_.getQualifiedName).foreach{p => System.out.println(s"meta property: ${p.getQualifiedName}")}
+          metaProperties.toList.sortBy(_.getQualifiedName)
+            .foreach{p => System.out.println(s"meta property: ${p.getQualifiedName}")}
 
         case ep: UMLPackage[Uml] =>
           System.out.println(s"package: ${ep.qualifiedName}; effective URI=${ep.getEffectiveURI}, URI=${ep.URI}")
         case _ => ()
       }
 
-      val mName = ClassTypes.getShortName( mdE.getClassType() )
+      val mName = ClassTypes.getShortName( mdE.getClassType )
 
       def dynamicScriptMenuFilter( das: DynamicActionScript ): Boolean =
         das match {
@@ -201,14 +209,19 @@ object nameTest {
     Success( None )
   }
 
-  def getMDBrowserSelectedElements(): Set[Element] = {
-    val project = Application.getInstance().getProjectsManager().getActiveProject()
+  def getMDBrowserSelectedElements
+  : Set[Element] = {
+    val project = Application.getInstance().getProjectsManager.getActiveProject
     if ( null == project )
       return Set()
 
     val tab = project.getBrowser().getActiveTree()
-    val elementFilter: ( Node => Option[Element] ) = { n => if ( n.getUserObject().isInstanceOf[Element] ) Some( n.getUserObject().asInstanceOf[Element] ) else None }
-    val elements = tab.getSelectedNodes().map( elementFilter( _ ) ) filter ( _.isDefined ) map ( _.get )
+    val elementFilter: ( Node => Option[Element] ) = { n =>
+      if ( n.getUserObject.isInstanceOf[Element] )
+        Some( n.getUserObject.asInstanceOf[Element] )
+      else
+        None }
+    val elements = tab.getSelectedNodes.map( elementFilter( _ ) ) filter ( _.isDefined ) map ( _.get )
     elements.toSet
   }
 }

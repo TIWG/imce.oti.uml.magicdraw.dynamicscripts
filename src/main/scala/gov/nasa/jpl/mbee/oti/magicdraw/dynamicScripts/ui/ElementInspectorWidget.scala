@@ -110,7 +110,9 @@ object ElementInspectorWidget {
   def getPackageOwnerWithURI
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
+  ( implicit
+    idg: IDGenerator[MagicDrawUML],
+    otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] = None)
   : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
     elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
       derived, e,

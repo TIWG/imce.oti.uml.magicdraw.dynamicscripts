@@ -121,6 +121,7 @@ object setOTIUUIDs {
 
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
+    implicit val otiCharacterizations: Option[Map[UMLPackage[Uml], UMLComment[Uml]]] = None
 
     val runnable = new RunnableWithProgress() {
 

@@ -292,8 +292,10 @@ object generateIDsForPackageExtents {
             .transform[Option[IllegalElementException[MagicDrawUML, _]]](
             s = { (_: String) => Success(None) },
             f = {
-              case t: IllegalElementException[MagicDrawUML, _] => Success(Some(t))
-              case _ => Success(None)
+              case t: IllegalElementException[MagicDrawUML, _] =>
+                Success(Some(t))
+              case _ =>
+                Success(None)
             })
         } yield mdError
 
