@@ -280,26 +280,26 @@ object generateIDsForPackageExtents {
       } else
         None
 
-        val idGenerator = MagicDrawIDGenerator(resolved)
         val mdErrors = for {
           pkg <- specificationRootPackages
           _ = progressStatus.increase()
           _ = progressStatus.setDescription(s"Generating OTI Canonical XMI:IDs for '${pkg.name.get}'...")
           _ = System.out.println(s"Generating OTI Canonical XMI:IDs for '${pkg.name.get}'...")
           e <- pkg.allOwnedElements
-          mdError = idGenerator
+          mdError = mdIdGenerator
             .getXMI_ID(e)
             .transform[Option[IllegalElementException[MagicDrawUML, _]]](
             s = { (_: String) => Success(None) },
             f = {
               case t: IllegalElementException[MagicDrawUML, _] =>
+                System.out.println(s"MD ID Generation: ${t.element.head}")
                 Success(Some(t))
               case _ =>
                 Success(None)
             })
         } yield mdError
 
-        val elementIDs = idGenerator.getElement2IDMap
+        val elementIDs = mdIdGenerator.getElement2IDMap
         val errors = elementIDs filter (_._2.isFailure)
         if (errors.nonEmpty) {
           guiLog.log(s"${errors.size} errors when computing OTI XMI IDs for the package extent(s) of:")
@@ -387,7 +387,7 @@ object generateIDsForPackageExtents {
 
         guiLog.log(s" Saved migration model at: $migrationF ")
 
-        val unique = idGenerator.checkIDs()
+        val unique = mdIdGenerator.checkIDs()
         guiLog.log(s"Unique IDs? $unique")
 
         //          val cpanel = new JPanel()

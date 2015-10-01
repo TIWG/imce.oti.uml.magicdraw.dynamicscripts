@@ -74,7 +74,6 @@ object MDAPI {
         ne.qualifiedName
           .fold[Boolean](false) { neQName =>
           DynamicScriptsPlugin.wildCardMatch(neQName, "UML Standard Profile::MagicDraw Profile::*") ||
-            DynamicScriptsPlugin.wildCardMatch(neQName, "*OMG*") ||
             DynamicScriptsPlugin.wildCardMatch(neQName, "Specifications::SysML.profileAnnotations::*")
         }
 
