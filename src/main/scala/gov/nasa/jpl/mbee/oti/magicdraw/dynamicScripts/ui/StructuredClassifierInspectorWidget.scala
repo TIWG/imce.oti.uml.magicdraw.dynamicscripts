@@ -67,27 +67,27 @@ object StructuredClassifierInspectorWidget {
 
   import ComputedDerivedWidgetHelper._
   
-  def allRoles
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLStructuredClassifier[MagicDrawUML], UMLConnectableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.allRoles,
-          MagicDrawUMLUtil( project ) )
-          
-  def compositeStructureTree
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedTree,
-    ek: MagicDrawElementKindDesignation, e: StructuredClassifier )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[Seq[( AbstractTreeNodeInfo, Map[String, AbstractTreeNodeInfo] )]] = {
-   
-    val treeInfo = TreeNodeInfo(
-      identifier = s"${e.getQualifiedName}",
-      nested = Seq() )
-
-    Success( Seq( ( treeInfo, Map[String, AbstractTreeNodeInfo]() ) ) )
-  }
+//  def allRoles
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLStructuredClassifier[MagicDrawUML], UMLConnectableElement[MagicDrawUML]](
+//          derived, e,
+//          _.allRoles,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def compositeStructureTree
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedTree,
+//    ek: MagicDrawElementKindDesignation, e: StructuredClassifier )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[Seq[( AbstractTreeNodeInfo, Map[String, AbstractTreeNodeInfo] )]] = {
+//
+//    val treeInfo = TreeNodeInfo(
+//      identifier = s"${e.getQualifiedName}",
+//      nested = Seq() )
+//
+//    Success( Seq( ( treeInfo, Map[String, AbstractTreeNodeInfo]() ) ) )
+//  }
     
 }

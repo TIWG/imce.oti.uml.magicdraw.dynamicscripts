@@ -66,44 +66,44 @@ object PropertyInspectorWidget {
 
   import ComputedDerivedWidgetHelper._
   
-  def redefinedProperty
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]]( 
-          derived, e, 
-          _.redefinedProperty,
-          MagicDrawUMLUtil( project ) )
-    
-  def redefiningdProperty
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]]( 
-          derived, e, 
-          _.redefinedProperty_property,
-          MagicDrawUMLUtil( project ) )
-    
-  def subsettedProperty
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]]( 
-          derived, e, 
-          _.subsettedProperty,
-          MagicDrawUMLUtil( project ) )
-    
-  def subsettingProperty
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]]( 
-          derived, e, 
-          _.subsettedProperty_property,
-          MagicDrawUMLUtil( project ) )
+//  def redefinedProperty
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+//          derived, e,
+//          _.redefinedProperty,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def redefiningdProperty
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+//          derived, e,
+//          _.redefinedProperty_property,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def subsettedProperty
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+//          derived, e,
+//          _.subsettedProperty,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def subsettingProperty
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+//          derived, e,
+//          _.subsettedProperty_property,
+//          MagicDrawUMLUtil( project ) )
     
 }

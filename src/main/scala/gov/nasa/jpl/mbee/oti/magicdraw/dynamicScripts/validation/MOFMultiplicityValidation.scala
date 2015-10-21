@@ -74,164 +74,166 @@ import scala.util.{Failure, Success, Try}
 */
 object MOFMultiplicityValidation {
 
-  def doit
-  ( p: Project, ev: ActionEvent,
-    script: DynamicScriptsTypes.BrowserContextMenuAction,
-    tree: Tree, node: Node,
-    pkg: Profile, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
-
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-        .toIterable
-        .selectByKindOf { case p: Package => umlPackage(p) }
-        .to[Set]
-
-    doit(p, selectedPackages)
-  }
-
-  def doit
-  ( p: Project, ev: ActionEvent,
-    script: DynamicScriptsTypes.BrowserContextMenuAction,
-    tree: Tree, node: Node,
-    top: Package, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
-
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-        .toIterable
-        .selectByKindOf { case p: Package => umlPackage(p) }
-        .to[Set]
-
-    doit(p, selectedPackages)
-  }
-
-  def doit
-  ( p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Profile,
-    selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
-
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
-
-  def doit
-  ( p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Package,
-    selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
-
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
-
-  def doit
-  ( p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-  ( implicit _umlUtil: MagicDrawUMLUtil )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    import _umlUtil._
-
-    val otiV = OTIMagicDrawValidation(p)
-
-    val elementMessages = scala.collection.mutable.HashMap[
-      Element,
-      scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
-
-    for {
-      v <- ConnectableMultiplicityValidationHelper.analyzePackageContents(pkgs)
-      if MultiplicityValueValidationStatus.ValidValueStatus != v.status
-      mdPoP = umlMagicDrawUMLMultiplicityElement(v.parameter_or_property).getMagicDrawMultiplicityElement
-      vOptInfo <- (v.status, v.value, v.valueRepair) match {
-        case ( MultiplicityValueValidationStatus.ValidValueStatus, _, _ ) =>
-          Success(None)
-        case ( MultiplicityValueValidationStatus.RedundantValueStatus, Some(vDelete), _) =>
-          val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_RedundantValue,
-            Some(s"Delete redundant ${v.role.propertyName} value for ${v.parameter_or_property.qualifiedName.get}"),
-            DeleteRedundantValue(v.role) :: Nil)
-        case ( _, Some(vDelete), Some(vRepair)) =>
-          val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
-          if (MultiplicityElement_lowerValue == v.role)
-            otiV.makeValidationInfo(
-              otiV.MD_OTI_ValidationConstraint_InvalidValueAsInteger,
-              Some(s"Replace lower value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
-              ReplaceLowerIntegerValue(vDelete.xmiType.head, vRepair) :: Nil)
-          else
-            otiV.makeValidationInfo(
-              otiV.MD_OTI_ValidationConstraint_InvalidValueAsUnlimitedNatural,
-              Some(s"Replace upper value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
-              ReplaceUpperUnlimitedNaturalValue(vDelete.xmiType.head, vRepair) :: Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueAsIntegerStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueAsInteger,
-            v.explanation,
-            Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueAsStringStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueAsString,
-            v.explanation,
-            Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueAsUnlimitedNaturalStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueAsUnlimitedNatural,
-            v.explanation,
-            Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueKindStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueKind,
-            v.explanation,
-            Nil)
-      }
-      vInfo <- vOptInfo
-      validationInfo = elementMessages.getOrElseUpdate(
-        mdPoP, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
-    } validationInfo += vInfo
-
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "EMOF [32] & CMOF [14] Multiplicity Validation",
-      elementMessages.toMap)
-
-  }
+//  def doit
+//  ( p: Project, ev: ActionEvent,
+//    script: DynamicScriptsTypes.BrowserContextMenuAction,
+//    tree: Tree, node: Node,
+//    pkg: Profile, selection: java.util.Collection[Element] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    val app = Application.getInstance()
+//    val guiLog = app.getGUILog
+//    guiLog.clearLog()
+//
+//    val selectedPackages: Set[UMLPackage[Uml]] =
+//      selection
+//        .toIterable
+//        .selectByKindOf { case p: Package => umlPackage(p) }
+//        .to[Set]
+//
+//    doit(p, selectedPackages)
+//  }
+//
+//  def doit
+//  ( p: Project, ev: ActionEvent,
+//    script: DynamicScriptsTypes.BrowserContextMenuAction,
+//    tree: Tree, node: Node,
+//    top: Package, selection: java.util.Collection[Element] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    val app = Application.getInstance()
+//    val guiLog = app.getGUILog
+//    guiLog.clearLog()
+//
+//    val selectedPackages: Set[UMLPackage[Uml]] =
+//      selection
+//        .toIterable
+//        .selectByKindOf { case p: Package => umlPackage(p) }
+//        .to[Set]
+//
+//    doit(p, selectedPackages)
+//  }
+//
+//  def doit
+//  ( p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Profile,
+//    selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    val app = Application.getInstance()
+//    val guiLog = app.getGUILog
+//    guiLog.clearLog()
+//
+//    doit(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
+//
+//  def doit
+//  ( p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Package,
+//    selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    val app = Application.getInstance()
+//    val guiLog = app.getGUILog
+//    guiLog.clearLog()
+//
+//    doit(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
+//
+//  def doit
+//  ( p: Project,
+//    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
+//  ( implicit _umlUtil: MagicDrawUMLUtil )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    import _umlUtil._
+//
+//    val otiV = OTIMagicDrawValidation(p)
+//
+//    val elementMessages = scala.collection.mutable.HashMap[
+//      Element,
+//      scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
+//
+//    for {
+//      v <- ConnectableMultiplicityValidationHelper.analyzePackageContents(pkgs)
+//      if MultiplicityValueValidationStatus.ValidValueStatus != v.status
+//      mdPoP = umlMagicDrawUMLMultiplicityElement(v.parameter_or_property).getMagicDrawMultiplicityElement
+//      vOptInfo <- (v.status, v.value, v.valueRepair) match {
+//        case ( MultiplicityValueValidationStatus.ValidValueStatus, _, _ ) =>
+//          Success(None)
+//        case ( MultiplicityValueValidationStatus.RedundantValueStatus, Some(vDelete), _) =>
+//          val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
+//          otiV.makeValidationInfo(
+//            otiV.MD_OTI_ValidationConstraint_RedundantValue,
+//            Some(s"Delete redundant ${v.role.propertyName} value for ${v.parameter_or_property.qualifiedName.get}"),
+//            DeleteRedundantValue(v.role) :: Nil)
+//        case ( _, Some(vDelete), Some(vRepair)) =>
+//          val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
+//          if (MultiplicityElement_lowerValue == v.role)
+//            otiV.makeValidationInfo(
+//              otiV.MD_OTI_ValidationConstraint_InvalidValueAsInteger,
+//              Some(s"Replace lower value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
+//              ReplaceLowerIntegerValue(vDelete.xmiType.head, vRepair) :: Nil)
+//          else
+//            otiV.makeValidationInfo(
+//              otiV.MD_OTI_ValidationConstraint_InvalidValueAsUnlimitedNatural,
+//              Some(s"Replace upper value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
+//              ReplaceUpperUnlimitedNaturalValue(vDelete.xmiType.head, vRepair) :: Nil)
+//        case ( MultiplicityValueValidationStatus.InvalidValueAsIntegerStatus, _, _ ) =>
+//          otiV.makeValidationInfo(
+//            otiV.MD_OTI_ValidationConstraint_InvalidValueAsInteger,
+//            v.explanation,
+//            Nil)
+//        case ( MultiplicityValueValidationStatus.InvalidValueAsStringStatus, _, _ ) =>
+//          otiV.makeValidationInfo(
+//            otiV.MD_OTI_ValidationConstraint_InvalidValueAsString,
+//            v.explanation,
+//            Nil)
+//        case ( MultiplicityValueValidationStatus.InvalidValueAsUnlimitedNaturalStatus, _, _ ) =>
+//          otiV.makeValidationInfo(
+//            otiV.MD_OTI_ValidationConstraint_InvalidValueAsUnlimitedNatural,
+//            v.explanation,
+//            Nil)
+//        case ( MultiplicityValueValidationStatus.InvalidValueKindStatus, _, _ ) =>
+//          otiV.makeValidationInfo(
+//            otiV.MD_OTI_ValidationConstraint_InvalidValueKind,
+//            v.explanation,
+//            Nil)
+//        case _ =>
+//          ()
+//      }
+//      vInfo <- vOptInfo
+//      validationInfo = elementMessages.getOrElseUpdate(
+//        mdPoP, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
+//    } validationInfo += vInfo
+//
+//    otiV.makeMDIllegalArgumentExceptionValidation(
+//      "EMOF [32] & CMOF [14] Multiplicity Validation",
+//      elementMessages.toMap)
+//
+//  }
 }

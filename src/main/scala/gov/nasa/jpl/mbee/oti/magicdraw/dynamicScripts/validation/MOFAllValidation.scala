@@ -58,111 +58,111 @@ import scala.util.{Success, Try}
 
 object MOFAllValidation {
 
-  def doit
-  ( p: Project, ev: ActionEvent,
-    script: DynamicScriptsTypes.BrowserContextMenuAction,
-    tree: Tree, node: Node,
-    pkg: Profile, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-      .toIterable
-      .selectByKindOf { case p: Package => umlPackage( p ) }
-      .to[Set]
-
-    doit(p, selectedPackages)
-  }
-
-  def doit
-  ( p: Project, ev: ActionEvent,
-    script: DynamicScriptsTypes.BrowserContextMenuAction,
-    tree: Tree, node: Node,
-    top: Package, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-      .toIterable
-      .selectByKindOf { case p: Package => umlPackage( p ) }
-      .to[Set]
-
-    doit(p, selectedPackages)
-  }
-
-  def doit
-  ( p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Profile,
-    selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
-
-  def doit(
-    p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Package,
-    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
-
-  def doit
-  ( p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-  ( implicit _umlUtil: MagicDrawUMLUtil )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    for {
-      vo <- MOFDefaultValueValidation.doit(p, pkgs)
-      v <- vo
-    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
-
-    for {
-      vo <- MOFMultiplicityValidation.doit(p, pkgs)
-      v <- vo
-    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
-
-    for {
-      vo <- MOFNamedElementValidation.doit(p, pkgs)
-      v <- vo
-    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
-
-    for {
-      vo <- MOFTypedElementValidation.doit(p, pkgs)
-      v <- vo
-    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
-
-    for {
-      vo <- MOFVisibilityValidation.doit(p, pkgs)
-      v <- vo
-    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
-
-    Success(None)
-
-  }
+//  def doit
+//  ( p: Project, ev: ActionEvent,
+//    script: DynamicScriptsTypes.BrowserContextMenuAction,
+//    tree: Tree, node: Node,
+//    pkg: Profile, selection: java.util.Collection[Element] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    val selectedPackages: Set[UMLPackage[Uml]] =
+//      selection
+//      .toIterable
+//      .selectByKindOf { case p: Package => umlPackage( p ) }
+//      .to[Set]
+//
+//    doit(p, selectedPackages)
+//  }
+//
+//  def doit
+//  ( p: Project, ev: ActionEvent,
+//    script: DynamicScriptsTypes.BrowserContextMenuAction,
+//    tree: Tree, node: Node,
+//    top: Package, selection: java.util.Collection[Element] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    val selectedPackages: Set[UMLPackage[Uml]] =
+//      selection
+//      .toIterable
+//      .selectByKindOf { case p: Package => umlPackage( p ) }
+//      .to[Set]
+//
+//    doit(p, selectedPackages)
+//  }
+//
+//  def doit
+//  ( p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Profile,
+//    selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    doit(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
+//
+//  def doit(
+//    p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Package,
+//    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    doit(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
+//
+//  def doit
+//  ( p: Project,
+//    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
+//  ( implicit _umlUtil: MagicDrawUMLUtil )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    for {
+//      vo <- MOFDefaultValueValidation.doit(p, pkgs)
+//      v <- vo
+//    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+//
+//    for {
+//      vo <- MOFMultiplicityValidation.doit(p, pkgs)
+//      v <- vo
+//    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+//
+//    for {
+//      vo <- MOFNamedElementValidation.doit(p, pkgs)
+//      v <- vo
+//    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+//
+//    for {
+//      vo <- MOFTypedElementValidation.doit(p, pkgs)
+//      v <- vo
+//    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+//
+//    for {
+//      vo <- MOFVisibilityValidation.doit(p, pkgs)
+//      v <- vo
+//    } MagicDrawValidationDataResults.showMDValidationDataResults(v)
+//
+//    Success(None)
+//
+//  }
 }

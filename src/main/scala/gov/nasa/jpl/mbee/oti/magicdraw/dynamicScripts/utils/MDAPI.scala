@@ -92,37 +92,37 @@ object MDAPI {
       case _ => None
     }
 
-  def getMDCatalogs
-  (omgCatalogResourcePath: String = "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml",
-   mdCatalogResourcePath: String = "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml")
-  : Try[(CatalogURIMapper, CatalogURIMapper)] = {
-
-    val defaultOMGCatalogFile =
-      new File(
-        new File(
-          ApplicationEnvironment.getInstallRoot).
-          toURI.resolve(omgCatalogResourcePath))
-    val omgCatalog =
-      if (defaultOMGCatalogFile.exists()) Seq(defaultOMGCatalogFile)
-      else MagicDrawFileChooser.chooseCatalogFile("Select the OMG UML 2.5 *.catalog.xml file").to[Seq]
-
-    val defaultMDCatalogFile =
-      new File(
-        new File(ApplicationEnvironment.getInstallRoot).
-          toURI.resolve(mdCatalogResourcePath))
-    val mdCatalog =
-      if (defaultMDCatalogFile.exists()) Seq(defaultMDCatalogFile)
-      else MagicDrawFileChooser.chooseCatalogFile("Select the MagicDraw UML 2.5 *.catalog.xml file").to[Seq]
-
-    CatalogURIMapper.createMapperFromCatalogFiles(omgCatalog.to[Seq])
-    .flatMap { omgCatalogMapper =>
-      CatalogURIMapper.createMapperFromCatalogFiles(mdCatalog.to[Seq])
-        .flatMap { mdCatalogMapper =>
-        Success((omgCatalogMapper, mdCatalogMapper))
-      }
-    }
-
-  }
+//  def getMDCatalogs
+//  (omgCatalogResourcePath: String = "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml",
+//   mdCatalogResourcePath: String = "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml")
+//  : Try[(CatalogURIMapper, CatalogURIMapper)] = {
+//
+//    val defaultOMGCatalogFile =
+//      new File(
+//        new File(
+//          ApplicationEnvironment.getInstallRoot).
+//          toURI.resolve(omgCatalogResourcePath))
+//    val omgCatalog =
+//      if (defaultOMGCatalogFile.exists()) Seq(defaultOMGCatalogFile)
+//      else MagicDrawFileChooser.chooseCatalogFile("Select the OMG UML 2.5 *.catalog.xml file").to[Seq]
+//
+//    val defaultMDCatalogFile =
+//      new File(
+//        new File(ApplicationEnvironment.getInstallRoot).
+//          toURI.resolve(mdCatalogResourcePath))
+//    val mdCatalog =
+//      if (defaultMDCatalogFile.exists()) Seq(defaultMDCatalogFile)
+//      else MagicDrawFileChooser.chooseCatalogFile("Select the MagicDraw UML 2.5 *.catalog.xml file").to[Seq]
+//
+//    CatalogURIMapper.createMapperFromCatalogFiles(omgCatalog.to[Seq])
+//    .flatMap { omgCatalogMapper =>
+//      CatalogURIMapper.createMapperFromCatalogFiles(mdCatalog.to[Seq])
+//        .flatMap { mdCatalogMapper =>
+//        Success((omgCatalogMapper, mdCatalogMapper))
+//      }
+//    }
+//
+//  }
 
   def getMDPluginsLog(): Logger =
     MDLog.getPluginsLog()

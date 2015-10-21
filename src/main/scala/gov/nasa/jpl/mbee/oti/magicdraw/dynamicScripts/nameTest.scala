@@ -190,6 +190,8 @@ object nameTest {
                   System.out.println(c)
                   System.out.println(s"avail? $available")
                 }
+              case _ =>
+                ()
             }
             available
           case _ =>

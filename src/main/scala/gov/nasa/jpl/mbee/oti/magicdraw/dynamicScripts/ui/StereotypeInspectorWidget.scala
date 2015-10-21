@@ -66,106 +66,106 @@ object StereotypeInspectorWidget {
 
   import ComputedDerivedWidgetHelper._
 
-  def baseMetaProperties
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML]): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProperty[MagicDrawUML]](
-      derived, e,
-      _.baseMetaProperties.toList.sortBy(_.qualifiedName.get),
-      umlUtil )
-  }
-  
-  def baseMetaPropertiesExceptRedefined
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProperty[MagicDrawUML]](
-      derived, e,
-      _.baseMetaPropertiesExceptRedefined.toList.sortBy(_.qualifiedName.get),
-      umlUtil )
-  }
-  
-  def profile
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProfile[MagicDrawUML]](
-      derived, e,
-      _.profile.toSet,
-      MagicDrawUMLUtil( project ) )
-
-  def getSpecializedStereotypes
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-      derived, e,
-      org.omg.oti.uml.getSpecializedStereotypes( _ ),
-      umlUtil )
-  }
-  
-  def getSpecializedStereotypesOutsideProfile
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-      derived, e,
-      org.omg.oti.uml.getSpecializedStereotypesOutsideProfile( _ ),
-      umlUtil )
-  }
-  
-  def getSpecializedStereotypesWithinProfile
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML]): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-      derived, e,
-      org.omg.oti.uml.getSpecializedStereotypesWithinProfile( _ ),
-      umlUtil )
-  }
-  
-  def getAllSpecializedStereotypes
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-      derived, e,
-      org.omg.oti.uml.getAllSpecializedStereotypes( _ ),
-      umlUtil )
-  }
-  
-  def getAllSpecializedStereotypesWithinProfile
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-      derived, e,
-      org.omg.oti.uml.getAllSpecializedStereotypesWithinProfile( _ ),
-      umlUtil )
-  }
-  def getSpecializedStereotypesFromOtherProfiles
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-      derived, e,
-      org.omg.oti.uml.getSpecializedStereotypesFromOtherProfiles( _ ),
-      umlUtil )
-  }
+//  def baseMetaProperties
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML]): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProperty[MagicDrawUML]](
+//      derived, e,
+//      _.baseMetaProperties.toList.sortBy(_.qualifiedName.get),
+//      umlUtil )
+//  }
+//
+//  def baseMetaPropertiesExceptRedefined
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProperty[MagicDrawUML]](
+//      derived, e,
+//      _.baseMetaPropertiesExceptRedefined.toList.sortBy(_.qualifiedName.get),
+//      umlUtil )
+//  }
+//
+//  def profile
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLProfile[MagicDrawUML]](
+//      derived, e,
+//      _.profile.toSet,
+//      MagicDrawUMLUtil( project ) )
+//
+//  def getSpecializedStereotypes
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+//      derived, e,
+//      org.omg.oti.uml.getSpecializedStereotypes( _ ),
+//      umlUtil )
+//  }
+//
+//  def getSpecializedStereotypesOutsideProfile
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+//      derived, e,
+//      org.omg.oti.uml.getSpecializedStereotypesOutsideProfile( _ ),
+//      umlUtil )
+//  }
+//
+//  def getSpecializedStereotypesWithinProfile
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML]): Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+//      derived, e,
+//      org.omg.oti.uml.getSpecializedStereotypesWithinProfile( _ ),
+//      umlUtil )
+//  }
+//
+//  def getAllSpecializedStereotypes
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+//      derived, e,
+//      org.omg.oti.uml.getAllSpecializedStereotypes( _ ),
+//      umlUtil )
+//  }
+//
+//  def getAllSpecializedStereotypesWithinProfile
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+//      derived, e,
+//      org.omg.oti.uml.getAllSpecializedStereotypesWithinProfile( _ ),
+//      umlUtil )
+//  }
+//  def getSpecializedStereotypesFromOtherProfiles
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+//    implicit val umlUtil = MagicDrawUMLUtil( project )
+//    elementOperationWidget[UMLStereotype[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+//      derived, e,
+//      org.omg.oti.uml.getSpecializedStereotypesFromOtherProfiles( _ ),
+//      umlUtil )
+//  }
 }

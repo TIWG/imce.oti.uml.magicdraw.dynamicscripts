@@ -68,88 +68,88 @@ object NamespaceInspectorWidget {
   import ComputedDerivedWidgetHelper._
   import RelationTripleWidgetHelper._
   
-  def importedPackages
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.importedPackages,
-          MagicDrawUMLUtil( project ) )
-    
-  def allImportedPackagesTransitively
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.allImportedPackagesTransitively,
-          MagicDrawUMLUtil( project ) )
-
-  def members
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-    elementOperationWidget[UMLNamespace[MagicDrawUML], UMLNamedElement[MagicDrawUML]](
-      derived, e,
-      _.member,
-      MagicDrawUMLUtil( project ) )
-
-  def importedMembers
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.importedMember,
-          MagicDrawUMLUtil( project ) )  
-
-  def visibleMembers
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.visibleMembers,
-          MagicDrawUMLUtil( project ) )  
-      
-  def allVisibleMembersTransitively
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.allVisibleMembersTransitively,
-          MagicDrawUMLUtil( project ) )  
-
-  def allVisibleMembersAccessibleTransitively
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]]( 
-          derived, e, 
-          _.allVisibleMembersAccessibleTransitively,
-          MagicDrawUMLUtil( project ) )  
-      
-  def forwardReferencesBeyondNamespaceScope
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-    ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-    e match {
-      case ns: Namespace =>
-        namespaceRelationTripleWidget(
-          derived, ns,
-          _.forwardReferencesBeyondNamespaceScope,
-          MagicDrawUMLUtil( project ) )
-      case _ =>
-        Failure( new IllegalArgumentException( "Not a package!" ) )
-    }    
+//  def importedPackages
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+//          derived, e,
+//          _.importedPackages,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def allImportedPackagesTransitively
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+//          derived, e,
+//          _.allImportedPackagesTransitively,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def members
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//    elementOperationWidget[UMLNamespace[MagicDrawUML], UMLNamedElement[MagicDrawUML]](
+//      derived, e,
+//      _.member,
+//      MagicDrawUMLUtil( project ) )
+//
+//  def importedMembers
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+//          derived, e,
+//          _.importedMember,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def visibleMembers
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+//          derived, e,
+//          _.visibleMembers,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def allVisibleMembersTransitively
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+//          derived, e,
+//          _.allVisibleMembersTransitively,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def allVisibleMembersAccessibleTransitively
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+//          derived, e,
+//          _.allVisibleMembersAccessibleTransitively,
+//          MagicDrawUMLUtil( project ) )
+//
+//  def forwardReferencesBeyondNamespaceScope
+//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//    ek: MagicDrawElementKindDesignation, e: Element )
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+//    e match {
+//      case ns: Namespace =>
+//        namespaceRelationTripleWidget(
+//          derived, ns,
+//          _.forwardReferencesBeyondNamespaceScope,
+//          MagicDrawUMLUtil( project ) )
+//      case _ =>
+//        Failure( new IllegalArgumentException( "Not a package!" ) )
+//    }
 }

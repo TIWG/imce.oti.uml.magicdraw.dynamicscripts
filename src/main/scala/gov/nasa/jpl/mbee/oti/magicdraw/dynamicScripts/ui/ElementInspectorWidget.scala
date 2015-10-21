@@ -58,94 +58,94 @@ object ElementInspectorWidget {
   import AppliedStereotypeWidgetHelper._
   import ComputedDerivedWidgetHelper._
 
-  def appliedStereotypes
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    appliedStereotypeInstanceWidget[UMLElement[MagicDrawUML]](
-      derived, e,
-      MagicDrawUMLUtil(project))
+//  def appliedStereotypes
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    appliedStereotypeInstanceWidget[UMLElement[MagicDrawUML]](
+//      derived, e,
+//      MagicDrawUMLUtil(project))
 
-  def appliedStereotypesWithoutMetaclassProperties
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-      derived, e,
-      _.getAppliedStereotypesWithoutMetaclassProperties,
-      MagicDrawUMLUtil(project))
+//  def appliedStereotypesWithoutMetaclassProperties
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+//      derived, e,
+//      _.getAppliedStereotypesWithoutMetaclassProperties,
+//      MagicDrawUMLUtil(project))
 
-  def allForwardReferencesFromStereotypeTagProperties
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-      derived, e,
-      _.allForwardReferencesFromStereotypeTagProperties,
-      MagicDrawUMLUtil(project))
+//  def allForwardReferencesFromStereotypeTagProperties
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+//      derived, e,
+//      _.allForwardReferencesFromStereotypeTagProperties,
+//      MagicDrawUMLUtil(project))
 
-  def allForwardReferencesToElements
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-      derived, e,
-      _.allForwardReferencesToElements,
-      MagicDrawUMLUtil(project))
+//  def allForwardReferencesToElements
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+//      derived, e,
+//      _.allForwardReferencesToElements,
+//      MagicDrawUMLUtil(project))
 
-  def allForwardReferencesToImportablePackageableElements
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-      derived, e,
-      _.allForwardReferencesToImportablePackageableElements,
-      MagicDrawUMLUtil(project))
+//  def allForwardReferencesToImportablePackageableElements
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+//      derived, e,
+//      _.allForwardReferencesToImportablePackageableElements,
+//      MagicDrawUMLUtil(project))
 
-  def getPackageOwnerWithURI
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit
-    idg: IDGenerator[MagicDrawUML],
-    otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] = None)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-      derived, e,
-      _.getPackageOwnerWithEffectiveURI,
-      MagicDrawUMLUtil(project))
+//  def getPackageOwnerWithURI
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit
+//    idg: IDGenerator[MagicDrawUML],
+//    otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] = None)
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+//      derived, e,
+//      _.getPackageOwnerWithEffectiveURI,
+//      MagicDrawUMLUtil(project))
 
-  def packageOrProfileOwner
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLPackage[MagicDrawUML]](
-      derived, e,
-      getPackageOrProfileOwner(_),
-      MagicDrawUMLUtil(project))
+//  def packageOrProfileOwner
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLPackage[MagicDrawUML]](
+//      derived, e,
+//      getPackageOrProfileOwner(_),
+//      MagicDrawUMLUtil(project))
 
-  def ownedElements
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-      derived, e,
-      _.ownedElement,
-      MagicDrawUMLUtil(project))
+//  def ownedElements
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+//      derived, e,
+//      _.ownedElement,
+//      MagicDrawUMLUtil(project))
 
-  def allOwnedElementsWithinPackageScope
-  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-   ek: MagicDrawElementKindDesignation, e: Element)
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
-    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-      derived, e,
-      _.allOwnedElementsWithinPackageScope,
-      MagicDrawUMLUtil(project))
+//  def allOwnedElementsWithinPackageScope
+//  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+//   ek: MagicDrawElementKindDesignation, e: Element)
+//  ( implicit idg: IDGenerator[MagicDrawUML])
+//  : Try[(java.awt.Component, Seq[ValidationAnnotation])] =
+//    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+//      derived, e,
+//      _.allOwnedElementsWithinPackageScope,
+//      MagicDrawUMLUtil(project))
 }

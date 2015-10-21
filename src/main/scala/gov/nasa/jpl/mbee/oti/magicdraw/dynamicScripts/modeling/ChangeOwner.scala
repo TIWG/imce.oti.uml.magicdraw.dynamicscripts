@@ -69,96 +69,96 @@ import scala.util.{Failure, Success, Try}
 */
 object ChangeOwner {
 
-  def doit
-  (p: Project,
-   ev: ActionEvent,
-   script: DynamicScriptsTypes.DiagramContextMenuAction,
-   dpe: DiagramPresentationElement,
-   triggerView: PresentationElement,
-   triggerElement: Element,
-   selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-    
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+//  def doit
+//  (p: Project,
+//   ev: ActionEvent,
+//   script: DynamicScriptsTypes.DiagramContextMenuAction,
+//   dpe: DiagramPresentationElement,
+//   triggerView: PresentationElement,
+//   triggerElement: Element,
+//   selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    val app = Application.getInstance()
+//    val guiLog = app.getGUILog
+//    guiLog.clearLog()
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    // @todo populate...
+//    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+//      None
+//
+//    implicit val documentOps = new MagicDrawDocumentOps()
+//    val upd = MagicDrawUMLUpdate(umlUtil)
+//
+//    val newOwner = MDUML.getBrowserTreeSelection() match {
+//      case None =>
+//        return Failure(new IllegalArgumentException("Select a single element (new owner) in the browser tree"))
+//      case Some(bInfo) if 1 == bInfo.selection.size =>
+//        umlElement( bInfo.selection.head.e )
+//      case _ =>
+//        return Failure(new IllegalArgumentException("Select a single element (new owner) in the browser tree"))
+//    }
+//
+//    val selectedElements =
+//      selection
+//      .toIterable
+//      .selectByKindOf { case pe: PresentationElement => umlElement( pe.getElement ) }
+//      .to[List]
+//
+//
+//    MDAPI
+//      .getMDCatalogs()
+//      .flatMap { case (documentURIMapper, builtInURIMapper) =>
+//
+//        MagicDrawDocumentSet
+//        .createMagicDrawProjectDocumentSet(
+//            documentURIMapper, builtInURIMapper,
+//            otiCharacterizations,
+//            ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
+//            unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil))
+//        .transform[Option[MagicDrawValidationDataResults]](
+//        {
+//          info: MagicDrawDocumentSet.MagicDrawDocumentSetInfo
+//          //(MagicDrawOTISymbols, ResolvedDocumentSet[MagicDrawUML], MagicDrawDocumentSet, Iterable[UnresolvedElementCrossReference[MagicDrawUML]])
+//          =>
+//
+//          implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator(info._2)
+//
+//          selectedElements.foreach { e =>
+//            changeOwner(newOwner, e)
+//              .recover{ case t: Throwable =>
+//              return Failure(t)
+//            }
+//          }
+//
+//            Success(None)
+//
+//        },
+//        {
+//          f => Failure(f)
+//        })
+//    }
+//
+//  }
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    // @todo populate...
-    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
-      None
-
-    implicit val documentOps = new MagicDrawDocumentOps()
-    val upd = MagicDrawUMLUpdate(umlUtil)
-
-    val newOwner = MDUML.getBrowserTreeSelection() match {
-      case None =>
-        return Failure(new IllegalArgumentException("Select a single element (new owner) in the browser tree"))
-      case Some(bInfo) if 1 == bInfo.selection.size =>
-        umlElement( bInfo.selection.head.e )
-      case _ =>
-        return Failure(new IllegalArgumentException("Select a single element (new owner) in the browser tree"))
-    }
-
-    val selectedElements =
-      selection
-      .toIterable
-      .selectByKindOf { case pe: PresentationElement => umlElement( pe.getElement ) }
-      .to[List]
-
-
-    MDAPI
-      .getMDCatalogs()
-      .flatMap { case (documentURIMapper, builtInURIMapper) =>
-
-        MagicDrawDocumentSet
-        .createMagicDrawProjectDocumentSet(
-            documentURIMapper, builtInURIMapper,
-            otiCharacterizations,
-            ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
-            unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil))
-        .transform[Option[MagicDrawValidationDataResults]](
-        {
-          info: MagicDrawDocumentSet.MagicDrawDocumentSetInfo
-          //(MagicDrawOTISymbols, ResolvedDocumentSet[MagicDrawUML], MagicDrawDocumentSet, Iterable[UnresolvedElementCrossReference[MagicDrawUML]])
-          =>
-
-          implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator(info._2)
-
-          selectedElements.foreach { e =>
-            changeOwner(newOwner, e)
-              .recover{ case t: Throwable =>
-              return Failure(t)
-            }
-          }
-
-            Success(None)
-
-        },
-        {
-          f => Failure(f)
-        })
-    }
-
-  }
-
-  def changeOwner[Uml <: UML]
-  (newParent: UMLElement[Uml],
-   relocatedChild: UMLElement[Uml])
-  (implicit idg: IDGenerator[Uml])
-  : Try[Unit] =
-    relocatedChild.getContainingMetaPropertyEvaluator match {
-      case Failure(f) =>
-        Failure(f)
-      case Success(None) =>
-        Failure(new IllegalArgumentException("cannot change the ownership of the root element"))
-      case Success(Some(m)) =>
-        if (!newParent.compositeMetaProperties.contains(m))
-          Failure(new IllegalArgumentException("Different ownership properties!"))
-        else {
-          Success(Unit)
-        }
-    }
+//  def changeOwner[Uml <: UML]
+//  (newParent: UMLElement[Uml],
+//   relocatedChild: UMLElement[Uml])
+//  (implicit idg: IDGenerator[Uml])
+//  : Try[Unit] =
+//    relocatedChild.getContainingMetaPropertyEvaluator match {
+//      case Failure(f) =>
+//        Failure(f)
+//      case Success(None) =>
+//        Failure(new IllegalArgumentException("cannot change the ownership of the root element"))
+//      case Success(Some(m)) =>
+//        if (!newParent.compositeMetaProperties.contains(m))
+//          Failure(new IllegalArgumentException("Different ownership properties!"))
+//        else {
+//          Success(Unit)
+//        }
+//    }
 }

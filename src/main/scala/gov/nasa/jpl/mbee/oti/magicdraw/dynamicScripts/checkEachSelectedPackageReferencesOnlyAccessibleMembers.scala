@@ -61,152 +61,152 @@ import scala.util.{Success, Try}
  */
 object checkEachSelectedPackageReferencesOnlyAccessibleMembers {
 
-  def doitExceptNestingPackagesAndAppliedProfiles
-  ( p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Profile,
-    selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
+//  def doitExceptNestingPackagesAndAppliedProfiles
+//  ( p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Profile,
+//    selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
   
-  def doitIncludingNestingPackagesAndAppliedProfiles
-  ( p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Profile,
-    selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+//  def doitIncludingNestingPackagesAndAppliedProfiles
+//  ( p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Profile,
+//    selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+//  def doitExceptNestingPackagesAndAppliedProfiles
+//  ( p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Package,
+//    selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
 
-    checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
+//  def doitIncludingNestingPackagesAndAppliedProfiles
+//  ( p: Project,
+//    ev: ActionEvent,
+//    script: DynamicScriptsTypes.DiagramContextMenuAction,
+//    dpe: DiagramPresentationElement,
+//    triggerView: PackageView,
+//    triggerElement: Package,
+//    selection: java.util.Collection[PresentationElement] )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    implicit val umlUtil = MagicDrawUMLUtil( p )
+//    import umlUtil._
+//
+//    checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles(
+//      p,
+//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+//  }
 
-  def doitExceptNestingPackagesAndAppliedProfiles
-  ( p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Package,
-    selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
-
-  def doitIncludingNestingPackagesAndAppliedProfiles
-  ( p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PackageView,
-    triggerElement: Package,
-    selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
-
-    checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-  }
-
-  def checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles
-  ( p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-  ( implicit _umlUtil: MagicDrawUMLUtil )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    import _umlUtil._
-    val app = Application.getInstance
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
-
-    val otiV = OTIMagicDrawValidation(p)
-
-    val rules = new UMLPackageableElementRules[Uml, MagicDrawUMLUtil] {
-      implicit val umlOps = _umlUtil
-    }
-
-    implicit val referencedButNotAccessibleValidationConstructor =
-      rules.defaultReferencedButNotAccessibleConstructor _
-
-    val elementMessages = for {
-      pkg <- pkgs
-      _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
-      mdPkg = umlMagicDrawUMLPackage(pkg).getMagicDrawPackage
-      as = List( actions.SelectInContainmentTreeAction( mdPkg ) )
-      violation <- rules.
-        findNonAccessibleButReferencedImportablePackabeableElementsExceptNestingPackagesAndAppliedProfiles( pkg )
-      vInfo = otiV.constructValidationInfo(
-        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
-        Some(s"unaccessible cross-reference from ${pkg.qualifiedName.get}"),
-        Nil).get
-    } yield
-      umlMagicDrawUMLPackageableElement(violation.referencedButNotAccessible).getMagicDrawElement -> List(vInfo)
-
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "Validate each package references only accessible members (excluding nesting packages & applied profiles)",
-      elementMessages.toMap)
-  }
+//  def checkEachSelectedPackageReferencesOnlyAccessibleMembersExceptNestingPackagesAndAppliedProfiles
+//  ( p: Project,
+//    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
+//  ( implicit _umlUtil: MagicDrawUMLUtil )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    import _umlUtil._
+//    val app = Application.getInstance
+//    val guiLog = app.getGUILog
+//    guiLog.clearLog()
+//
+//    val otiV = OTIMagicDrawValidation(p)
+//
+//    val rules = new UMLPackageableElementRules[Uml, MagicDrawUMLUtil] {
+//      implicit val umlOps = _umlUtil
+//    }
+//
+//    implicit val referencedButNotAccessibleValidationConstructor =
+//      rules.defaultReferencedButNotAccessibleConstructor _
+//
+//    val elementMessages = for {
+//      pkg <- pkgs
+//      _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
+//      mdPkg = umlMagicDrawUMLPackage(pkg).getMagicDrawPackage
+//      as = List( actions.SelectInContainmentTreeAction( mdPkg ) )
+//      violation <- rules.
+//        findNonAccessibleButReferencedImportablePackabeableElementsExceptNestingPackagesAndAppliedProfiles( pkg )
+//      vInfo = otiV.constructValidationInfo(
+//        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+//        Some(s"unaccessible cross-reference from ${pkg.qualifiedName.get}"),
+//        Nil).get
+//    } yield
+//      umlMagicDrawUMLPackageableElement(violation.referencedButNotAccessible).getMagicDrawElement -> List(vInfo)
+//
+//    otiV.makeMDIllegalArgumentExceptionValidation(
+//      "Validate each package references only accessible members (excluding nesting packages & applied profiles)",
+//      elementMessages.toMap)
+//  }
   
-  def checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles
-  ( p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-  ( implicit _umlUtil: MagicDrawUMLUtil )
-  : Try[Option[MagicDrawValidationDataResults]] = {
-
-    import _umlUtil._
-    val app = Application.getInstance
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
-
-    val otiV = OTIMagicDrawValidation(p)
-
-    val rules = new UMLPackageableElementRules[Uml, MagicDrawUMLUtil] {
-      implicit val umlOps = _umlUtil
-    }
-
-    implicit val referencedButNotAccessibleValidationConstructor =
-      rules.defaultReferencedButNotAccessibleConstructor _
-
-    val elementMessages = for {
-      pkg <- pkgs
-      _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
-      as = List( actions.SelectInContainmentTreeAction( umlMagicDrawUMLPackage(pkg).getMagicDrawPackage ) )
-      violation <- rules.
-        findNonAccessibleButReferencedImportablePackabeableElementsIncludingNestingPackagesAndAppliedProfiles( pkg )
-      vInfo = otiV.constructValidationInfo(
-        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
-        Some(s"unaccessible cross-reference from ${pkg.qualifiedName.get}"),
-        Nil).get
-    } yield
-      umlMagicDrawUMLPackageableElement(violation.referencedButNotAccessible).getMagicDrawElement -> List(vInfo)
-
-    otiV.makeMDIllegalArgumentExceptionValidation(
-        "Validate each package references only accessible members (including nesting packages & applied profiles)",
-        elementMessages.toMap)
-  }
+//  def checkEachSelectedPackageReferencesOnlyAccessibleMembersIncludingNestingPackagesAndAppliedProfiles
+//  ( p: Project,
+//    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
+//  ( implicit _umlUtil: MagicDrawUMLUtil )
+//  : Try[Option[MagicDrawValidationDataResults]] = {
+//
+//    import _umlUtil._
+//    val app = Application.getInstance
+//    val guiLog = app.getGUILog
+//    guiLog.clearLog()
+//
+//    val otiV = OTIMagicDrawValidation(p)
+//
+//    val rules = new UMLPackageableElementRules[Uml, MagicDrawUMLUtil] {
+//      implicit val umlOps = _umlUtil
+//    }
+//
+//    implicit val referencedButNotAccessibleValidationConstructor =
+//      rules.defaultReferencedButNotAccessibleConstructor _
+//
+//    val elementMessages = for {
+//      pkg <- pkgs
+//      _ = guiLog.log( s"Analyzing ${pkg.qualifiedName.get}" )
+//      as = List( actions.SelectInContainmentTreeAction( umlMagicDrawUMLPackage(pkg).getMagicDrawPackage ) )
+//      violation <- rules.
+//        findNonAccessibleButReferencedImportablePackabeableElementsIncludingNestingPackagesAndAppliedProfiles( pkg )
+//      vInfo = otiV.constructValidationInfo(
+//        otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
+//        Some(s"unaccessible cross-reference from ${pkg.qualifiedName.get}"),
+//        Nil).get
+//    } yield
+//      umlMagicDrawUMLPackageableElement(violation.referencedButNotAccessible).getMagicDrawElement -> List(vInfo)
+//
+//    otiV.makeMDIllegalArgumentExceptionValidation(
+//        "Validate each package references only accessible members (including nesting packages & applied profiles)",
+//        elementMessages.toMap)
+//  }
 }
