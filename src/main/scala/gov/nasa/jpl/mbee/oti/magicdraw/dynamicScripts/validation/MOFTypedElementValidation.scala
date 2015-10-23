@@ -63,7 +63,8 @@ import org.omg.oti.uml.xmi._
 import scala.collection.immutable._
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Success, Try}
+import scalaz._
+import scala.util.{Failure, Success, Try}
 
 /**
 * Validates all TypedElements in scope of the selected packages per MOF 2.5 well-formedness constraints
@@ -86,179 +87,189 @@ import scala.util.{Success, Try}
 */
 object MOFTypedElementValidation {
 
-//  def doit
-//  ( p: Project, ev: ActionEvent,
-//    script: DynamicScriptsTypes.BrowserContextMenuAction,
-//    tree: Tree, node: Node,
-//    pkg: Profile, selection: java.util.Collection[Element] )
-//  : Try[Option[MagicDrawValidationDataResults]] = {
-//
-//    implicit val umlUtil = MagicDrawUMLUtil( p )
-//    import umlUtil._
-//
-//    val app = Application.getInstance()
-//    val guiLog = app.getGUILog
-//    guiLog.clearLog()
-//
-//    val selectedPackages: Set[UMLPackage[Uml]] =
-//      selection
-//        .toIterable
-//        .selectByKindOf { case p: Package => umlPackage(p) }
-//        .to[Set]
-//
-//    doit(p, selectedPackages)
-//  }
-//
-//  def doit
-//  ( p: Project, ev: ActionEvent,
-//    script: DynamicScriptsTypes.BrowserContextMenuAction,
-//    tree: Tree, node: Node,
-//    top: Package, selection: java.util.Collection[Element] )
-//  : Try[Option[MagicDrawValidationDataResults]] = {
-//
-//    implicit val umlUtil = MagicDrawUMLUtil( p )
-//    import umlUtil._
-//
-//    val app = Application.getInstance()
-//    val guiLog = app.getGUILog
-//    guiLog.clearLog()
-//
-//    val selectedPackages: Set[UMLPackage[Uml]] =
-//      selection
-//        .toIterable
-//        .selectByKindOf { case p: Package => umlPackage(p) }
-//        .to[Set]
-//
-//    doit(p, selectedPackages)
-//  }
-//
-//  def doit
-//  ( p: Project,
-//    ev: ActionEvent,
-//    script: DynamicScriptsTypes.DiagramContextMenuAction,
-//    dpe: DiagramPresentationElement,
-//    triggerView: PackageView,
-//    triggerElement: Profile,
-//    selection: java.util.Collection[PresentationElement] )
-//  : Try[Option[MagicDrawValidationDataResults]] = {
-//
-//    implicit val umlUtil = MagicDrawUMLUtil( p )
-//    import umlUtil._
-//
-//    val app = Application.getInstance()
-//    val guiLog = app.getGUILog
-//    guiLog.clearLog()
-//
-//    doit(
-//      p,
-//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-//  }
-//
-//  def doit
-//  ( p: Project,
-//    ev: ActionEvent,
-//    script: DynamicScriptsTypes.DiagramContextMenuAction,
-//    dpe: DiagramPresentationElement,
-//    triggerView: PackageView,
-//    triggerElement: Package,
-//    selection: java.util.Collection[PresentationElement] )
-//  : Try[Option[MagicDrawValidationDataResults]] = {
-//
-//    implicit val umlUtil = MagicDrawUMLUtil( p )
-//    import umlUtil._
-//
-//    val app = Application.getInstance()
-//    val guiLog = app.getGUILog
-//    guiLog.clearLog()
-//
-//    doit(
-//      p,
-//      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
-//  }
+  def doit
+  ( p: Project, ev: ActionEvent,
+    script: DynamicScriptsTypes.BrowserContextMenuAction,
+    tree: Tree, node: Node,
+    pkg: Profile, selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
 
-//  def doit
-//  ( p: Project,
-//    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-//  ( implicit _umlUtil: MagicDrawUMLUtil )
-//  : Try[Option[MagicDrawValidationDataResults]] = {
-//
-//    import _umlUtil._
-//
-//    // @todo populate...
-//    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
-//      None
-//
-//    implicit val documentOps = new MagicDrawDocumentOps()
-//
-//    MDAPI
-//      .getMDCatalogs()
-//      .flatMap { case (documentURIMapper, builtInURIMapper) =>
-//
-//      MagicDrawDocumentSet.createMagicDrawProjectDocumentSet  (
-//        documentURIMapper, builtInURIMapper,
-//        otiCharacterizations,
-//        MDAPI.ignoreCrossReferencedElementFilter,
-//        MDAPI.unresolvedElementMapper(_umlUtil))
-//        .flatMap {
-//        case (_, rds, _, _) =>
-//
-//          implicit val idg: IDGenerator[MagicDrawUML] = MagicDrawIDGenerator(rds)
-//    val otiV = OTIMagicDrawValidation(p)
-//
-//    val elementMessages = scala.collection.mutable.HashMap[
-//      Element,
-//      scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
-//
-//    for {
-//      v <- TypedElementValidationHelper.analyzePackageContents(pkgs)
-//      if TypedElementValidationStatus.ValidTypedElementStatus != v.status
-//      mdTE = umlMagicDrawUMLTypedElement(v.typedElement).getMagicDrawTypedElement
-//      vOptInfo <- v.status match {
-//        case TypedElementValidationStatus.ValidTypedElementStatus =>
-//          Success(None)
-//        case TypedElementValidationStatus.InvalidOperationRaisedExceptionNonClassTypeStatus =>
-//          otiV.makeValidationInfo(
-//            otiV.MD_OTI_ValidationConstraint_InvalidOperationRaisedExceptionNonClassType,
-//            v.explanation,
-//            Nil)
-//        case TypedElementValidationStatus.InvalidTypedElementWithAssociationTypeStatus =>
-//          otiV.makeValidationInfo(
-//            otiV.MD_OTI_ValidationConstraint_InvalidTypedElementWithAssociationType,
-//            v.explanation,
-//            Nil)
-//        case TypedElementValidationStatus.InvalidUntypedTypedElementStatus =>
-//          otiV.makeValidationInfo(
-//            otiV.MD_OTI_ValidationConstraint_InvalidUntypedTypedElement,
-//            v.explanation,
-//            Nil)
-//        case TypedElementValidationStatus.InvalidDataTypePropertyAggregationStatus =>
-//          require(v.isRepairable)
-//          otiV.makeValidationInfo(
-//            otiV.MD_OTI_ValidationConstraint_InvalidDataTypePropertyAggregation,
-//            v.explanation,
-//            SetPropertyAggregationToNone() :: Nil)
-//        case TypedElementValidationStatus.InvalidDataTypePropertyWithNonDataTypeTypeStatus =>
-//          otiV.makeValidationInfo(
-//            otiV.MD_OTI_ValidationConstraint_InvalidDataTypePropertyWithNonDataTypeType,
-//            v.explanation,
-//            Nil)
-//        case TypedElementValidationStatus.InvalidAssociationMemberEndPropertyNonClassTypeStatus =>
-//          otiV.makeValidationInfo(
-//            otiV.MD_OTI_ValidationConstraint_InvalidAssociationMemberEndPropertyNonClassType,
-//            v.explanation,
-//            Nil)
-//      }
-//      vInfo <- vOptInfo
-//      validationInfo = elementMessages.getOrElseUpdate(
-//        mdTE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
-//    } validationInfo += vInfo
-//
-//    otiV.makeMDIllegalArgumentExceptionValidation(
-//      "EMOF [1,22,23,28,29,30] & CMOF [2,22,23,28,29,30] TypedElement Validation",
-//      elementMessages.toMap)
-//
-//      }
-//
-//    }
-//  }
+    implicit val umlUtil = MagicDrawUMLUtil( p )
+    import umlUtil._
+
+    val app = Application.getInstance()
+    val guiLog = app.getGUILog
+    guiLog.clearLog()
+
+    val selectedPackages: Set[UMLPackage[Uml]] =
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
+
+    doit(p, selectedPackages)
+  }
+
+  def doit
+  ( p: Project, ev: ActionEvent,
+    script: DynamicScriptsTypes.BrowserContextMenuAction,
+    tree: Tree, node: Node,
+    top: Package, selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    implicit val umlUtil = MagicDrawUMLUtil( p )
+    import umlUtil._
+
+    val app = Application.getInstance()
+    val guiLog = app.getGUILog
+    guiLog.clearLog()
+
+    val selectedPackages: Set[UMLPackage[Uml]] =
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
+
+    doit(p, selectedPackages)
+  }
+
+  def doit
+  ( p: Project,
+    ev: ActionEvent,
+    script: DynamicScriptsTypes.DiagramContextMenuAction,
+    dpe: DiagramPresentationElement,
+    triggerView: PackageView,
+    triggerElement: Profile,
+    selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    implicit val umlUtil = MagicDrawUMLUtil( p )
+    import umlUtil._
+
+    val app = Application.getInstance()
+    val guiLog = app.getGUILog
+    guiLog.clearLog()
+
+    doit(
+      p,
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+  }
+
+  def doit
+  ( p: Project,
+    ev: ActionEvent,
+    script: DynamicScriptsTypes.DiagramContextMenuAction,
+    dpe: DiagramPresentationElement,
+    triggerView: PackageView,
+    triggerElement: Package,
+    selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    implicit val umlUtil = MagicDrawUMLUtil( p )
+    import umlUtil._
+
+    val app = Application.getInstance()
+    val guiLog = app.getGUILog
+    guiLog.clearLog()
+
+    doit(
+      p,
+      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) } )
+  }
+
+  def doit
+  ( p: Project,
+    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
+  ( implicit _umlUtil: MagicDrawUMLUtil )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    import _umlUtil._
+
+    // @todo populate...
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
+
+    implicit val documentOps = new MagicDrawDocumentOps()
+
+    val result: Try[Option[MagicDrawValidationDataResults]] =
+    MDAPI
+      .getMDCatalogs()
+      .flatMap { case (documentURIMapper, builtInURIMapper) =>
+
+      MagicDrawDocumentSet.createMagicDrawProjectDocumentSet  (
+        documentURIMapper, builtInURIMapper,
+        otiCharacterizations,
+        MDAPI.ignoreCrossReferencedElementFilter,
+        MDAPI.unresolvedElementMapper(_umlUtil))
+        .fold[Try[Option[MagicDrawValidationDataResults]]](
+        l = (nels: NonEmptyList[java.lang.Throwable]) => {
+          Failure(nels.head)
+        },
+        r = {
+          case (_, rds, _, _) => {
+
+            implicit val idg: IDGenerator[MagicDrawUML] = MagicDrawIDGenerator(rds)
+            val otiV = OTIMagicDrawValidation(p)
+
+            val elementMessages = scala.collection.mutable.HashMap[
+              Element,
+              scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
+
+            for {
+              v <- TypedElementValidationHelper.analyzePackageContents(pkgs)
+              if TypedElementValidationStatus.ValidTypedElementStatus != v.status
+              mdTE = umlMagicDrawUMLTypedElement(v.typedElement).getMagicDrawTypedElement
+              vOptInfo <- v.status match {
+                case TypedElementValidationStatus.ValidTypedElementStatus =>
+                  Success(None)
+                case TypedElementValidationStatus.InvalidOperationRaisedExceptionNonClassTypeStatus =>
+                  otiV.makeValidationInfo(
+                    otiV.MD_OTI_ValidationConstraint_InvalidOperationRaisedExceptionNonClassType,
+                    v.explanation,
+                    Nil)
+                case TypedElementValidationStatus.InvalidTypedElementWithAssociationTypeStatus =>
+                  otiV.makeValidationInfo(
+                    otiV.MD_OTI_ValidationConstraint_InvalidTypedElementWithAssociationType,
+                    v.explanation,
+                    Nil)
+                case TypedElementValidationStatus.InvalidUntypedTypedElementStatus =>
+                  otiV.makeValidationInfo(
+                    otiV.MD_OTI_ValidationConstraint_InvalidUntypedTypedElement,
+                    v.explanation,
+                    Nil)
+                case TypedElementValidationStatus.InvalidDataTypePropertyAggregationStatus =>
+                  require(v.isRepairable)
+                  otiV.makeValidationInfo(
+                    otiV.MD_OTI_ValidationConstraint_InvalidDataTypePropertyAggregation,
+                    v.explanation,
+                    SetPropertyAggregationToNone() :: Nil)
+                case TypedElementValidationStatus.InvalidDataTypePropertyWithNonDataTypeTypeStatus =>
+                  otiV.makeValidationInfo(
+                    otiV.MD_OTI_ValidationConstraint_InvalidDataTypePropertyWithNonDataTypeType,
+                    v.explanation,
+                    Nil)
+                case TypedElementValidationStatus.InvalidAssociationMemberEndPropertyNonClassTypeStatus =>
+                  otiV.makeValidationInfo(
+                    otiV.MD_OTI_ValidationConstraint_InvalidAssociationMemberEndPropertyNonClassType,
+                    v.explanation,
+                    Nil)
+              }
+              vInfo <- vOptInfo
+              validationInfo = elementMessages.getOrElseUpdate(
+                mdTE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
+            } validationInfo += vInfo
+
+            val validationResults: Try[Option[MagicDrawValidationDataResults]] =
+              otiV.makeMDIllegalArgumentExceptionValidation(
+                "EMOF [1,22,23,28,29,30] & CMOF [2,22,23,28,29,30] TypedElement Validation",
+                elementMessages.toMap)
+
+            validationResults
+          }
+        })
+
+    }
+
+    result
+  }
 }
