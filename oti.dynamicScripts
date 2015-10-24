@@ -343,6 +343,22 @@ dynamicScripts(
       [ m: Package ]
       scripts {
           BrowserContextMenuAction(
+              name: 'Inspect OTI info'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/o
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Inspect OTI info'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/o
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
+              method: doit
+          )
+          BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
               dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
@@ -523,6 +539,22 @@ dynamicScripts(
       [ m: Model ]
       scripts {
           BrowserContextMenuAction(
+              name: 'Inspect OTI info'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/o
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Inspect OTI info'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/o
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
+              method: doit
+          )
+          BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts
               dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
@@ -551,6 +583,22 @@ dynamicScripts(
       name='OMG Tool Infrastructure'
       [ m: Profile ]
       scripts {
+          BrowserContextMenuAction(
+              name: 'Inspect OTI info'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/o
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Inspect OTI info'
+              project: jpl.omg.oti.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti, org.omg.oti.trees, org.omg.oti.changeMigration, org.omg.oti.magicdraw }
+              access: r/o
+              class: gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
+              method: doit
+          )
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: jpl.omg.oti.magicdraw.dynamicscripts

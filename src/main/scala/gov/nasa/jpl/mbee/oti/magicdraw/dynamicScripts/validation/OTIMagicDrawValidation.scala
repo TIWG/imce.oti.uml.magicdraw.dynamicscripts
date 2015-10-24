@@ -47,10 +47,13 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Constraint, Element, Enu
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults.ValidationAnnotationAction
 import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.actions.ExportAsJUnitResult
+
+import org.omg.oti.uml.UMLError
 import org.omg.oti.magicdraw.uml.read.{MagicDrawUMLUtil, MagicDrawUMLOps}
 
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
+import scalaz._, Scalaz._
 import scala.util.{Failure, Success, Try}
 
 object OTIMagicDrawValidation {
@@ -237,12 +240,12 @@ case class OTIMagicDrawValidation(project: Project)(implicit mdUtil: MagicDrawUM
   (validationMessage: String,
    elementMessages: Map[Element, Iterable[OTIMagicDrawValidation.MDValidationInfo]],
    vSuite: MagicDrawValidationDataResults.ValidationSuiteInfo = mdOTIValidationSuite)
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : NonEmptyList[java.lang.Throwable] \/ Option[MagicDrawValidationDataResults] = {
     val app = Application.getInstance()
     val guiLog = app.getGUILog
     if (elementMessages.isEmpty) {
       guiLog.log(s"OK -- no violations of $validationMessage")
-      Success(None)
+      Option.empty[MagicDrawValidationDataResults].right[NonEmptyList[java.lang.Throwable]]
     }
     else {
 
@@ -268,7 +271,7 @@ case class OTIMagicDrawValidation(project: Project)(implicit mdUtil: MagicDrawUM
       guiLog.log(summary)
 
       val initialLevel: Option[EnumerationLiteral] = None
-      val minimumLevel = (initialLevel /: results) {
+      val minimumLevel: Option[EnumerationLiteral] = (initialLevel /: results) {
         case (None, (c, _, _)) =>
           Option.apply(vSuite.vsh.getRuleSeverityLevel(c))
         case (Some(severityLevel), (c, _, _)) =>
@@ -281,16 +284,24 @@ case class OTIMagicDrawValidation(project: Project)(implicit mdUtil: MagicDrawUM
               else
                 Some(severityLevel)
           }
-      } match {
-        case None =>
-          return Failure(new IllegalArgumentException(
-            """At least one error message must involve
-              |a MagicDraw <<validationRule>>-stereotyped Constraint with a severity level""".stripMargin))
-        case Some(level) =>
-          level
       }
 
-      val runData = new ValidationRunData(vSuite.suite, false, elements, minimumLevel)
+      val minimumLevelOrError: NonEmptyList[java.lang.Throwable] \/ EnumerationLiteral =
+        minimumLevel
+        .fold[NonEmptyList[java.lang.Throwable] \/ EnumerationLiteral](
+          NonEmptyList(
+            UMLError.umlAdaptationError(
+              """|At least one error message must involve
+                 |a MagicDraw <<validationRule>>-stereotyped Constraint with a severity level""".stripMargin('|'))
+          ).left
+        ) { level =>
+          level.right[NonEmptyList[java.lang.Throwable]]
+        }
+
+      val runDataOrError =
+        minimumLevelOrError.map { minimumLevel =>
+          new ValidationRunData(vSuite.suite, false, elements, minimumLevel)
+        }
 
       val exportAction = ExportAsJUnitResult()
 
@@ -309,12 +320,96 @@ case class OTIMagicDrawValidation(project: Project)(implicit mdUtil: MagicDrawUM
           }
       }
 
-      Success(Some(MagicDrawValidationDataResults(
-        summary,
-        runData,
-        runResults.toList,
-        List[RunnableWithProgress]())))
+      runDataOrError
+      .map { runData =>
+        MagicDrawValidationDataResults(
+          summary,
+          runData,
+          runResults.toList,
+          List[RunnableWithProgress]())
+          .some
+      }
     }
 
   }
+
+
+  def toTryOptionMDValidationDataResults
+  (p: Project, message: String, maybeErrors: NonEmptyList[java.lang.Throwable] \/ Unit)
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    maybeErrors
+      .fold[Try[Option[MagicDrawValidationDataResults]]](
+      l = (nels: NonEmptyList[java.lang.Throwable]) =>
+      {
+        val errorMessages
+        : Map[com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element, (String, List[com.nomagic.actions.NMAction])] =
+          nels
+            .toList
+            .map { cause =>
+              p.getModel -> Tuple2(cause.getMessage, List.empty[com.nomagic.actions.NMAction])
+            }
+            .toMap
+
+
+        scala.util.Success(
+          MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
+            p, message,
+            errorMessages,
+            "*::MagicDrawOTIValidation",
+            "*::UnresolvedCrossReference"
+          )
+            .validationDataResults
+            .some
+        )
+      },
+      r = (_: Unit) =>
+        Success(None)
+    )
+
+  }
+
+  def toTryOptionMDValidationDataResults
+  (p: Project, message: String, maybeErrors: Option[NonEmptyList[java.lang.Throwable]])
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    maybeErrors
+      .fold[scala.util.Try[Option[MagicDrawValidationDataResults]]](
+      scala.util.Success(Option.empty[MagicDrawValidationDataResults])
+    ){ nels: NonEmptyList[java.lang.Throwable] =>
+      val errors
+      : Map[com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element, (String, List[com.nomagic.actions.NMAction])] =
+        nels
+          .toList
+          .map { error =>
+            p.getModel -> Tuple2(error.getMessage, List.empty[com.nomagic.actions.NMAction])
+          }
+          .toMap
+
+
+      scala.util.Success(
+        MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
+          p, message,
+          errors,
+          "*::MagicDrawOTIValidation",
+          "*::UnresolvedCrossReference"
+        )
+          .validationDataResults
+          .some
+      )
+    }
+
+  }
+
+  def toTryOptionMagicDrawValidationDataResults
+  ( p: Project,
+    message: String,
+    results: NonEmptyList[java.lang.Throwable] \/ Option[MagicDrawValidationDataResults] )
+  : Try[Option[MagicDrawValidationDataResults]] =
+    results.fold[Try[Option[MagicDrawValidationDataResults]]](
+    l = (nels: NonEmptyList[java.lang.Throwable]) =>
+      toTryOptionMDValidationDataResults(p, message, nels.some),
+    r = (mdValidationDataResults: Option[MagicDrawValidationDataResults]) =>
+      Success(mdValidationDataResults)
+    )
 }

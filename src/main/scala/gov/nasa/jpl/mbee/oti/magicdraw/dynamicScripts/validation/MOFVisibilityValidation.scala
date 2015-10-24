@@ -212,9 +212,10 @@ object MOFVisibilityValidation {
         mdE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
     } validationInfo += vInfo
 
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "EMOF [4] & CMOF [7] Visibility Validation",
-      elementMessages.toMap)
-
+    val validation =
+      otiV.makeMDIllegalArgumentExceptionValidation(
+        "EMOF [4] & CMOF [7] Visibility Validation",
+        elementMessages.toMap)
+    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF Visibility Validation", validation)
   }
 }

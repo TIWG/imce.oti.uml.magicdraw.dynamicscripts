@@ -231,9 +231,11 @@ object MOFMultiplicityValidation {
         mdPoP, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
     } validationInfo += vInfo
 
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "EMOF [32] & CMOF [14] Multiplicity Validation",
-      elementMessages.toMap)
+    val validation =
+      otiV.makeMDIllegalArgumentExceptionValidation(
+        "EMOF [32] & CMOF [14] Multiplicity Validation",
+        elementMessages.toMap)
+    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF MultiplicityElement Validation", validation)
 
   }
 }

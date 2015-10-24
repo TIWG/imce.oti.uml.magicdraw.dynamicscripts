@@ -47,7 +47,7 @@ import com.nomagic.magicdraw.ui.browser.BrowserTabTree
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.utils.MDLog
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
-import gov.nasa.jpl.dynamicScripts.magicdraw.DynamicScriptsPlugin
+import gov.nasa.jpl.dynamicScripts.magicdraw.{MagicDrawValidationDataResults, DynamicScriptsPlugin}
 import org.apache.log4j.Logger
 
 
@@ -60,7 +60,7 @@ import org.omg.oti.uml.read.api._
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
 import scala.language.postfixOps
-import scalaz._
+import scalaz._, Scalaz._
 import scala.util.{Failure, Success, Try}
 
 object MDAPI {
@@ -96,7 +96,7 @@ object MDAPI {
   def getMDCatalogs
   (omgCatalogResourcePath: String = "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml",
    mdCatalogResourcePath: String = "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml")
-  : Try[(CatalogURIMapper, CatalogURIMapper)] = {
+  : NonEmptyList[java.lang.Throwable] \/ (CatalogURIMapper, CatalogURIMapper) = {
 
     val defaultOMGCatalogFile =
       new File(
@@ -116,20 +116,12 @@ object MDAPI {
       else MagicDrawFileChooser.chooseCatalogFile("Select the MagicDraw UML 2.5 *.catalog.xml file").to[Seq]
 
     CatalogURIMapper.createMapperFromCatalogFiles(omgCatalog.to[Seq])
-    .fold[Try[(CatalogURIMapper, CatalogURIMapper)]](
-      (nels: NonEmptyList[java.lang.Throwable]) => {
-        Failure(nels.head)
-      },
-      (omgCatalogMapper: CatalogURIMapper) => {
+    .flatMap { omgCatalogMapper: CatalogURIMapper =>
         CatalogURIMapper.createMapperFromCatalogFiles(mdCatalog.to[Seq])
-          .fold[Try[(CatalogURIMapper, CatalogURIMapper)]](
-          (nels: NonEmptyList[java.lang.Throwable]) => {
-            Failure(nels.head)
-          },
-          (mdCatalogMapper: CatalogURIMapper) => {
-            Success((omgCatalogMapper, mdCatalogMapper))
-          })
-      })
+        .map { mdCatalogMapper: CatalogURIMapper =>
+          (omgCatalogMapper, mdCatalogMapper)
+        }
+      }
   }
 
   def getMDPluginsLog(): Logger =
@@ -260,4 +252,5 @@ object MDAPI {
 
       result
     }
+
 }

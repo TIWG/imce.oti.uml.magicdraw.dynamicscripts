@@ -193,9 +193,10 @@ object MOFNamedElementValidation {
         mdNE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
     } validationInfo += vInfo
 
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "EMOF [3] & CMOF [6] NamedElement Validation",
-      elementMessages.toMap)
-
+    val validation =
+      otiV.makeMDIllegalArgumentExceptionValidation(
+        "EMOF [3] & CMOF [6] NamedElement Validation",
+        elementMessages.toMap)
+    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF NamedElement Validation", validation)
   }
 }

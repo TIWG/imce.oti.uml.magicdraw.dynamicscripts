@@ -216,8 +216,10 @@ object MOFDefaultValueValidation {
         mdE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
     } validationInfo += vInfo
 
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "EMOF [24,25,26,31] & CMOF [13,24,25,26] DefaultValue Validation",
-      elementMessages.toMap)
+    val validation =
+      otiV.makeMDIllegalArgumentExceptionValidation(
+        "EMOF [24,25,26,31] & CMOF [13,24,25,26] DefaultValue Validation",
+        elementMessages.toMap)
+    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF Default Value Validation", validation)
   }
 }
