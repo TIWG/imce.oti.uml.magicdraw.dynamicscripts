@@ -373,6 +373,7 @@ object InspectOTIPackageInfo {
         .toThese
         .map { case (documentURIMapper, builtInURIMapper) =>
 
+          val info =
           MagicDrawDocumentSet
             .createMagicDrawProjectDocumentSet(
               additionalSpecificationRootPackages=selectedPackages.to[Set],
@@ -380,11 +381,22 @@ object InspectOTIPackageInfo {
               otiCharacterizations,
               ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
               unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil))
+
+          info.a.fold[Unit](
+            guiLog.log(s"MagicDrawDocumentSet.createMagicDrawProjectDocumentSet: no errors")
+          ){ nels =>
+            guiLog.log(s"MagicDrawDocumentSet.createMagicDrawProjectDocumentSet: ${nels.size} errors")
+            nels.foreach { error =>
+              guiLog.log(s"==> $error")
+            }
+          }
+
+          info
             .map {
               case (otiSymbols: MagicDrawOTISymbols,
-              rds: ResolvedDocumentSet[MagicDrawUML],
-              ds: MagicDrawDocumentSet,
-              xrefs: Iterable[UnresolvedElementCrossReference[MagicDrawUML]]) =>
+                    rds: ResolvedDocumentSet[MagicDrawUML],
+                    ds: MagicDrawDocumentSet,
+                    xrefs: Iterable[UnresolvedElementCrossReference[MagicDrawUML]]) =>
 
                 implicit val mdDocOps = new MagicDrawDocumentOps()
                 implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator(rds)
@@ -392,6 +404,8 @@ object InspectOTIPackageInfo {
                 selectedPackages.foreach { pkg =>
                   guiLog.log(s"# OTI info: ${pkg.qualifiedName.get}")
                   guiLog.log(s"-- is OTI Specification Root? ${DocumentSet.isPackageRootOfSpecificationDocument(pkg)}")
+                  guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiID: ${pkg.xmiID()}")
+                  guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiUUID: ${pkg.xmiUUID()}")
 
                 }
                 ()
