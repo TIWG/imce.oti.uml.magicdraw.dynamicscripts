@@ -102,7 +102,7 @@
             <arg value="-DMD_INSTALL_DIR=${md.install.dir}"/>
             <arg value="-batch"/>
             <arg value="-no-colors"/>
-            <arg value="publish copyPublishedArtifactLibraries"/>
+            <arg value="publish; copyPublishedArtifactLibraries"/>
         </exec>
     </target>
 
