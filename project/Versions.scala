@@ -36,7 +36,7 @@ object Versions {
   // OTI MagicDraw version
 
   val oti_magicdraw_prefix = version_prefix
-  val oti_magicdraw_suffix = "445095"
+  val oti_magicdraw_suffix = "445096"
 
 
 }
