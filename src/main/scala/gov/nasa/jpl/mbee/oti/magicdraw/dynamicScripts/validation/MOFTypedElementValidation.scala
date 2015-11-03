@@ -48,14 +48,18 @@ import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
+
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
 import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.actions._
 import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.MDAPI
 
 import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.magicdraw.uml.characteristics._
 import org.omg.oti.magicdraw.uml.read._
+
 import org.omg.oti.uml.canonicalXMI._
+import org.omg.oti.uml.characteristics._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.validation._
 import org.omg.oti.uml.xmi._
@@ -191,6 +195,9 @@ object MOFTypedElementValidation {
     implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
       None
 
+    implicit val otiCharacterizationProfileProvider: OTICharacteristicsProvider[MagicDrawUML] =
+      MagicDrawOTICharacteristicsProfileProvider()
+
     implicit val documentOps = new MagicDrawDocumentOps()
 
     val result: NonEmptyList[java.lang.Throwable] \/ Option[MagicDrawValidationDataResults] =
@@ -200,13 +207,12 @@ object MOFTypedElementValidation {
 
           val result1: NonEmptyList[java.lang.Throwable] \&/ Option[MagicDrawValidationDataResults] =
             MagicDrawDocumentSet.createMagicDrawProjectDocumentSet(
-              additionalSpecificationRootPackages = pkgs.to[Set],
+              additionalSpecificationRootPackages = pkgs.to[Set].some,
               documentURIMapper, builtInURIMapper,
-              otiCharacterizations,
               MDAPI.ignoreCrossReferencedElementFilter,
               MDAPI.unresolvedElementMapper(_umlUtil))
               .flatMap {
-                case (_, rds, _, _) =>
+                case (rds, _, _) =>
 
                   implicit val idg: IDGenerator[MagicDrawUML] = MagicDrawIDGenerator(rds)
 

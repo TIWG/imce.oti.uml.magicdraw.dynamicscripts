@@ -62,8 +62,11 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 
+import org.omg.oti.uml.characteristics._
 import org.omg.oti.uml.read.api._
-import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
+
+import org.omg.oti.magicdraw.uml.characteristics._
+import org.omg.oti.magicdraw.uml.read._
 
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
@@ -119,9 +122,13 @@ object setOTIUUIDs {
     val guiLog = a.getGUILog
     guiLog.clearLog()
 
-    val umlUtil = MagicDrawUMLUtil( p )
+    implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
+
     implicit val otiCharacterizations: Option[Map[UMLPackage[Uml], UMLComment[Uml]]] = None
+
+    implicit val otiCharacterizationProfileProvider: OTICharacteristicsProvider[MagicDrawUML] =
+      MagicDrawOTICharacteristicsProfileProvider()
 
     val runnable = new RunnableWithProgress() {
 

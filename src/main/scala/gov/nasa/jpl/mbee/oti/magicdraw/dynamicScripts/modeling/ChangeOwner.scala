@@ -45,20 +45,24 @@ import com.nomagic.magicdraw.core.{ApplicationEnvironment, Application, Project}
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
 import com.nomagic.uml2.ext.jmi.helpers.{ModelHelper, StereotypesHelper}
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
+
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawValidationDataResults}
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
 import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.{ResultSetAggregator, MDAPI}
 import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
-import org.omg.oti.uml.UMLError
 
+import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.xmi._
-import org.omg.oti.magicdraw.uml.read._
-import org.omg.oti.magicdraw.uml.write.MagicDrawUMLUpdate
 import org.omg.oti.uml.canonicalXMI._
-import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.uml.characteristics._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.read.operations._
+
+import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.magicdraw.uml.characteristics._
+import org.omg.oti.magicdraw.uml.read._
+import org.omg.oti.magicdraw.uml.write.MagicDrawUMLUpdate
 
 import scala.collection.Iterable
 import scala.collection.JavaConversions._
@@ -93,6 +97,9 @@ object ChangeOwner {
     // @todo populate...
     implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
       None
+
+    implicit val otiCharacterizationProfileProvider: OTICharacteristicsProvider[MagicDrawUML] =
+      MagicDrawOTICharacteristicsProfileProvider()
 
     implicit val documentOps = new MagicDrawDocumentOps()
     val upd = MagicDrawUMLUpdate(umlUtil)
@@ -134,28 +141,20 @@ object ChangeOwner {
                 .toThese
           }
 
-        val _extraSpecificationRootPkgs
-        : Set[UMLPackage[Uml]] =
-          extraSpecificationRootPkgs.b.fold[Set[UMLPackage[Uml]]](
-            Set[UMLPackage[Uml]]()
-          )(identity)
-
         val mdDS =
           MagicDrawDocumentSet
             .createMagicDrawProjectDocumentSet(
-              additionalSpecificationRootPackages = _extraSpecificationRootPkgs,
+              additionalSpecificationRootPackages = extraSpecificationRootPkgs.b,
               documentURIMapper = documentURIMapper,
               builtInURIMapper = builtInURIMapper,
-              otiCharacterizations = otiCharacterizations,
               ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
               unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil))
 
         val maybeErrors =
           mdDS.flatMap {
-            case (otiSymbols: MagicDrawOTISymbols,
-            rds: ResolvedDocumentSet[MagicDrawUML],
-            ds: MagicDrawDocumentSet,
-            xrefs: Iterable[UnresolvedElementCrossReference[MagicDrawUML]]) =>
+            case (rds: ResolvedDocumentSet[MagicDrawUML],
+                  ds: MagicDrawDocumentSet,
+                  xrefs: Iterable[UnresolvedElementCrossReference[MagicDrawUML]]) =>
 
               implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator(rds)
 
