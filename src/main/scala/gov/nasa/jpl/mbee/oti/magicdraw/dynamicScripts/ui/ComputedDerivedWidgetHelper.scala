@@ -61,10 +61,13 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationCo
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
+
+import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read._
-import scala.reflect.{ classTag, ClassTag }
 
+import scala.reflect.{ classTag, ClassTag }
+import scalaz._, Scalaz._
 
 object ComputedDerivedWidgetHelper {
 
@@ -96,97 +99,99 @@ object ComputedDerivedWidgetHelper {
           typeName = DynamicScriptsTypes.HName( "metaclass" ),
           typeInfo = DynamicScriptsTypes.StringTypeDesignation() ) ) ) )
 
-//  def createRowForElement
-//  ( e: UMLElement[MagicDrawUML] )
-//  ( implicit umlUtil: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
-//  : Map[String, AbstractTreeNodeInfo] = {
-//    import umlUtil._
-//    Map(
-//      "context" -> ( e.owner match {
-//        case None => LabelNodeInfo( "<none>" )
-//        case Some( o ) => o match {
-//          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
-//          case parent                       => ReferenceNodeInfo( parent.toolSpecific_id.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
-//        }
-//      } ),
-//      "EMF eContainingFeature" -> {
-//        Option.apply(umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement.eContainingFeature) match {
-//          case None => LabelNodeInfo("<none>")
-//          case Some(f) => LabelNodeInfo(f.getName)
-//        }
-//      },
-//      "OTI containing meta-property" -> {
-//        val meval = e.getContainingMetaPropertyEvaluator.get
-//        meval match {
-//          case None => LabelNodeInfo("<none>")
-//          case Some(mp) => LabelNodeInfo(mp.propertyName)
-//        }
-//      },
-//      "name" ->
-//        ( e match {
-//          case ne: UMLNamedElement[Uml] =>
-//            ReferenceNodeInfo(
-//              ( ne, ne.name ) match {
-//                case ( l: UMLLiteralBoolean[Uml], _ )          => l.value.toString
-//                case ( l: UMLLiteralInteger[Uml], _ )          => l.value.toString
-//                case ( l: UMLLiteralReal[Uml], _ )             => l.value.toString
-//                case ( l: UMLLiteralString[Uml], _ )           => l.value.toString
-//                case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
-//                case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
-//                  case None      => "<unbound element>"
-//                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
-//                }
-//                case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
-//                  case None      => "<unbound element>"
-//                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
-//                }
-//                case ( _, Some( name ) ) => name
-//                case ( _, _ )            => ne.toolSpecific_id.get
-//              },
-//              umlMagicDrawUMLElement(e).getMagicDrawElement )
-//          case e: UMLElement[Uml] =>
-//            ReferenceNodeInfo( e.toolSpecific_id.get, umlMagicDrawUMLElement(e).getMagicDrawElement )
-//        } ),
-//      "metaclass" -> LabelNodeInfo( e.xmiType.head ) )
-//  }
+  def createRowForElement
+  ( e: UMLElement[MagicDrawUML] )
+  ( implicit umlUtil: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
+  : Map[String, AbstractTreeNodeInfo] = {
+    import umlUtil._
+    Map(
+      "context" -> ( e.owner match {
+        case None => LabelNodeInfo( "<none>" )
+        case Some( o ) => o match {
+          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent                       => ReferenceNodeInfo( parent.toolSpecific_id.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+        }
+      } ),
+      "EMF eContainingFeature" -> {
+        Option.apply(umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement.eContainingFeature) match {
+          case None => LabelNodeInfo("<none>")
+          case Some(f) => LabelNodeInfo(f.getName)
+        }
+      },
+      "OTI containing meta-property" -> {
+        val meval = e.getContainingMetaPropertyEvaluator.getOrElse(None)
+        meval match {
+          case None => LabelNodeInfo("<none>")
+          case Some(mp) => LabelNodeInfo(mp.propertyName)
+        }
+      },
+      "name" ->
+        ( e match {
+          case ne: UMLNamedElement[Uml] =>
+            ReferenceNodeInfo(
+              ( ne, ne.name ) match {
+                case ( l: UMLLiteralBoolean[Uml], _ )          => l.value.toString
+                case ( l: UMLLiteralInteger[Uml], _ )          => l.value.toString
+                case ( l: UMLLiteralReal[Uml], _ )             => l.value.toString
+                case ( l: UMLLiteralString[Uml], _ )           => l.value.toString
+                case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
+                case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
+                  case None      => "<unbound element>"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                }
+                case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
+                  case None      => "<unbound element>"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                }
+                case ( _, Some( name ) ) => name
+                case ( _, _ )            => ne.toolSpecific_id.get
+              },
+              umlMagicDrawUMLElement(e).getMagicDrawElement )
+          case e: UMLElement[Uml] =>
+            ReferenceNodeInfo( e.toolSpecific_id.get, umlMagicDrawUMLElement(e).getMagicDrawElement )
+        } ),
+      "metaclass" -> LabelNodeInfo( e.xmiType.head ) )
+  }
 
-//  def createGroupTableUIPanelForElements[U <: UMLElement[MagicDrawUML]]
-//  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
-//    pes: Iterable[U] )
-//  ( implicit util: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
-//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-//
-//    val rows: Seq[Map[String, AbstractTreeNodeInfo]] = pes.map ( createRowForElement ).to[Seq]
-//
-//    val ui = GroupTableNodeUI(
-//      makeComputedDerivedTreeForPackageNameMetaclass( derived ),
-//      rows,
-//      Seq( "context", "EMF eContainingFeature", "OTI containing meta-property", "name", "metaclass" ) )
-//    //ui._table.addMouseListener( DoubleClickMouseListener.createAbstractTreeNodeInfoDoubleClickMouseListener( ui._table ) )
-//    HyperlinkTableCellValueEditorRenderer.addRenderer4AbstractTreeNodeInfo( ui._table )
-//
-//    val validationAnnotations = rows flatMap
-//      ( _.values ) flatMap
-//      AbstractTreeNodeInfo.collectAnnotationsRecursively
-//
-//    Success( ( ui.panel, validationAnnotations ) )
-//  }
+  def createGroupTableUIPanelForElements[U <: UMLElement[MagicDrawUML]]
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    pes: Iterable[U] )
+  ( implicit util: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
 
-//  def elementOperationWidget[U <: UMLElement[MagicDrawUML], V <: UMLElement[MagicDrawUML]]
-//  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
-//    mdE: MagicDrawUML#Element,
-//    f: U => Iterable[V],
-//    util: MagicDrawUMLUtil )
-//  ( implicit uTag: ClassTag[U], idg: IDGenerator[MagicDrawUML] )
-//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
-//      val e = util.umlElement( mdE )
-//      val uClass = uTag.runtimeClass
-//      require (uClass != null)
-//      if ( uClass.isInstance( e ) )
-//        createGroupTableUIPanelForElements[V]( derived, f( e.asInstanceOf[U] ) )( util, idg )
-//      else
-//        Failure( new IllegalArgumentException(s"${mdE.getHumanType}: ${mdE.getID} is not a kind of ${uClass.getName}"))
-//  }
+    val rows: Seq[Map[String, AbstractTreeNodeInfo]] = pes.map ( createRowForElement ).to[Seq]
+    System.out.println(s"* ${rows.size} rows")
+    System.out.println(rows.map(_.toString).mkString("\n *","\n *","\n"))
+
+    val ui = GroupTableNodeUI(
+      makeComputedDerivedTreeForPackageNameMetaclass( derived ),
+      rows,
+      Seq( "context", "EMF eContainingFeature", "OTI containing meta-property", "name", "metaclass" ) )
+    //ui._table.addMouseListener( DoubleClickMouseListener.createAbstractTreeNodeInfoDoubleClickMouseListener( ui._table ) )
+    HyperlinkTableCellValueEditorRenderer.addRenderer4AbstractTreeNodeInfo( ui._table )
+
+    val validationAnnotations = rows flatMap
+      ( _.values ) flatMap
+      AbstractTreeNodeInfo.collectAnnotationsRecursively
+
+    Success( ( ui.panel, validationAnnotations ) )
+  }
+
+  def elementOperationWidget[U <: UMLElement[MagicDrawUML], V <: UMLElement[MagicDrawUML]]
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    mdE: MagicDrawUML#Element,
+    f: U => Iterable[V],
+    util: MagicDrawUMLUtil )
+  ( implicit uTag: ClassTag[U], idg: IDGenerator[MagicDrawUML] )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+      val e = util.umlElement( mdE )
+      val uClass = uTag.runtimeClass
+      require (uClass != null)
+      if ( uClass.isInstance( e ) )
+        createGroupTableUIPanelForElements[V]( derived, f( e.asInstanceOf[U] ) )( util, idg )
+      else
+        Failure( new IllegalArgumentException(s"${mdE.getHumanType}: ${mdE.getID} is not a kind of ${uClass.getName}"))
+  }
     
 
 }

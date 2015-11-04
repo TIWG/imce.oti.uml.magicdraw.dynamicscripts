@@ -66,24 +66,24 @@ object ClassifierInspectorWidget {
 
   import ComputedDerivedWidgetHelper._
   
-//  def general
-//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-//    ek: MagicDrawElementKindDesignation, e: Element )
-//  ( implicit idg: IDGenerator[MagicDrawUML])
-//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-//      elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
-//          derived, e,
-//          _.general,
-//          MagicDrawUMLUtil( project ) )
+  def general
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    ek: MagicDrawElementKindDesignation, e: Element )
+  ( implicit idg: IDGenerator[MagicDrawUML])
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+      elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
+          derived, e,
+          _.general,
+          MagicDrawUMLUtil( project ) )
     
-//  def generalClassifier
-//  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
-//    ek: MagicDrawElementKindDesignation, e: Element )
-//  ( implicit idg: IDGenerator[MagicDrawUML])
-//  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-//      elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
-//          derived, e,
-//          _.general_classifier,
-//          MagicDrawUMLUtil( project ) )
+  def generalClassifier
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    ek: MagicDrawElementKindDesignation, e: Element )
+  ( implicit idg: IDGenerator[MagicDrawUML])
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
+      elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
+          derived, e,
+          _.general_classifier,
+          MagicDrawUMLUtil( project ) )
     
 }
