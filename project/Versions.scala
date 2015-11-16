@@ -4,19 +4,19 @@ object Versions {
   val scala = "2.11.7"
 
   // JPL MBEE Common Scala Libraries
-  val jpl_mbee_common_scala_libraries_revision="d44cf0591f31cb1005a9b4a2fab47bfd235e005c"
+  val jpl_mbee_common_scala_libraries_revision="1bd3b24dd84bc505e4acf98ca06530419e7efe13"
 
   val version_prefix = "0.19.0"
 
   // OTI Core version
 
   val oti_core_prefix = version_prefix
-  val oti_core_suffix = "445145"
+  val oti_core_suffix = "445170"
 
   // OTI Change Migration version
 
   val oti_changeMigration_prefix = version_prefix
-  val oti_changeMigration_suffix = "445146"
+  val oti_changeMigration_suffix = "445171"
 
   // OTI Trees version
 

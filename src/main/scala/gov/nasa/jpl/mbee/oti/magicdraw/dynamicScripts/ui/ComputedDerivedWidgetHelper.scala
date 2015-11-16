@@ -62,6 +62,7 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 
+import org.omg.oti.uml.OTIPrimitiveTypes._
 import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read._
@@ -108,8 +109,10 @@ object ComputedDerivedWidgetHelper {
       "context" -> ( e.owner match {
         case None => LabelNodeInfo( "<none>" )
         case Some( o ) => o match {
-          case parent: UMLNamedElement[Uml] => ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
-          case parent                       => ReferenceNodeInfo( parent.toolSpecific_id.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent: UMLNamedElement[Uml] =>
+            ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent                       =>
+            ReferenceNodeInfo( OTI_ID.unwrap(parent.toolSpecific_id.get), umlMagicDrawUMLElement(parent).getMagicDrawElement )
         }
       } ),
       "EMF eContainingFeature" -> {
@@ -144,11 +147,11 @@ object ComputedDerivedWidgetHelper {
                   case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
                 }
                 case ( _, Some( name ) ) => name
-                case ( _, _ )            => ne.toolSpecific_id.get
+                case ( _, _ )            => OTI_ID.unwrap(ne.toolSpecific_id.get)
               },
               umlMagicDrawUMLElement(e).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( e.toolSpecific_id.get, umlMagicDrawUMLElement(e).getMagicDrawElement )
+            ReferenceNodeInfo( OTI_ID.unwrap(e.toolSpecific_id.get), umlMagicDrawUMLElement(e).getMagicDrawElement )
         } ),
       "metaclass" -> LabelNodeInfo( e.xmiType.head ) )
   }

@@ -182,6 +182,12 @@ object invokeDiagramContextMenuActionForSelection {
       }
       else scripts.head match {
         case d: DiagramContextMenuAction =>
+          System.out.println(s"invokeTriggerView: $invokeTriggerView")
+          System.out.println(s"invokeTriggerElement: $invokeTriggerElement")
+          System.out.println(s"selection: ${selection.size}")
+          selection.foreach { s =>
+            System.out.println(s"- selected: $s")
+          }
           val action = DynamicDiagramContextMenuActionForTriggerAndSelection(
             p, dpe,
             invokeTriggerView, invokeTriggerElement, selection,

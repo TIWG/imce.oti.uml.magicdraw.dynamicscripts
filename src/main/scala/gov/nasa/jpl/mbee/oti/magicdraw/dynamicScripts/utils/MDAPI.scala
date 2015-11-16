@@ -55,6 +55,7 @@ import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.canonicalXMI.CatalogURIMapper
 import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.uml.OTIPrimitiveTypes._
 import org.omg.oti.uml.read.api._
 
 import scala.collection.JavaConversions._
@@ -87,7 +88,7 @@ object MDAPI {
   (umlUtil: MagicDrawUMLUtil)
   ( e: UMLElement[MagicDrawUML] )
   : Option[UMLElement[MagicDrawUML]] =
-    e.toolSpecific_id.fold[Option[UMLElement[MagicDrawUML]]](None) {
+    e.toolSpecific_id.map(OTI_ID.unwrap).fold[Option[UMLElement[MagicDrawUML]]](None) {
       case "_UML_" => Some( umlUtil.MDBuiltInUML.scope )
       case "_StandardProfile_" => Some( umlUtil.MDBuiltInStandardProfile.scope )
       case _ => None
