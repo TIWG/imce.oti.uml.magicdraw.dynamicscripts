@@ -94,6 +94,10 @@ object invokeDiagramContextMenuActionForSelection {
             val peSelection = for {
               e <- comment.annotatedElement
               pe = dpe.findPresentationElement(umlMagicDrawUMLElement(e).getMagicDrawElement, null)
+              _ = if (null == pe) {
+                System.out.println(s"Invoking $className / $methodName: there is no presentation element for ${e.toolSpecific_id}")
+              }
+              if null != pe
             } yield pe
 
             return invoke(

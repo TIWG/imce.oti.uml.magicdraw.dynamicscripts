@@ -41,6 +41,7 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import javax.swing.JOptionPane
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import org.omg.oti.uml.xmi.IDGenerator
 
 import scala.collection.JavaConversions._
@@ -69,21 +70,33 @@ object ClassifierInspectorWidget {
   def general
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
           derived, e,
           _.general,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
     
   def generalClassifier
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLClassifier[MagicDrawUML], UMLClassifier[MagicDrawUML]](
           derived, e,
           _.general_classifier,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
     
 }

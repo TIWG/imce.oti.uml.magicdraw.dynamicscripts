@@ -38,22 +38,27 @@
  */
 package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils
 
+import java.awt.event.ActionEvent
 import java.io.File
 import javax.swing.filechooser.FileFilter
 import javax.swing.{JFileChooser, SwingUtilities}
 
+import com.nomagic.actions.NMAction
 import com.nomagic.magicdraw.core.{Application, ApplicationEnvironment, Project}
 import com.nomagic.magicdraw.ui.browser.BrowserTabTree
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.utils.MDLog
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
+import com.nomagic.uml2.ext.magicdraw.auxiliaryconstructs.mdmodels.Model
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.dynamicScripts.magicdraw.{MagicDrawValidationDataResults, DynamicScriptsPlugin}
 import org.apache.log4j.Logger
 
 
 import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.magicdraw.uml.read._
-import org.omg.oti.uml.canonicalXMI.CatalogURIMapper
+import org.omg.oti.uml.UMLError
+import org.omg.oti.uml.canonicalXMI.{UnresolvedElementCrossReference, CatalogURIMapper}
 import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.uml.OTIPrimitiveTypes._
 import org.omg.oti.uml.read.api._
@@ -210,7 +215,6 @@ object MDAPI {
    fileNameSuffix: String,
    dir: File = getApplicationInstallDir())
   : Try[Option[File]] =
-
     Try {
       var result: Option[File] = None
 
@@ -254,4 +258,134 @@ object MDAPI {
       result
     }
 
+  type MDValidationElementResults = Map[Element, Tuple2[String, List[NMAction]]]
+
+  type NelThrowable = NonEmptyList[java.lang.Throwable]
+
+  def error2MDElementMessage
+  ( error: java.lang.Throwable )
+  ( implicit umlUtil: MagicDrawUMLUtil, rootModel: Model )
+  : Map[Element, List[String]] = error match {
+
+    case ue: UMLError.UElementException[_, _] =>
+      val umlElement = ue.element.head.asInstanceOf[UMLElement[umlUtil.Uml]]
+      Map(umlUtil.umlMagicDrawUMLElement(umlElement).getMagicDrawElement -> (ue.toString :: Nil))
+
+    case ue: UMLError.UException =>
+      Map(rootModel -> (ue.getClass.getName + ": " + ue.toString :: Nil))
+  }
+
+  def showOTIUMLErrors
+  ( p: Project,
+    title: String,
+    maybeErrors: UMLError.OptionThrowableNel )
+  ( implicit umlUtil: MagicDrawUMLUtil )
+  : Unit = {
+
+
+    val a = Application.getInstance()
+    val guiLog = a.getGUILog
+    implicit val rootModel = p.getModel
+
+    maybeErrors.fold[Unit](
+      SwingUtilities.invokeLater(new Runnable {
+        def run: Unit = {
+          guiLog.log(s"*** $title: 0 errors ***")
+        }
+      })
+    ){ nels: UMLError.ThrowableNel =>
+      val element2messageList: Map[Element, List[String]] =
+
+        ( Map[Element, List[String]]() /: nels.toList ) { (acc, error) =>
+          acc |+| error2MDElementMessage(error)
+        }
+
+      val element2messages: Map[Element, (String, List[NMAction])] =
+        element2messageList.map { case (e, messages) =>
+          e -> Tuple2(messages.mkString("\n"), List.empty[NMAction])
+        }
+
+      SwingUtilities.invokeLater(new Runnable {
+        def run: Unit = {
+          guiLog.log(s"*** $title: ${element2messages.size} errors ***")
+        }
+      })
+
+      val mdValidationDataResults =
+        MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
+          p, s"*** $title: ${element2messages.size} errors ***",
+          element2messages,
+          "*::MagicDrawOTIValidation",
+          "*::UnresolvedCrossReference"
+        )
+          .validationDataResults
+
+      MagicDrawValidationDataResults.showMDValidationDataResults(mdValidationDataResults)
+    }
+
+  }
+
+  def showUnresolvedCrossReferencesAsMagicDrawValidationResults
+  ( p: Project,
+    unresolved: Iterable[UnresolvedElementCrossReference[MagicDrawUML]],
+    ignoreCrossReferencedElementFilter: UMLElement[MagicDrawUML] => Boolean)
+  (implicit umlUtil: MagicDrawUMLUtil)
+  : Unit = {
+    import umlUtil._
+
+    val a = Application.getInstance()
+    val guiLog = a.getGUILog
+
+    val elementResults: MDValidationElementResults =
+      unresolved.map {
+        u: UnresolvedElementCrossReference[Uml] =>
+          val uRef = u.relationTriple.obj
+          val mdXRef = umlMagicDrawUMLElement(uRef).getMagicDrawElement
+          val a = new NMAction(
+            s"Select${u.hashCode}",
+            s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}",
+            0) {
+            def actionPerformed(ev: ActionEvent): Unit =
+              umlMagicDrawUMLElement(uRef).selectInContainmentTreeRunnable.run
+          }
+          val message =
+            if (ignoreCrossReferencedElementFilter(uRef))
+              "Filtered cross-reference to: "
+            else
+              "Unfiltered cross-reference to: "
+
+          val fullMessage =
+            message + s"${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})"
+
+          umlMagicDrawUMLElement(u.relationTriple.sub).getMagicDrawElement -> Tuple2(fullMessage, List(a))
+      }.toMap
+
+    if (elementResults.isEmpty) {
+
+      SwingUtilities.invokeAndWait(new Runnable {
+        def run: Unit = {
+          guiLog.log(s"*** OTI Document Graph analysis: 0 unresolved external document cross-reference errors ***")
+        }
+      })
+
+    } else {
+
+      SwingUtilities.invokeAndWait(new Runnable {
+        def run: Unit = {
+          guiLog.log(s"*** OTI Document Graph analysis: ${unresolved.size} unresolved external document cross-references ***")
+        }
+      })
+
+      val mdValidationDataResults =
+        MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
+          p, s"*** OTI Document Graph analysis: ${unresolved.size} unresolved cross-references ***",
+          elementResults,
+          "*::MagicDrawOTIValidation",
+          "*::UnresolvedCrossReference"
+        )
+          .validationDataResults
+
+      MagicDrawValidationDataResults.showMDValidationDataResults(mdValidationDataResults)
+    }
+  }
 }

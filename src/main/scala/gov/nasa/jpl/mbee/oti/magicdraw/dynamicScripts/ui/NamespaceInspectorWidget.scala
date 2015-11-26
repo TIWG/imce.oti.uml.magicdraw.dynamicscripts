@@ -41,6 +41,7 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import javax.swing.JOptionPane
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import org.omg.oti.uml.RelationTriple
 import org.omg.oti.uml.xmi.IDGenerator
 
@@ -72,87 +73,135 @@ object NamespaceInspectorWidget {
   def importedPackages
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
           derived, e,
           _.importedPackages,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def allImportedPackagesTransitively
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
           derived, e,
           _.allImportedPackagesTransitively,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def members
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-    elementOperationWidget[UMLNamespace[MagicDrawUML], UMLNamedElement[MagicDrawUML]](
-      derived, e,
-      _.member,
-      MagicDrawUMLUtil( project ) )
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLNamespace[MagicDrawUML], UMLNamedElement[MagicDrawUML]](
+          derived, e,
+          _.member,
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def importedMembers
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
           derived, e,
           _.importedMember,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def visibleMembers
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
           derived, e,
           _.visibleMembers,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def allVisibleMembersTransitively
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
           derived, e,
           _.allVisibleMembersTransitively,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def allVisibleMembersAccessibleTransitively
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLNamespace[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
           derived, e,
           _.allVisibleMembersAccessibleTransitively,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def forwardReferencesBeyondNamespaceScope
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-    e match {
-      case ns: Namespace =>
-        namespaceRelationTripleWidget(
-          derived, ns,
-          (x: UMLNamespace[MagicDrawUML]) => {
-            Success(x.forwardReferencesBeyondNamespaceScope.getOrElse(Set[RelationTriple[MagicDrawUML]]()))
-          },
-          MagicDrawUMLUtil( project ) )
-      case _ =>
-        Failure( new IllegalArgumentException( "Not a package!" ) )
-    }
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        e match {
+          case ns: Namespace =>
+            namespaceRelationTripleWidget(
+              derived, ns,
+              (x: UMLNamespace[MagicDrawUML]) => {
+                Success(x.forwardReferencesBeyondNamespaceScope.getOrElse(Set[RelationTriple[MagicDrawUML]]()))
+              },
+              MagicDrawUMLUtil(project))
+          case _ =>
+            Failure(new IllegalArgumentException("Not a package!"))
+        }
+      })
+  }
 }

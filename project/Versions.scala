@@ -11,32 +11,32 @@ object Versions {
   // OTI Core version
 
   val oti_core_prefix = version_prefix
-  val oti_core_suffix = "445170"
+  val oti_core_suffix = "445196"
 
   // OTI Change Migration version
 
   val oti_changeMigration_prefix = version_prefix
-  val oti_changeMigration_suffix = "445171"
+  val oti_changeMigration_suffix = "445197"
 
   // OTI Trees version
 
   val oti_trees_prefix = version_prefix
-  val oti_trees_suffix = "445172"
+  val oti_trees_suffix = "445198"
 
   // OTI Canonical XMI version
 
   val oti_canonical_xmi_prefix = version_prefix
-  val oti_canonical_xmi_suffix = "445176"
+  val oti_canonical_xmi_suffix = "445208"
 
   // OTI UML Loader version
 
   val oti_loader_prefix = version_prefix
-  val oti_loader_suffix = "445177"
+  val oti_loader_suffix = "445209"
 
   // OTI MagicDraw version
 
   val oti_magicdraw_prefix = version_prefix
-  val oti_magicdraw_suffix = "445178"
+  val oti_magicdraw_suffix = "445210"
 
 
 }

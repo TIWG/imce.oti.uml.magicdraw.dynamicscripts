@@ -205,6 +205,7 @@ object RelationTripleWidgetHelper {
     val rows: Seq[Map[String, AbstractTreeNodeInfo]] =
       pes.map(RelationTripleWidgetHelper.createRowForRelationTriple).to[Seq]
 
+    System.out.println(s"createGroupTableUIPanelForRelationTriples => ${rows.size} rows")
     val ui = GroupTableNodeUI(
       makeComputedDerivedTreeForRelationTriple( derived ),
       rows,

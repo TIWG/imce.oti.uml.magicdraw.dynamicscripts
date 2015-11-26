@@ -41,6 +41,7 @@ package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.ui
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import javax.swing.JOptionPane
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import org.omg.oti.uml.xmi.IDGenerator
 
 import scala.collection.JavaConversions._
@@ -69,41 +70,65 @@ object PropertyInspectorWidget {
   def redefinedProperty
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
           derived, e,
           _.redefinedProperty,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def redefiningdProperty
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
           derived, e,
           _.redefinedProperty_property,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def subsettedProperty
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
           derived, e,
           _.subsettedProperty,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
 
   def subsettingProperty
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
-  ( implicit idg: IDGenerator[MagicDrawUML])
-  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] =
-      elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLProperty[MagicDrawUML], UMLProperty[MagicDrawUML]](
           derived, e,
           _.subsettedProperty_property,
-          MagicDrawUMLUtil( project ) )
+          MagicDrawUMLUtil(project))
+      })
+  }
     
 }
