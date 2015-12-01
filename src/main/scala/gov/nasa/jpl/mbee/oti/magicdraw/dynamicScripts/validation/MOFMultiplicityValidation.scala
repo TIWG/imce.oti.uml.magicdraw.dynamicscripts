@@ -64,11 +64,11 @@ import scala.util.{Failure, Success, Try}
 /**
 * Validates all MultiplicityElements in scope of the selected packages per MOF 2.5 well-formedness constraints
 *
-* @See MOF 2.5, Section 12.4 EMOF Constraints
+* @see MOF 2.5, Section 12.4 EMOF Constraints
 * [32] The values of MultiplicityElement::lowerValue and upperValue must be
 * of kind LiteralInteger and LiteralUnlimitedNatural respectively.
 *
-* @See MOF 2.5, Section 14.4 CMOF Constraints
+* @see MOF 2.5, Section 14.4 CMOF Constraints
 * [14] The values of MultiplicityElement::lowerValue and upperValue must
 * be of kind LiteralInteger and LiteralUnlimitedNatural respectively.
 */

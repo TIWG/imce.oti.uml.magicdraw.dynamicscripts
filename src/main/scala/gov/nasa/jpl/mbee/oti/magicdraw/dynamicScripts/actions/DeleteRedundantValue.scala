@@ -49,11 +49,11 @@ import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 import scala.language.postfixOps
 
 /**
-* @See MOF 2.5, Section 12.4 EMOF Constraints
+* @see MOF 2.5, Section 12.4 EMOF Constraints
 * [32] The values of MultiplicityElement::lowerValue and upperValue must be
 * of kind LiteralInteger and LiteralUnlimitedNatural respectively.
 *
-* @See XMI 2.5, Section 9.4.1 EMOF Package
+* @see XMI 2.5, Section 9.4.1 EMOF Package
 * Properties whose values are the default values are not serialized except
 * where the value is being used to specify the default itself:
 * specifically if it is the value of the property Property::defaultValue in a metamodel.

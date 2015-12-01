@@ -48,7 +48,7 @@ import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 import scala.language.postfixOps
 
 /**
-* @See MOF 2.5, Section 12.4 EMOF Constraints
+* @see MOF 2.5, Section 12.4 EMOF Constraints
 * [32] The values of MultiplicityElement::lowerValue and upperValue must be
 * of kind LiteralInteger and LiteralUnlimitedNatural respectively.
 */
