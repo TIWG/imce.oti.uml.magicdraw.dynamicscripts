@@ -144,8 +144,11 @@ object checkPackageForImportsOfNestedPackages {
     } yield
       umlMagicDrawUMLPackage(missingImport).getMagicDrawPackage -> List(vInfo)
 
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "Validate for missing imports of nested packages",
-      elementMessages.toMap)
+    otiV.toTryOptionMagicDrawValidationDataResults(
+      p,
+      "checkPackageForImportsOfNestedPackages" ,
+      otiV.makeMDIllegalArgumentExceptionValidation(
+        "Validate for missing imports of nested packages",
+        elementMessages.toMap))
   }
 }

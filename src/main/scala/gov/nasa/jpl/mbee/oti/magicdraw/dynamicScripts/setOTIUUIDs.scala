@@ -62,8 +62,11 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 
+import org.omg.oti.uml.characteristics._
 import org.omg.oti.uml.read.api._
-import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
+
+import org.omg.oti.magicdraw.uml.characteristics._
+import org.omg.oti.magicdraw.uml.read._
 
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
@@ -119,8 +122,13 @@ object setOTIUUIDs {
     val guiLog = a.getGUILog
     guiLog.clearLog()
 
-    val umlUtil = MagicDrawUMLUtil( p )
+    implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
+
+    implicit val otiCharacterizations: Option[Map[UMLPackage[Uml], UMLComment[Uml]]] = None
+
+    implicit val otiCharacterizationProfileProvider: OTICharacteristicsProvider[MagicDrawUML] =
+      MagicDrawOTICharacteristicsProfileProvider()
 
     val runnable = new RunnableWithProgress() {
 
@@ -132,7 +140,11 @@ object setOTIUUIDs {
 
         try {
 
-          val selectedPackages: Set[UMLPackage[Uml]] = selection.toIterator selectByKindOf ( { case p: Package => umlPackage( p ) } ) toSet
+          val selectedPackages: Set[UMLPackage[Uml]] =
+            selection
+            .toIterable
+            .selectByKindOf { case p: Package => umlPackage( p ) }
+            .to[Set]
 
           progressStatus.setCurrent( 0 )
           progressStatus.setMax( 0 )
@@ -146,9 +158,9 @@ object setOTIUUIDs {
             _ = progressStatus.setDescription( s"Using $uuidPrefix to prefix OTI XMI:IDs for '${pkg.name.get}'..." )
             _ = guiLog.log( s"Using $uuidPrefix to prefix OTI XMI:IDs for '${pkg.name.get}'..." )
             _ = System.out.println( s"Using $uuidPrefix to prefix OTI XMI:IDs for '${pkg.name.get}'..." )
-            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(pkg).getMagicDrawElement, s"$uuidPrefix.${pkg.id}" )
+            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(pkg).getMagicDrawElement, s"$uuidPrefix.${pkg.toolSpecific_id}" )
             e <- pkg.allOwnedElements
-            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(e).getMagicDrawElement, s"$uuidPrefix.${e.id}" )
+            _ = UUIDRegistry.setUUID( umlMagicDrawUMLElement(e).getMagicDrawElement, s"$uuidPrefix.${e.toolSpecific_id}" )
           } ()
 
           guiLog.log( s"Done" )

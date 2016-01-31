@@ -94,6 +94,10 @@ object invokeDiagramContextMenuActionForSelection {
             val peSelection = for {
               e <- comment.annotatedElement
               pe = dpe.findPresentationElement(umlMagicDrawUMLElement(e).getMagicDrawElement, null)
+              _ = if (null == pe) {
+                System.out.println(s"Invoking $className / $methodName: there is no presentation element for ${e.toolSpecific_id}")
+              }
+              if null != pe
             } yield pe
 
             return invoke(
@@ -108,13 +112,17 @@ object invokeDiagramContextMenuActionForSelection {
     }
 
     for {
-      vInfo <- otiV.constructValidationInfo(
+      vInfo <-
+      otiV.constructValidationInfo(
         otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
         Some("Check the instance specification details"),
         Nil)
-      result <- otiV.makeMDIllegalArgumentExceptionValidation(
+      validation =
+      otiV.makeMDIllegalArgumentExceptionValidation(
         s"*** Ill-formed DiagramContextMenuActionForSelection instance specification ***",
         Map(triggerElement -> List(vInfo)))
+      result <-
+      otiV.toTryOptionMagicDrawValidationDataResults(p, "invokeDiagramContextMenuActionForSelection", validation)
     } yield result
 
   }
@@ -146,30 +154,44 @@ object invokeDiagramContextMenuActionForSelection {
 
     if (actions.size != 1) {
       for {
-        vInfo <- otiV.constructValidationInfo(
+        vInfo <-
+        otiV.constructValidationInfo(
           otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
           Some("Check the instance specification details"),
           Nil)
-        result <- otiV.makeMDIllegalArgumentExceptionValidation(
+        validation =
+        otiV.makeMDIllegalArgumentExceptionValidation(
           s"*** Ambiguous invocation; there are ${actions.size} relevant dynamic script actions matching the class/method name criteria ***",
           Map(invocation -> List(vInfo)))
+        result <-
+        otiV.toTryOptionMagicDrawValidationDataResults(p, "invokeDiagramContextMenuActionForSelection", validation)
       } yield result
     }
     else {
       val scripts = actions.head._2
       if (scripts.size != 1) {
         for {
-          vInfo <- otiV.constructValidationInfo(
+          vInfo <-
+          otiV.constructValidationInfo(
             otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
             Some("Check the instance specification details"),
             Nil)
-          result <- otiV.makeMDIllegalArgumentExceptionValidation(
+          validation =
+          otiV.makeMDIllegalArgumentExceptionValidation(
             s"*** Ambiguous invocation; there are ${actions.size} relevant dynamic script actions matching the class/method name criteria ***",
             Map(invocation -> List(vInfo)))
+          result <-
+          otiV.toTryOptionMagicDrawValidationDataResults(p, "invokeDiagramContextMenuActionForSelection", validation)
         } yield result
       }
       else scripts.head match {
         case d: DiagramContextMenuAction =>
+          System.out.println(s"invokeTriggerView: $invokeTriggerView")
+          System.out.println(s"invokeTriggerElement: $invokeTriggerElement")
+          System.out.println(s"selection: ${selection.size}")
+          selection.foreach { s =>
+            System.out.println(s"- selected: $s")
+          }
           val action = DynamicDiagramContextMenuActionForTriggerAndSelection(
             p, dpe,
             invokeTriggerView, invokeTriggerElement, selection,
@@ -183,13 +205,16 @@ object invokeDiagramContextMenuActionForSelection {
 
         case d: DynamicActionScript =>
           for {
-            vInfo <- otiV.constructValidationInfo(
+            vInfo <-
+            otiV.constructValidationInfo(
               otiV.MD_OTI_ValidationConstraint_UnresolvedCrossReference,
               Some("Check the instance specification details"),
               Nil)
-            result <- otiV.makeMDIllegalArgumentExceptionValidation(
+            validation = otiV.makeMDIllegalArgumentExceptionValidation(
               s"*** Invocation error: expected a DiagramContextMenuAction, got: ${d.prettyPrint("  ")}",
               Map(invocation -> List(vInfo)))
+            result <-
+            otiV.toTryOptionMagicDrawValidationDataResults(p, "invokeDiagramContextMenuActionForSelection", validation)
           } yield result
       }
     }

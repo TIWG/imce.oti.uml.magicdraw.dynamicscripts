@@ -39,20 +39,36 @@
 package gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.modeling
 
 import java.awt.event.ActionEvent
+import java.io.File
 
-import com.nomagic.magicdraw.core.{Application, Project}
+import com.nomagic.magicdraw.core.{ApplicationEnvironment, Application, Project}
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
 import com.nomagic.uml2.ext.jmi.helpers.{ModelHelper, StereotypesHelper}
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
-import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
-import gov.nasa.jpl.dynamicScripts.magicdraw.MagicDrawValidationDataResults
-import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
-import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
-import org.omg.oti.magicdraw.uml.write.MagicDrawUMLUpdate
-import org.omg.oti.uml.read.api._
 
+import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
+import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawValidationDataResults}
+import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils.{ResultSetAggregator, MDAPI}
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
+
+import org.omg.oti.uml.UMLError
+import org.omg.oti.uml.xmi._
+import org.omg.oti.uml.canonicalXMI._
+import org.omg.oti.uml.characteristics._
+import org.omg.oti.uml.read.api._
+import org.omg.oti.uml.read.operations._
+
+import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.magicdraw.uml.characteristics._
+import org.omg.oti.magicdraw.uml.read._
+import org.omg.oti.magicdraw.uml.write.MagicDrawUMLUpdate
+
+import scala.collection.Iterable
 import scala.collection.JavaConversions._
+import scala.collection.immutable._
 import scala.language.{implicitConversions, postfixOps}
+import scalaz._, Scalaz._
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -61,22 +77,31 @@ import scala.util.{Failure, Success, Try}
 */
 object ChangeOwner {
 
-  def doit(
-    p: Project,
-    ev: ActionEvent,
-    script: DynamicScriptsTypes.DiagramContextMenuAction,
-    dpe: DiagramPresentationElement,
-    triggerView: PresentationElement,
-    triggerElement: Element,
-    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
-    
+  def doit
+  (p: Project,
+   ev: ActionEvent,
+   script: DynamicScriptsTypes.DiagramContextMenuAction,
+   dpe: DiagramPresentationElement,
+   triggerView: PresentationElement,
+   triggerElement: Element,
+   selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
     val app = Application.getInstance()
     val guiLog = app.getGUILog
     guiLog.clearLog()
 
-    val umlUtil = MagicDrawUMLUtil( p )
+    implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
+    // @todo populate...
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
+
+    implicit val otiCharacterizationProfileProvider: OTICharacteristicsProvider[MagicDrawUML] =
+      MagicDrawOTICharacteristicsProfileProvider()
+
+    implicit val documentOps = new MagicDrawDocumentOps()
     val upd = MagicDrawUMLUpdate(umlUtil)
 
     val newOwner = MDUML.getBrowserTreeSelection() match {
@@ -89,36 +114,91 @@ object ChangeOwner {
     }
 
     val selectedElements =
-      selection.toIterator selectByKindOf { case pe: PresentationElement => umlElement( pe.getElement ) } toList
+      selection
+      .toIterable
+      .selectByKindOf { case pe: PresentationElement => umlElement( pe.getElement ) }
+      .toList
 
+    val result: NonEmptyList[java.lang.Throwable] \&/ Unit =
+      MDAPI
+      .getMDCatalogs()
+      .toThese
+      .flatMap { case (documentURIMapper, builtInURIMapper) =>
 
-    def changeOwner
-    (newParent: UMLElement[Uml],
-     relocatedChild: UMLElement[Uml]): Try[Unit] =
-      relocatedChild.getContainingMetaPropertyEvaluator match {
-        case Failure(f) =>
-          Failure(f)
-        case Success(None) =>
-          Failure(new IllegalArgumentException("cannot change the ownership of the root element"))
-        case Success(Some(m)) =>
-          if (!newParent.compositeMetaProperties.contains(m))
-            Failure(new IllegalArgumentException("Different ownership properties!"))
-          else {
-            guiLog.log("Change ownership...")
-            Success(Unit)
+        val extraSpecificationRootPkgs
+        : ResultSetAggregator[UMLPackage[Uml]]#F =
+          (ResultSetAggregator.zero[UMLPackage[Uml]] /: (selectedElements.to[Set] + newOwner)) { (acc, e) =>
+            acc append
+              e
+                .getPackageOwnerWithEffectiveURI
+                .map { opkg =>
+                  opkg.fold[Set[UMLPackage[Uml]]](
+                    Set[UMLPackage[Uml]]()
+                  ) { pkg =>
+                    Set(pkg)
+                  }
+                }
+                .toThese
           }
+
+        val mdDS =
+          MagicDrawDocumentSet
+            .createMagicDrawProjectDocumentSet(
+              additionalSpecificationRootPackages = extraSpecificationRootPkgs.b,
+              documentURIMapper = documentURIMapper,
+              builtInURIMapper = builtInURIMapper,
+              ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
+              unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil))
+
+        val maybeErrors =
+          mdDS.flatMap {
+            case (rds: ResolvedDocumentSet[MagicDrawUML],
+                  ds: MagicDrawDocumentSet,
+                  xrefs: Iterable[UnresolvedElementCrossReference[MagicDrawUML]]) =>
+
+              implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator(rds)
+
+              val result0: NonEmptyList[java.lang.Throwable] \&/ Unit = \&/.That(())
+              val results: NonEmptyList[java.lang.Throwable] \&/ Unit =
+                ( result0 /: selectedElements ) { (acc, e) =>
+                  acc append changeOwner(newOwner, e).toThese
+                }
+
+              results
+          }
+
+        maybeErrors
       }
 
-    selectedElements.foreach { e =>
-      changeOwner(newOwner, e) match {
-        case Failure(f) => return Failure(f)
-        case Success(_) => ()
-      }
-    }
+    val otiV = OTIMagicDrawValidation(p)
+    otiV.toTryOptionMDValidationDataResults(p, s"*** OTI Change Owner Errors ***", result.a)
 
-
-    guiLog.log("- Done")
-    Success( None )
   }
 
+  def changeOwner[Uml <: UML]
+  (newParent: UMLElement[Uml],
+   relocatedChild: UMLElement[Uml])
+  (implicit idg: IDGenerator[Uml])
+  : NonEmptyList[java.lang.Throwable] \/ Unit =
+    relocatedChild.getContainingMetaPropertyEvaluator
+    .flatMap { ev: Option[relocatedChild.MetaPropertyEvaluator] =>
+        ev.fold[NonEmptyList[java.lang.Throwable] \/ Unit](
+          -\/(
+            NonEmptyList(
+            UMLError.illegalElementError[Uml, UMLElement[Uml]](
+              "cannot change the ownership of the root element",
+              Iterable(relocatedChild, newParent))))
+        ){ evaluator =>
+          if (!newParent.compositeMetaProperties.contains(evaluator))
+            -\/(
+              NonEmptyList(
+                UMLError.illegalElementError[Uml, UMLElement[Uml]](
+                  "Different ownership properties!",
+                  Iterable(relocatedChild, newParent))))
+          else {
+            // @todo invoke the OTI UML Update API...
+            \/-(Unit)
+          }
+        }
+      }
 }

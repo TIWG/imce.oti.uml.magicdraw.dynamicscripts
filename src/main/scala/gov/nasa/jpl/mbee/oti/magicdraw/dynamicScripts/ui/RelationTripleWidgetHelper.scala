@@ -42,6 +42,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import javax.swing.JOptionPane
 import scala.collection.JavaConversions._
+import scala.collection.immutable._
 import scala.language.postfixOps
 import scala.util.Failure
 import scala.util.Success
@@ -58,6 +59,7 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 import org.omg.oti.uml._
+import org.omg.oti.uml.OTIPrimitiveTypes._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.read.operations._
 import org.omg.oti.magicdraw.uml.read._
@@ -117,7 +119,7 @@ object RelationTripleWidgetHelper {
           case parent: UMLNamedElement[Uml] =>
             ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
           case parent =>
-            ReferenceNodeInfo( parent.id, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+            ReferenceNodeInfo( OTI_ID.unwrap(parent.toolSpecific_id.get), umlMagicDrawUMLElement(parent).getMagicDrawElement )
         }
       } ),
       "subject" ->
@@ -132,18 +134,18 @@ object RelationTripleWidgetHelper {
                 case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
                 case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.id}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
                 }
                 case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.id}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
                 }
                 case ( _, Some( name ) ) => name
-                case ( _, _ )            => ne.id
+                case ( _, _ )            => OTI_ID.unwrap(ne.toolSpecific_id.get)
               },
               umlMagicDrawUMLElement(r.sub).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( e.id, umlMagicDrawUMLElement(e).getMagicDrawElement )
+            ReferenceNodeInfo( OTI_ID.unwrap(e.toolSpecific_id.get), umlMagicDrawUMLElement(e).getMagicDrawElement )
         } ),
       "sMetaclass" -> LabelNodeInfo( r.sub.xmiType.head ),
       "relation" ->
@@ -166,18 +168,18 @@ object RelationTripleWidgetHelper {
                 case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
                 case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.id}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
                 }
                 case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.id}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
                 }
                 case ( _, Some( name ) ) => name
-                case ( _, _ )            => ne.id
+                case ( _, _ )            => OTI_ID.unwrap(ne.toolSpecific_id.get)
               },
               umlMagicDrawUMLElement(r.obj).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( e.id, umlMagicDrawUMLElement(e).getMagicDrawElement )
+            ReferenceNodeInfo( OTI_ID.unwrap(e.toolSpecific_id.get), umlMagicDrawUMLElement(e).getMagicDrawElement )
         } ),
       "oMetaclass" -> LabelNodeInfo( r.obj.xmiType.head ),
       "oNamespace" -> ( r.obj.owningNamespace match {
@@ -201,8 +203,9 @@ object RelationTripleWidgetHelper {
   : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
 
     val rows: Seq[Map[String, AbstractTreeNodeInfo]] =
-      pes map RelationTripleWidgetHelper.createRowForRelationTriple toSeq
+      pes.map(RelationTripleWidgetHelper.createRowForRelationTriple).to[Seq]
 
+    System.out.println(s"createGroupTableUIPanelForRelationTriples => ${rows.size} rows")
     val ui = GroupTableNodeUI(
       makeComputedDerivedTreeForRelationTriple( derived ),
       rows,

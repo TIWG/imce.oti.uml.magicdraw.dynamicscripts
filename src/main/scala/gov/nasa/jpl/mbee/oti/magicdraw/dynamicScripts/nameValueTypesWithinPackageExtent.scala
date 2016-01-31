@@ -97,7 +97,12 @@ object nameValueTypesWithinPackageExtent {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
     
-    val selectedPackages = selection.toIterator selectByKindOf ( { case pv: PackageView => umlPackage( pv.getPackage ) } ) toList;    
+    val selectedPackages =
+      selection
+      .toIterable
+      .selectByKindOf { case pv: PackageView => umlPackage( pv.getPackage ) }
+      .to[List]
+
     selectedPackages foreach ( nameValueTypes( umlUtil, _ ) )
 
     Success( None )
@@ -119,7 +124,12 @@ object nameValueTypesWithinPackageExtent {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    val selectedPackages = selection.toIterator selectByKindOf ( { case p: Package => umlPackage( p ) } ) toList;    
+    val selectedPackages =
+      selection
+      .toIterable
+      .selectByKindOf { case p: Package => umlPackage( p ) }
+      .to[List]
+
     selectedPackages foreach ( nameValueTypes( umlUtil, _ ) )
 
     Success( None )

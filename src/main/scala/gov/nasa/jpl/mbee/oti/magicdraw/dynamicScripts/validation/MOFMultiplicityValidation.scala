@@ -56,6 +56,7 @@ import org.omg.oti.uml.validation._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read._
 
+import scala.collection.immutable._
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
@@ -63,11 +64,11 @@ import scala.util.{Failure, Success, Try}
 /**
 * Validates all MultiplicityElements in scope of the selected packages per MOF 2.5 well-formedness constraints
 *
-* @See MOF 2.5, Section 12.4 EMOF Constraints
+* @see MOF 2.5, Section 12.4 EMOF Constraints
 * [32] The values of MultiplicityElement::lowerValue and upperValue must be
 * of kind LiteralInteger and LiteralUnlimitedNatural respectively.
 *
-* @See MOF 2.5, Section 14.4 CMOF Constraints
+* @see MOF 2.5, Section 14.4 CMOF Constraints
 * [14] The values of MultiplicityElement::lowerValue and upperValue must
 * be of kind LiteralInteger and LiteralUnlimitedNatural respectively.
 */
@@ -88,7 +89,10 @@ object MOFMultiplicityValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -108,7 +112,10 @@ object MOFMultiplicityValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -216,15 +223,19 @@ object MOFMultiplicityValidation {
             otiV.MD_OTI_ValidationConstraint_InvalidValueKind,
             v.explanation,
             Nil)
+        case _ =>
+          Success(None)
       }
       vInfo <- vOptInfo
       validationInfo = elementMessages.getOrElseUpdate(
         mdPoP, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
     } validationInfo += vInfo
 
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "EMOF [32] & CMOF [14] Multiplicity Validation",
-      elementMessages.toMap)
+    val validation =
+      otiV.makeMDIllegalArgumentExceptionValidation(
+        "EMOF [32] & CMOF [14] Multiplicity Validation",
+        elementMessages.toMap)
+    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF MultiplicityElement Validation", validation)
 
   }
 }

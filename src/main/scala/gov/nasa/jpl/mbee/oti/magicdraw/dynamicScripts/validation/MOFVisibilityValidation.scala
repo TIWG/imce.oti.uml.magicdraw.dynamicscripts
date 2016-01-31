@@ -55,6 +55,7 @@ import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.validation._
 
+import scala.collection.immutable._
 import scala.collection.JavaConversions._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
@@ -91,7 +92,10 @@ object MOFVisibilityValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -111,7 +115,10 @@ object MOFVisibilityValidation {
     guiLog.clearLog()
 
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
     doit(p, selectedPackages)
   }
@@ -205,9 +212,10 @@ object MOFVisibilityValidation {
         mdE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
     } validationInfo += vInfo
 
-    otiV.makeMDIllegalArgumentExceptionValidation(
-      "EMOF [4] & CMOF [7] Visibility Validation",
-      elementMessages.toMap)
-
+    val validation =
+      otiV.makeMDIllegalArgumentExceptionValidation(
+        "EMOF [4] & CMOF [7] Visibility Validation",
+        elementMessages.toMap)
+    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF Visibility Validation", validation)
   }
 }

@@ -52,14 +52,22 @@ import com.nomagic.uml2.ext.magicdraw.auxiliaryconstructs.mdmodels.Model
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
+import gov.nasa.jpl.dynamicScripts.magicdraw.utils.ValidationAnnotation
 import gov.nasa.jpl.dynamicScripts.magicdraw.{DynamicScriptsPlugin, MagicDrawValidationDataResults}
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.utils._
+import gov.nasa.jpl.mbee.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
+
 import org.omg.oti.uml.read.api._
-import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, DocumentSet}
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import scala.collection.immutable._
+import org.omg.oti.uml.xmi._
+import org.omg.oti.magicdraw.uml.canonicalXMI._
+import org.omg.oti.uml.canonicalXMI.{UnresolvedElementCrossReference, CatalogURIMapper, DocumentEdge, DocumentSet}
+import org.omg.oti.magicdraw.uml.read._
 
 import scala.collection.JavaConversions.{asJavaCollection, collectionAsScalaIterable}
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
+import scalaz._, Scalaz._
 
 /**
  * Should be functionally equivalent to exportPackageExtents but simpler thanks to the methods in DocumentSet's companion object
@@ -112,93 +120,62 @@ object exportPackageExtents2OTICanonicalXMI {
     selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] = {
 
     val a = Application.getInstance()
-    val guiLog = a.getGUILog()
+    val guiLog = a.getGUILog
     guiLog.clearLog()
 
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
+    val otiV = OTIMagicDrawValidation(p)
     val selectedPackages: Set[UMLPackage[Uml]] =
-      selection.toIterator selectByKindOf { case p: Package => umlPackage( p ) } toSet
+      selection
+      .toIterable
+      .selectByKindOf { case p: Package => umlPackage( p ) }
+      .to[Set]
 
-    /**
-     * Ignore OMG production-related elements pertaining to OMG SysML 1.4 spec.
-     */
-    def ignoreCrossReferencedElementFilter( e: UMLElement[Uml] ): Boolean = e match {
+    OTIHelper.getOTIMDInfo().fold[Try[Option[MagicDrawValidationDataResults]]](
+      l = (nels) =>
+        otiV
+          .toTryOptionMDValidationDataResults(p, "exportPackageExtents2OTICanonicalXMI", nels.some),
 
-      case ne: UMLNamedElement[Uml] =>
-        val neQName = ne.qualifiedName.get
-          DynamicScriptsPlugin.wildCardMatch( neQName, "UML Standard Profile::MagicDraw Profile::*" ) ||
-          DynamicScriptsPlugin.wildCardMatch( neQName, "*OMG*" ) ||
-          DynamicScriptsPlugin.wildCardMatch( neQName, "Specifications::SysML.profileAnnotations::*" )
+      r = (info) => {
 
-      case e =>
-        false
-    }
+        var result: Option[Try[Option[MagicDrawValidationDataResults]]] = None
+        val runnable = new RunnableWithProgress() {
 
-    def unresolvedElementMapper( e: UMLElement[Uml] ): Option[UMLElement[Uml]] = e.id match {
-      case "_UML_" => Some( MDBuiltInUML.scope )
-      case "_StandardProfile_" => Some( MDBuiltInStandardProfile.scope )
-      case _ => None
-    }
-    
-    val defaultOMGCatalogFile =
-      new File(
-        new File(
-          ApplicationEnvironment.getInstallRoot ).
-          toURI.resolve( "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml" ) )
-    val omgCatalog =
-      if ( defaultOMGCatalogFile.exists() ) Seq( defaultOMGCatalogFile )
-      else chooseCatalogFile( "Select the OMG UML 2.5 *.catalog.xml file" ).toSeq
+          def run(progressStatus: ProgressStatus): Unit =
+            result = Some(
+              exportPackageExtents(
+                progressStatus,
+                p, selectedPackages,
+                info,
+                ignoreCrossReferencedElementFilter = MDAPI.ignoreCrossReferencedElementFilter,
+                unresolvedElementMapper = MDAPI.unresolvedElementMapper(umlUtil)))
 
-    val defaultMDCatalogFile =
-      new File(
-        new File( ApplicationEnvironment.getInstallRoot ).
-          toURI.resolve( "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml" ) )
-    val mdCatalog =
-      if ( defaultMDCatalogFile.exists() ) Seq( defaultMDCatalogFile )
-      else chooseCatalogFile( "Select the MagicDraw UML 2.5 *.catalog.xml file" ).toSeq
+        }
 
-    ( CatalogURIMapper.createCatalogURIMapper( omgCatalog ),
-      CatalogURIMapper.createCatalogURIMapper( mdCatalog ) ) match {
-        case ( Failure( t ), _ ) => Failure( t )
-        case ( _, Failure( t ) ) => Failure( t )
-        case ( Success( documentURIMapper ), Success( builtInURIMapper ) ) =>
+        MagicDrawProgressStatusRunner.runWithProgressStatus(
+          runnable,
+          s"Export ${selectedPackages.size} packages to OTI Canonical XMI...",
+          true, 0)
 
-          var result: Option[Try[Option[MagicDrawValidationDataResults]]] = None
-          val runnable = new RunnableWithProgress() {
-
-            def run( progressStatus: ProgressStatus ): Unit =
-              result = Some(
-                exportPackageExtents(
-                  progressStatus,
-                  p, selectedPackages,
-                  documentURIMapper, builtInURIMapper,
-                  ignoreCrossReferencedElementFilter,
-                  unresolvedElementMapper ) )
-
-          }
-
-          MagicDrawProgressStatusRunner.runWithProgressStatus(
-            runnable,
-            s"Export ${selectedPackages.size} packages to OTI Canonical XMI...",
-            true, 0 )
-
-          require( result.isDefined )
-          result.get
-      }
+        require(result.isDefined)
+        result.get
+      })
   }
 
-  def exportPackageExtents(
-    progressStatus: ProgressStatus,
+  def exportPackageExtents
+  ( progressStatus: ProgressStatus,
     p: Project,
     specificationRootPackages: Set[UMLPackage[MagicDrawUML]],
-    documentURIMapper: CatalogURIMapper,
-    builtInURIMapper: CatalogURIMapper,
+    info: OTIHelper.OTIMDInfo,
     ignoreCrossReferencedElementFilter: Function1[UMLElement[MagicDrawUML], Boolean],
-    unresolvedElementMapper: Function1[UMLElement[MagicDrawUML], Option[UMLElement[MagicDrawUML]]] )( implicit umlUtil: MagicDrawUMLUtil ): Try[Option[MagicDrawValidationDataResults]] = {
+    unresolvedElementMapper: Function1[UMLElement[MagicDrawUML], Option[UMLElement[MagicDrawUML]]] )
+  ( implicit umlUtil: MagicDrawUMLUtil )
+  : Try[Option[MagicDrawValidationDataResults]] = {
     import umlUtil._
 
+    val otiV = OTIMagicDrawValidation(p)
     val a = Application.getInstance()
     val guiLog = a.getGUILog
 
@@ -207,47 +184,78 @@ object exportPackageExtents2OTICanonicalXMI {
     progressStatus.setMax( 1 )
     progressStatus.setLocked( true )
 
-    DocumentSet.constructDocumentSetCrossReferenceGraph(
-      specificationRootPackages,
-      documentURIMapper, builtInURIMapper,
-      builtInDocuments = Set( MDBuiltInPrimitiveTypes, MDBuiltInUML, MDBuiltInStandardProfile ),
-      builtInDocumentEdges = Set( MDBuiltInUML2PrimitiveTypes, MDBuiltInStandardProfile2UML ),
-      ignoreCrossReferencedElementFilter,
-      unresolvedElementMapper ) match {
-        case Failure( t ) => Failure( t )
-        case Success( ( resolved, unresolved ) ) =>
+    // @todo populate...
+    implicit val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] =
+      None
 
-          val result = if ( unresolved.isEmpty ) Success( None )
-          else {
-            guiLog.log( s"*** ${unresolved.size} unresolved cross-references ***" )
-            val elementMessages = unresolved map { u =>
-              val mdXRef = umlMagicDrawUMLElement(u.externalReference).getMagicDrawElement
-              val a = new NMAction( s"Select${u.hashCode}", s"Select ${mdXRef.getHumanType}: ${mdXRef.getHumanName}", 0 ) {
-                def actionPerformed( ev: ActionEvent ): Unit = umlMagicDrawUMLElement(u.externalReference).selectInContainmentTreeRunnable.run
-              }
-              umlMagicDrawUMLElement(u.documentElement).getMagicDrawElement ->
-                Tuple2( s"cross-reference to: ${mdXRef.getHumanType}: ${mdXRef.getHumanName} (ID=${mdXRef.getID})",
-                  List( a ) )
-            } toMap
+    implicit val mdIdGenerator = info._1
+    val mdDS: MagicDrawDocumentSet = info._3
 
-            Success( Some(
-              MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
-                p, s"*** ${unresolved.size} unresolved cross-references ***",
-                elementMessages,
-                "*::MagicDrawOTIValidation",
-                "*::UnresolvedCrossReference" ).validationDataResults ) )
-          }
+    val unresolved: Iterable[UnresolvedElementCrossReference[MagicDrawUML]] = info._4
 
-          resolved.serialize match {
-            case Success( _ ) =>
-              progressStatus.increase()
-              guiLog.log( s"Graph: ${resolved.g}" )
-              guiLog.log( s"Done..." )
-              result
+    if ( unresolved.isEmpty ) {
 
-            case Failure( t ) =>
-              Failure( t )
-          }
+      val resolved = info._2
+      guiLog.log(s"Graph: ${resolved.g.nodes.size} nodes, ${resolved.g.edges.size} edges")
+      resolved.g.nodes.foreach { n =>
+        n.value match {
+          case doc: MagicDrawBuiltInDocument =>
+            guiLog.log(s"Tool BuiltIn: ${doc.scope.qualifiedName.get}")
+          case doc: MagicDrawSerializableDocument =>
+            guiLog.log(s"Serializable: ${doc.scope.qualifiedName.get}")
+        }
       }
+      resolved.serialize.fold[Try[Option[MagicDrawValidationDataResults]]](
+        l = (nels) =>
+          otiV.toTryOptionMDValidationDataResults(p, "exportPackageExtents2OTICanonicalXMI", nels.some),
+
+        r = (serialized: Set[(SerializableDocument[MagicDrawUML], File)]) => {
+          guiLog.log(s"Finished serializing ${serialized.size} documents")
+          serialized.foreach { case (doc, file) =>
+            guiLog.log(s"Document root: ${doc.scope.qualifiedName.get}")
+            guiLog.log(s"Document file: $file")
+          }
+          Success(Option.empty[MagicDrawValidationDataResults])
+        }
+      )
+    } else {
+      guiLog.log(s"*** ${
+        unresolved.size
+      } unresolved cross-references ***")
+
+      val elementMessages =
+        unresolved.map {
+          u =>
+            val mdXRef = umlMagicDrawUMLElement(u.relationTriple.obj).getMagicDrawElement
+            val a = new NMAction(s"Select${
+              u.hashCode
+            }", s"Select ${
+              mdXRef.getHumanType
+            }: ${
+              mdXRef.getHumanName
+            }", 0) {
+              def actionPerformed(ev: ActionEvent): Unit = umlMagicDrawUMLElement(u.relationTriple.obj)
+                .selectInContainmentTreeRunnable.run
+            }
+            umlMagicDrawUMLElement(u.relationTriple.sub).getMagicDrawElement ->
+              Tuple2(s"cross-reference to: ${
+                mdXRef.getHumanType
+              }: ${
+                mdXRef.getHumanName
+              } (ID=${
+                mdXRef.getID
+              })",
+                List(a))
+        }.toMap
+
+      Success(Some(
+        MagicDrawValidationDataResults.makeMDIllegalArgumentExceptionValidation(
+          p, s"*** ${
+            unresolved.size
+          } unresolved cross-references ***",
+          elementMessages,
+          "*::MagicDrawOTIValidation",
+          "*::UnresolvedCrossReference").validationDataResults))
+    }
   }
 }
