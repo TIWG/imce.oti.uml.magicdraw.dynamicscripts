@@ -109,18 +109,13 @@ object OTIHelper {
     : (Document[MagicDrawUML], RelationTriple[MagicDrawUML], Document[MagicDrawUML]) => Boolean
     = (_: Document[MagicDrawUML], _: RelationTriple[MagicDrawUML], _: Document[MagicDrawUML]) => true
 
-    val element2documentTable
-    : Map[UMLElement[MagicDrawUML], Document[MagicDrawUML]]
-    = Map()
-
     getOTIMagicDrawInfo(
       specificationRootPackages,
       documentURIMapper,
       builtInURIMapper,
       ignoreCrossReferencedElementFilter,
       unresolvedElementMapper,
-      includeAllForwardRelationTriple,
-      element2documentTable) match {
+      includeAllForwardRelationTriple) match {
       case \&/.This(errors) =>
         -\/(NonEmptyList[java.lang.Throwable](errors.head, errors.tail.to[Seq]: _*))
       case \&/.That(result) =>
@@ -138,8 +133,7 @@ object OTIHelper {
    builtInURIMapper: CatalogURIMapper,
    ignoreCrossReferencedElementFilter: UMLElement[MagicDrawUML] => Boolean,
    unresolvedElementMapper: UMLElement[MagicDrawUML] => Option[UMLElement[MagicDrawUML]],
-   includeAllForwardRelationTriple: (Document[MagicDrawUML], RelationTriple[MagicDrawUML], Document[MagicDrawUML]) => Boolean,
-   element2documentTable: Map[UMLElement[MagicDrawUML], Document[MagicDrawUML]])
+   includeAllForwardRelationTriple: (Document[MagicDrawUML], RelationTriple[MagicDrawUML], Document[MagicDrawUML]) => Boolean)
   (implicit umlUtil: MagicDrawUMLUtil)
   : Set[java.lang.Throwable] \&/ OTIMDInfo
   = MagicDrawCatalogManager.createMagicDrawCatalogManager().fold[Set[java.lang.Throwable] \&/ OTIMDInfo](
@@ -195,7 +189,7 @@ object OTIHelper {
               .resolve(ignoreCrossReferencedElementFilter, unresolvedElementMapper, includeAllForwardRelationTriple)
               .leftMap(_.list.to[Set])
               .map { case (rds, unresolved) =>
-                val idg = MagicDrawIDGenerator(element2documentTable)(umlUtil, ds, documentOps)
+                val idg = MagicDrawIDGenerator(rds.element2document)(umlUtil, ds, documentOps)
                 (idg, rds, ds, unresolved)
 
               }

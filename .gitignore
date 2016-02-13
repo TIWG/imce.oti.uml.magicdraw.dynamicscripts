@@ -1,13 +1,6 @@
 .ensime*
 .idea
-bin
-lib*/*
-jpl-mbee-common-owlapi-libraries
-oti-change-migration
-oti-core
-oti-magicdraw
-oti-trees
+imce.md.package
 project/project
 project/target
-sbt.staging
 target
