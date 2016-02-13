@@ -1,73 +1,197 @@
-
-import gov.nasa.jpl.mbee.sbt._
+import java.io.File
+import java.nio.file.Files
 import sbt.Keys._
 import sbt._
 
-lazy val copyPublishedArtifactLibraries = TaskKey[Unit]("copy-published-artifact-libraries", "Copies published artifact libraries")
+import scala.collection.JavaConversions._
 
-lazy val jpl_omg_oti_magicdraw_dynamicscripts = Project("jpl-omg-oti-magicdraw-dynamicscripts", file("."))
-  .settings(GitVersioning.buildSettings) // in principle, unnecessary; in practice: doesn't work without this
-  .enablePlugins(MBEEGitPlugin, MBEEMagicDrawEclipseClasspathPlugin)
-  //.settings(MBEEPlugin.mbeeDynamicScriptsProjectResourceSettings(Some("jpl.omg.oti.magicdraw.dynamicscripts")))
-  .settings(MBEEPlugin.mbeeAspectJSettings)
+import gov.nasa.jpl.imce.sbt._
+
+useGpg := true
+
+developers := List(
+  Developer(
+    id="rouquett",
+    name="Nicolas F. Rouquette",
+    email="nicolas.f.rouquette@jpl.nasa.gov",
+    url=url("https://gateway.jpl.nasa.gov/personal/rouquett/default.aspx")))
+
+shellPrompt in ThisBuild := { state => Project.extract(state).currentRef.project + "> " }
+
+cleanFiles <+=
+  baseDirectory { base => base / "imce.md.package" }
+
+lazy val mdInstallDirectory = SettingKey[File]("md-install-directory", "MagicDraw Installation Directory")
+
+mdInstallDirectory in Global :=
+  baseDirectory.value / "imce.md.package"
+
+
+lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
+  .enablePlugins(IMCEGitPlugin)
+  .enablePlugins(IMCEReleasePlugin)
+  .settings(dynamicScriptsResourceSettings(Some("imce.oti.uml.magicdraw.dynamicscripts")))
+  .settings(IMCEPlugin.strictScalacFatalWarningsSettings)
+  .settings(IMCEPlugin.scalaDocSettings(diagrams=false))
   .settings(
-    MBEEKeys.mbeeLicenseYearOrRange := "2014-2015",
-    MBEEKeys.mbeeOrganizationInfo := MBEEPlugin.MBEEOrganizations.imce,
-    MBEEKeys.targetJDK := MBEEKeys.jdk17.value,
+    IMCEKeys.licenseYearOrRange := "2014-2016",
+    IMCEKeys.organizationInfo := IMCEPlugin.Organizations.oti,
+    IMCEKeys.targetJDK := IMCEKeys.jdk18.value,
 
-    classDirectory in Compile := baseDirectory.value / "bin",
+    organization := "gov.nasa.jpl.imce.oti",
+    organizationHomepage :=
+      Some(url("https://github.jpl.nasa.gov/imce/gov.nasa.jpl.imce.team")),
 
-    libraryDependencies ++= Seq(
-      MBEEPlugin.MBEEOrganizations.imce.mbeeZipArtifactVersion(
-        "jpl-mbee-common-owlapi-libraries",
-        MBEEKeys.mbeeReleaseVersionPrefix.value, Versions.jpl_mbee_common_scala_libraries_revision
-      ),
-      MBEEPlugin.MBEEOrganizations.imce.mbeeZipArtifactVersion(
-        "jpl-mbee-common-jena-libraries",
-        MBEEKeys.mbeeReleaseVersionPrefix.value, Versions.jpl_mbee_common_scala_libraries_revision
-      ),
-      MBEEPlugin.MBEEOrganizations.oti.mbeeArtifactVersion(
-        "oti-core",
-        Versions.oti_core_prefix, Versions.oti_core_suffix
-      ),
-      MBEEPlugin.MBEEOrganizations.oti.mbeeArtifactVersion(
-        "oti-change-migration",
-        Versions.oti_changeMigration_prefix, Versions.oti_changeMigration_suffix
-      ),
-      MBEEPlugin.MBEEOrganizations.oti.mbeeArtifactVersion(
-        "oti-trees",
-        Versions.oti_trees_prefix, Versions.oti_trees_suffix
-      ),
-      MBEEPlugin.MBEEOrganizations.oti.mbeeArtifactVersion(
-        "oti-canonical-xmi",
-        Versions.oti_canonical_xmi_prefix, Versions.oti_canonical_xmi_suffix
-      ),
-      MBEEPlugin.MBEEOrganizations.oti.mbeeArtifactVersion(
-        "oti-loader",
-        Versions.oti_loader_prefix, Versions.oti_loader_suffix
-      ),
-      MBEEPlugin.MBEEOrganizations.oti.mbeeArtifactVersion(
-        "oti-magicdraw",
-        Versions.oti_magicdraw_prefix, Versions.oti_magicdraw_suffix
-      )
+    buildInfoPackage := "imce.oti.uml.magicdraw.dynamicscripts",
+    buildInfoKeys ++= Seq[BuildInfoKey](BuildInfoKey.action("buildDateUTC") { buildUTCDate.value }),
+
+    mappings in (Compile, packageSrc) ++= {
+      import Path.{flat, relativeTo}
+      val base = (sourceManaged in Compile).value
+      val srcs = (managedSources in Compile).value
+      srcs x (relativeTo(base) | flat)
+    },
+
+    projectID := {
+      val previous = projectID.value
+      previous.extra("build.date.utc" -> buildUTCDate.value)
+    },
+
+    git.baseVersion := Versions.version,
+
+    scalaSource in Compile := baseDirectory.value / "src" / "main" / "scala",
+
+    resourceDirectory in Compile := baseDirectory.value / "resources",
+
+    unmanagedClasspath in Compile <++= unmanagedJars in Compile,
+    libraryDependencies ++= Seq (
+      "org.omg.tiwg" %% "oti-uml-magicdraw-adapter"
+        % Versions_oti_uml_magicdraw_adapter.version % "compile"
+        withSources() withJavadoc() artifacts
+        Artifact("oti-uml-magicdraw-adapter", "zip", "zip", Some("resource"), Seq(), None, Map())
     ),
 
-    copyPublishedArtifactLibraries <<= publish,
+    extractArchives <<= (baseDirectory, update, streams, mdInstallDirectory in ThisBuild) map {
+      (base, up, s, mdInstallDir) =>
 
-    copyPublishedArtifactLibraries <<= (baseDirectory, packagedArtifacts, streams) map {
-      (base, pas, s) =>
-        for {
-          ( a, f ) <- pas
-          if f.ext == "jar"
-          dir = a.`type` match {
-            case "jar" => base / "lib"
-            case "src" => base / "lib.sources"
-            case "doc" => base / "lib.javadoc"
+        if (!mdInstallDir.exists) {
+
+          val vendorZip: File =
+            singleMatch(up, artifactFilter(name = "cae_md18_0_sp5_vendor", `type` = "zip", extension = "zip"))
+          s.log.info(s"=> Extracting CAE Vendor: $vendorZip")
+          nativeUnzip(vendorZip, mdInstallDir)
+
+          val zfilter: DependencyFilter = new DependencyFilter {
+            def apply(c: String, m: ModuleID, a: Artifact): Boolean =
+              (a.`type` == "zip" || a.`type` == "resource") &&
+                a.extension == "zip" &&
+                a.name != "cae_md18_0_sp5_vendor"
           }
-        } {
-          s.log.info(s"artifact: ${a.`type`} ${a.name} \nfile: $f")
-          IO.copyFile(f, dir / f.name )
-        }
+          val zs: Seq[File] = up.matching(zfilter)
+          zs.foreach { zip =>
+            val files = IO.unzip(zip, mdInstallDir)
+            s.log.info(
+              s"=> created md.install.dir=$mdInstallDir with ${files.size} " +
+                s"files extracted from zip: ${zip.getName}")
+          }
+
+        } else
+          s.log.info(
+            s"=> use existing md.install.dir=$mdInstallDir")
+    },
+
+    unmanagedJars in Compile <++= (baseDirectory, update, streams,
+      mdInstallDirectory in ThisBuild,
+      extractArchives) map {
+      (base, up, s, mdInstallDir, _) =>
+
+        val libJars = ((mdInstallDir / "lib") ** "*.jar").get
+        s.log.info(s"jar libraries: ${libJars.size}")
+
+        val dsJars = ((mdInstallDir / "dynamicScripts") * "*" / "lib" ** "*.jar").get
+        s.log.info(s"jar dynamic script: ${dsJars.size}")
+
+        val mdJars = (libJars ++ dsJars).map { jar => Attributed.blank(jar) }
+
+        mdJars
+    },
+
+    compile <<= (compile in Compile) dependsOn extractArchives,
+
+    IMCEKeys.nexusJavadocRepositoryRestAPIURL2RepositoryName := Map(
+      "https://oss.sonatype.org/service/local" -> "releases",
+      "https://cae-nexuspro.jpl.nasa.gov/nexus/service/local" -> "JPL",
+      "https://cae-nexuspro.jpl.nasa.gov/nexus/content/groups/jpl.beta.group" -> "JPL Beta Group",
+      "https://cae-nexuspro.jpl.nasa.gov/nexus/content/groups/jpl.public.group" -> "JPL Public Group"),
+    IMCEKeys.pomRepositoryPathRegex := """\<repositoryPath\>\s*([^\"]*)\s*\<\/repositoryPath\>""".r
+
+  )
+  .settings(IMCEReleasePlugin.packageReleaseProcessSettings)
+
+def dynamicScriptsResourceSettings(dynamicScriptsProjectName: Option[String] = None): Seq[Setting[_]] = {
+
+  import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport._
+
+  def addIfExists(f: File, name: String): Seq[(File, String)] =
+    if (!f.exists) Seq()
+    else Seq((f, name))
+
+  val QUALIFIED_NAME = "^[a-zA-Z][\\w_]*(\\.[a-zA-Z][\\w_]*)*$".r
+
+  Seq(
+    // the '*-resource.zip' archive will start from: 'dynamicScripts/<dynamicScriptsProjectName>'
+    com.typesafe.sbt.packager.Keys.topLevelDirectory in Universal := {
+      val projectName = dynamicScriptsProjectName.getOrElse(baseDirectory.value.getName)
+      require(
+        QUALIFIED_NAME.pattern.matcher(projectName).matches,
+        s"The project name, '$projectName` is not a valid Java qualified name")
+      Some("dynamicScripts/" + projectName)
+    },
+
+    // name the '*-resource.zip' in the same way as other artifacts
+    com.typesafe.sbt.packager.Keys.packageName in Universal :=
+      normalizedName.value + "_" + scalaBinaryVersion.value + "-" + version.value + "-resource",
+
+    // contents of the '*-resource.zip' to be produced by 'universal:packageBin'
+    mappings in Universal <++= (
+      baseDirectory,
+      packageBin in Compile,
+      packageSrc in Compile,
+      packageDoc in Compile,
+      packageBin in Test,
+      packageSrc in Test,
+      packageDoc in Test) map {
+      (dir, bin, src, doc, binT, srcT, docT) =>
+        (dir ** "*.dynamicScripts").pair(relativeTo(dir)) ++
+          ((dir ** "*.md") --- (dir / "sbt.staging" ***)).pair(relativeTo(dir)) ++
+          (dir / "models" ** "*.mdzip").pair(relativeTo(dir)) ++
+          com.typesafe.sbt.packager.MappingsHelper.directory(dir / "resources") ++
+          com.typesafe.sbt.packager.MappingsHelper.directory(dir / "profiles") ++
+          addIfExists(bin, "lib/" + bin.name) ++
+          addIfExists(binT, "lib/" + binT.name) ++
+          addIfExists(src, "lib.sources/" + src.name) ++
+          addIfExists(srcT, "lib.sources/" + srcT.name) ++
+          addIfExists(doc, "lib.javadoc/" + doc.name) ++
+          addIfExists(docT, "lib.javadoc/" + docT.name)
+    },
+
+    artifacts <+= (name in Universal) { n => Artifact(n, "zip", "zip", Some("resource"), Seq(), None, Map()) },
+    packagedArtifacts <+= (packageBin in Universal, name in Universal) map { (p, n) =>
+      Artifact(n, "zip", "zip", Some("resource"), Seq(), None, Map()) -> p
     }
   )
+}
 
+def nativeUnzip(f: File, dir: File): Unit = {
+  IO.createDirectory(dir)
+  Process(Seq("unzip", "-q", f.getAbsolutePath, "-d", dir.getAbsolutePath), dir).! match {
+    case 0 => ()
+    case n => sys.error("Failed to run native unzip application!")
+  }
+}
+
+def singleMatch(up: UpdateReport, f: DependencyFilter): File = {
+  val files: Seq[File] = up.matching(f)
+  require(1 == files.size)
+  files.head
+}
