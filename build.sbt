@@ -78,23 +78,34 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
 
         if (!mdInstallDir.exists) {
 
-          val vendorZip: File =
-            singleMatch(up, artifactFilter(name = "cae_md18_0_sp5_vendor", `type` = "zip", extension = "zip"))
-          s.log.info(s"=> Extracting CAE Vendor: $vendorZip")
-          nativeUnzip(vendorZip, mdInstallDir)
+          val pfilter: DependencyFilter = new DependencyFilter {
+            def apply(c: String, m: ModuleID, a: Artifact): Boolean =
+              (a.`type` == "zip" || a.`type` == "resource") &&
+                a.extension == "zip" &&
+                m.organization == "gov.nasa.jpl.cae.magicdraw.packages"
+          }
+          val ps: Seq[File] = up.matching(pfilter)
+          ps.foreach { zip =>
+            val files = IO.unzip(zip, mdInstallDir)
+            s.log.info(
+              s"=> created md.install.dir=$mdInstallDir with ${files.size} " +
+                s"files extracted from zip: ${zip.getName}")
+          }
+
+          val mdDynamicScriptsDir = mdInstallDir / "dynamicScripts"
+          IO.createDirectory(mdDynamicScriptsDir)
 
           val zfilter: DependencyFilter = new DependencyFilter {
             def apply(c: String, m: ModuleID, a: Artifact): Boolean =
               (a.`type` == "zip" || a.`type` == "resource") &&
                 a.extension == "zip" &&
-                a.name != "cae_md18_0_sp5_vendor"
+                m.organization == "org.omg.tiwg"
           }
           val zs: Seq[File] = up.matching(zfilter)
           zs.foreach { zip =>
-            val files = IO.unzip(zip, mdInstallDir)
+            val files = IO.unzip(zip, mdDynamicScriptsDir)
             s.log.info(
-              s"=> created md.install.dir=$mdInstallDir with ${files.size} " +
-                s"files extracted from zip: ${zip.getName}")
+              s"=> extracted ${files.size} DynamicScripts files from zip: ${zip.getName}")
           }
 
         } else
@@ -164,11 +175,8 @@ def dynamicScriptsResourceSettings(dynamicScriptsProjectName: Option[String] = N
       packageSrc in Test,
       packageDoc in Test) map {
       (dir, bin, src, doc, binT, srcT, docT) =>
-        (dir ** "*.dynamicScripts").pair(relativeTo(dir)) ++
-          ((dir ** "*.md") --- (dir / "sbt.staging" ***)).pair(relativeTo(dir)) ++
-          (dir / "models" ** "*.mdzip").pair(relativeTo(dir)) ++
+          (dir ** "*.md").pair(relativeTo(dir)) ++
           com.typesafe.sbt.packager.MappingsHelper.directory(dir / "resources") ++
-          com.typesafe.sbt.packager.MappingsHelper.directory(dir / "profiles") ++
           addIfExists(bin, "lib/" + bin.name) ++
           addIfExists(binT, "lib/" + binT.name) ++
           addIfExists(src, "lib.sources/" + src.name) ++
@@ -182,18 +190,4 @@ def dynamicScriptsResourceSettings(dynamicScriptsProjectName: Option[String] = N
       Artifact(n, "zip", "zip", Some("resource"), Seq(), None, Map()) -> p
     }
   )
-}
-
-def nativeUnzip(f: File, dir: File): Unit = {
-  IO.createDirectory(dir)
-  Process(Seq("unzip", "-q", f.getAbsolutePath, "-d", dir.getAbsolutePath), dir).! match {
-    case 0 => ()
-    case n => sys.error("Failed to run native unzip application!")
-  }
-}
-
-def singleMatch(up: UpdateReport, f: DependencyFilter): File = {
-  val files: Seq[File] = up.matching(f)
-  require(1 == files.size)
-  files.head
 }
