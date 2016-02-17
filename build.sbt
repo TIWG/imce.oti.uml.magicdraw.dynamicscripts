@@ -26,7 +26,6 @@ lazy val mdInstallDirectory = SettingKey[File]("md-install-directory", "MagicDra
 mdInstallDirectory in Global :=
   baseDirectory.value / "imce.md.package"
 
-
 lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
   .enablePlugins(IMCEGitPlugin)
   .enablePlugins(IMCEReleasePlugin)
