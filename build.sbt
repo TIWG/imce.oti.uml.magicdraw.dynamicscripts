@@ -33,6 +33,7 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
   .settings(dynamicScriptsResourceSettings(Some("imce.oti.uml.magicdraw.dynamicscripts")))
   .settings(IMCEPlugin.strictScalacFatalWarningsSettings)
   .settings(IMCEPlugin.scalaDocSettings(diagrams=false))
+  .settings(IMCEReleasePlugin.packageReleaseProcessSettings)
   .settings(
     IMCEKeys.licenseYearOrRange := "2014-2016",
     IMCEKeys.organizationInfo := IMCEPlugin.Organizations.oti,
@@ -139,7 +140,6 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
     IMCEKeys.pomRepositoryPathRegex := """\<repositoryPath\>\s*([^\"]*)\s*\<\/repositoryPath\>""".r
 
   )
-  .settings(IMCEReleasePlugin.packageReleaseProcessSettings)
 
 def dynamicScriptsResourceSettings(dynamicScriptsProjectName: Option[String] = None): Seq[Setting[_]] = {
 
