@@ -54,7 +54,9 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
 
     projectID := {
       val previous = projectID.value
-      previous.extra("build.date.utc" -> buildUTCDate.value)
+      previous.extra(
+        "build.date.utc" -> buildUTCDate.value,
+        "artifact.kind" -> "magicdaw.library")
     },
 
     git.baseVersion := Versions.version,
@@ -145,7 +147,7 @@ def dynamicScriptsResourceSettings(dynamicScriptsProjectName: Option[String] = N
       require(
         QUALIFIED_NAME.pattern.matcher(projectName).matches,
         s"The project name, '$projectName` is not a valid Java qualified name")
-      Some("dynamicScripts/" + projectName)
+      Some(projectName)
     },
 
     // name the '*-resource.zip' in the same way as other artifacts
