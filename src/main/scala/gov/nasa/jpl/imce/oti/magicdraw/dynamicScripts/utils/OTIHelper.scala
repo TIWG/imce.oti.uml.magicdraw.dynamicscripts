@@ -38,6 +38,9 @@
  */
 package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils
 
+import java.lang.System
+import java.util.concurrent.TimeUnit
+
 import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.magicdraw.uml.characteristics.MagicDrawOTICharacteristicsProfileProvider
 import org.omg.oti.magicdraw.uml.read._
@@ -49,10 +52,12 @@ import org.omg.oti.uml.xmi.Document
 
 import scala.language.{implicitConversions, postfixOps}
 import scala.collection.immutable._
+import scala.concurrent.duration.Duration
 import scalaz._
 
-import scala.{Boolean,Option,None,StringContext}
-import scala.Predef.{identity}
+import scala.{Boolean,Long,Option,None,StringContext}
+import scala.concurrent.duration.FiniteDuration
+import scala.Predef.{identity,String}
 
 object OTIHelper {
 
@@ -124,6 +129,25 @@ object OTIHelper {
         -\/(NonEmptyList[java.lang.Throwable](errors.head, errors.tail.to[Seq]: _*))
     }
   }
+
+  def prettyDuration(d: Duration): String = {
+
+    val (hours, minutes, seconds, millis) =
+      (d.toHours, d.toMinutes, d.toSeconds, d.toMillis)
+
+    val adjMinutes = minutes - hours * 60
+    val adjSeconds = seconds - minutes * 60
+    val adjMillis = millis - seconds * 1000
+
+    val r1 = if (hours > 0) s"$hours hours" else ""
+    val r2 = if (adjMinutes > 0) (if (!r1.isEmpty) r1+", " else "") + s"$adjMinutes minutes" else r1
+    val r3 = if (adjSeconds > 0) (if (!r2.isEmpty) r2+", " else "") + s"$adjSeconds seconds" else r2
+    val r4 = if (adjMillis > 0) (if (!r3.isEmpty) r3+", " else "") + s"$adjMillis millis" else r3
+    val r5 = if (r4.isEmpty) "<1 ms" else r4
+    r5
+  }
+
+
   implicit def setThrowableSemigroup: Semigroup[Set[java.lang.Throwable]] =
   Semigroup.instance(_ ++ _)
 
@@ -143,6 +167,9 @@ object OTIHelper {
         type ResolvedDocumentSet_UnresolvedCrossReferences =
         (ResolvedDocumentSet[MagicDrawUML], Iterable[UnresolvedElementCrossReference[MagicDrawUML]])
 
+        System.out.println(s"getOTIMagicDrawInfo Start...")
+        val t0: Long = java.lang.System.currentTimeMillis()
+
         val otiCharacterizationProfileProvider: OTICharacteristicsProfileProvider[MagicDrawUML] =
           MagicDrawOTICharacteristicsProfileProvider()(
             Option.empty[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]],
@@ -151,10 +178,18 @@ object OTIHelper {
         val otiInfo = MagicDrawOTIInfo(mdCatalogMgr, umlUtil, otiCharacterizationProfileProvider)
         val documentOps = new MagicDrawDocumentOps(otiInfo)
 
+        val t1: Long = java.lang.System.currentTimeMillis()
+        val delta1 = FiniteDuration.apply(t1 - t0, TimeUnit.MILLISECONDS)
+        System.out.println(s"getOTIMagicDrawInfo: document ops in ${prettyDuration(delta1)}")
+
         val ds1 =
           documentOps
             .initializeDocumentSet(documentURIMapper, builtInURIMapper)
-            .leftMap(_.list.to[Set])
+            .leftMap[Set[java.lang.Throwable]](_.list.to[Set])
+
+        val t2: Long = java.lang.System.currentTimeMillis()
+        val delta2 = FiniteDuration.apply(t2 - t1, TimeUnit.MILLISECONDS)
+        System.out.println(s"getOTIMagicDrawInfo: initial document set in ${prettyDuration(delta2)}")
 
         val ds2 =
           ds1.flatMap { ds: MagicDrawDocumentSet =>
@@ -167,9 +202,9 @@ object OTIHelper {
             = documents
               .flatMap { mdocs: Set[MagicDrawDocument] =>
                 val docsm: Set[Document[MagicDrawUML]] = for {mdoc <- mdocs} yield mdoc
+                val added: Set[java.lang.Throwable] \&/ DocumentSet[MagicDrawUML] = documentOps.addDocuments(ds, docsm)
                 val dsm: Set[java.lang.Throwable] \&/ MagicDrawDocumentSet =
-                  documentOps
-                    .addDocuments(ds, docsm)
+                  added
                   .flatMap {
                     case mdSet: MagicDrawDocumentSet =>
                       \&/.That(mdSet)
@@ -183,17 +218,29 @@ object OTIHelper {
             result
           }
 
+        val t3: Long = java.lang.System.currentTimeMillis()
+        val delta3 = FiniteDuration.apply(t3 - t2, TimeUnit.MILLISECONDS)
+        System.out.println(s"getOTIMagicDrawInfo: updated document set in ${prettyDuration(delta3)}")
+
         val result =
           ds2.flatMap { ds: MagicDrawDocumentSet =>
-            ds
-              .resolve(ignoreCrossReferencedElementFilter, unresolvedElementMapper, includeAllForwardRelationTriple)
-              .leftMap(_.list.to[Set])
+            val dresolved =
+              ds.resolve(ignoreCrossReferencedElementFilter, unresolvedElementMapper, includeAllForwardRelationTriple)
+
+            dresolved
               .map { case (rds, unresolved) =>
-                val idg = MagicDrawIDGenerator(rds.element2document)(umlUtil, ds, documentOps)
+                val idg = MagicDrawIDGenerator()(umlUtil, ds, documentOps)
                 (idg, rds, ds, unresolved)
 
               }
           }
+
+        val t4: Long = java.lang.System.currentTimeMillis()
+        val delta4 = FiniteDuration.apply(t4 - t3, TimeUnit.MILLISECONDS)
+        System.out.println(s"getOTIMagicDrawInfo: id generator in ${prettyDuration(delta4)}")
+
+        val delta0 = FiniteDuration.apply(t4 - t0, TimeUnit.MILLISECONDS)
+        System.out.println(s"getOTIMagicDrawInfo: total in ${prettyDuration(delta0)}")
 
         result
       }

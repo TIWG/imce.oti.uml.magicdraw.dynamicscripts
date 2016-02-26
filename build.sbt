@@ -151,10 +151,13 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
         Artifact("oti-uml-magicdraw-adapter", "zip", "zip", Some("resource"), Seq(), None, Map())
     ),
 
-    extractArchives <<= (baseDirectory, update, streams, mdInstallDirectory in ThisBuild) map {
-      (base, up, s, mdInstallDir) =>
+    extractArchives <<= (baseDirectory, update, streams) map {
+      (base, up, s) =>
 
+        val mdInstallDir = base / "target" / "md.package"
         if (!mdInstallDir.exists) {
+
+          IO.createDirectory(mdInstallDir)
 
           val pfilter: DependencyFilter = new DependencyFilter {
             def apply(c: String, m: ModuleID, a: Artifact): Boolean =
@@ -170,39 +173,40 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
                 s"files extracted from zip: ${zip.getName}")
           }
 
-          val mdDynamicScriptsDir = mdInstallDir / "dynamicScripts"
-          IO.createDirectory(mdDynamicScriptsDir)
-
-          val zfilter: DependencyFilter = new DependencyFilter {
-            def apply(c: String, m: ModuleID, a: Artifact): Boolean =
-              (a.`type` == "zip" || a.`type` == "resource") &&
-                a.extension == "zip" &&
-                m.organization == "org.omg.tiwg"
-          }
-          val zs: Seq[File] = up.matching(zfilter)
-          zs.foreach { zip =>
-            val files = IO.unzip(zip, mdDynamicScriptsDir)
-            s.log.info(
-              s"=> extracted ${files.size} DynamicScripts files from zip: ${zip.getName}")
-          }
+//          val mdDynamicScriptsDir = mdInstallDir / "dynamicScripts"
+//          IO.createDirectory(mdDynamicScriptsDir)
+//
+//          val zfilter: DependencyFilter = new DependencyFilter {
+//            def apply(c: String, m: ModuleID, a: Artifact): Boolean =
+//              (a.`type` == "zip" || a.`type` == "resource") &&
+//                a.extension == "zip" &&
+//                m.organization == "org.omg.tiwg"
+//          }
+//          val zs: Seq[File] = up.matching(zfilter)
+//          zs.foreach { zip =>
+//            val files = IO.unzip(zip, mdDynamicScriptsDir)
+//            s.log.info(
+//              s"=> extracted ${files.size} DynamicScripts files from zip: ${zip.getName}")
+//          }
 
         } else
           s.log.info(
             s"=> use existing md.install.dir=$mdInstallDir")
     },
 
-    unmanagedJars in Compile <++= (baseDirectory, update, streams,
-      mdInstallDirectory in ThisBuild,
-      extractArchives) map {
-      (base, up, s, mdInstallDir, _) =>
+    unmanagedJars in Compile <++= (baseDirectory, update, streams, extractArchives) map {
+      (base, up, s, _) =>
+
+        val mdInstallDir = base / "target" / "md.package"
 
         val libJars = ((mdInstallDir / "lib") ** "*.jar").get
         s.log.info(s"jar libraries: ${libJars.size}")
 
-        val dsJars = ((mdInstallDir / "dynamicScripts") * "*" / "lib" ** "*.jar").get
-        s.log.info(s"jar dynamic script: ${dsJars.size}")
-
-        val mdJars = (libJars ++ dsJars).map { jar => Attributed.blank(jar) }
+//        val dsJars = ((mdInstallDir / "dynamicScripts") * "*" / "lib" ** "*.jar").get
+//        s.log.info(s"jar dynamic script: ${dsJars.size}")
+//
+//        val mdJars = (libJars ++ dsJars).map { jar => Attributed.blank(jar) }
+        val mdJars = libJars.map { jar => Attributed.blank(jar) }
 
         mdJars
     },
