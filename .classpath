@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="con" path="gov.nasa.jpl.magicdraw.CLASSPATH_LIB_CONTAINER/,lib/,lib/org.aspectj/,lib/gov.nasa.jpl.imce.magicdraw.libraries/,lib/gov.nasa.jpl.imce.secae/,lib/graphics/,lib/org.scala-lang/,lib/org.scala-lang.modules/,lib/com.assembla.scala-incubator/,lib/webservice/,plugins/com.nomagic.magicdraw.migration/,plugins/com.nomagic.magicdraw.migrationtransformation/,plugins/com.nomagic.magicdraw.modeltransformations/,plugins/com.nomagic.magicdraw.sysml/,plugins/com.nomagic.magicdraw.sysml/lib/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/,plugins/gov.nasa.jpl.dynamicScripts.magicdraw/lib/"/>
+	<classpathentry kind="con" path="gov.nasa.jpl.magicdraw.CLASSPATH_LIB_CONTAINER/,lib/other-scala/,lib/scala-graph/"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.omg.oti.uml.core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.omg.oti.uml.composite_structure_tree_analysis"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.omg.oti.uml.change_migration"/>

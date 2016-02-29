@@ -932,6 +932,14 @@ characterization(
             method: appliedStereotypesWithoutMetaclassProperties
         )
 		EarlyDerivedWidget(
+			name: 'OTI Element::annotatedElement_comment'
+			project: imce.oti.uml.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            access: r/o
+            class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
+            method: annotatingComments
+        )
+		EarlyDerivedWidget(
 			name: 'OTI Element::ownedElements'
 			project: imce.oti.uml.magicdraw.dynamicscripts
             dependencies: { org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }

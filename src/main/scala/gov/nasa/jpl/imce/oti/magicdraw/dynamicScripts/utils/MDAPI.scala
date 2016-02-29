@@ -51,6 +51,7 @@ import com.nomagic.uml2.ext.magicdraw.auxiliaryconstructs.mdmodels.Model
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.symbols.internal.SymbolHelper._
+import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.internal.MDValidationAPIHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.wildCardMatch
 import org.omg.oti.magicdraw.uml.read._
@@ -59,15 +60,27 @@ import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, UnresolvedElementCrossReference}
 import org.omg.oti.uml.read.api._
 
-import scala.Predef.{ArrowAssoc,String}
+import scala.Predef.{ArrowAssoc, String}
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
 import scala.language.postfixOps
+import scala.util.Try
 import scalaz.Scalaz._
 import scalaz._
-
-import scala.{Boolean,Option,None,Some,StringContext,Tuple2,Tuple3,Unit}
+import scala.{Boolean, None, Option, Some, StringContext, Tuple2, Tuple3, Unit}
 object MDAPI {
+
+  def thrwoables2MagicDrawValidationDataResults
+  (p: Project, message: String)
+  (nels: Set[java.lang.Throwable])
+  : Try[Option[MagicDrawValidationDataResults]] =
+    scala.util.Success(
+      Some(
+        p.makeMDIllegalArgumentExceptionValidation(
+          s"*** ${nels.size} catalog-related errors prevented the exporter to run ***",
+          Map(p.getModel -> Tuple2( nels.map(_.getMessage).toList.mkString("\n"), Nil)),
+          "*::MagicDrawOTIValidation",
+          "*::UnresolvedCrossReference").validationDataResults))
 
 
   /**
@@ -99,8 +112,10 @@ object MDAPI {
     }
 
   def getMDCatalogs
-  (omgCatalogResourcePath: String = "dynamicScripts/org.omg.oti/resources/omgCatalog/omg.local.catalog.xml",
-   mdCatalogResourcePath: String = "dynamicScripts/org.omg.oti.magicdraw/resources/md18Catalog/omg.magicdraw.catalog.xml")
+  (omgCatalogResourcePath: String =
+   "dynamicScripts/org.omg.oti.uml.core/resources/omgCatalog/omg.local.catalog.xml",
+   mdCatalogResourcePath: String =
+   "dynamicScripts/org.omg.oti.uml.magicdraw.adapter/resources/md18Catalog/omg.magicdraw.catalog.xml")
   : NonEmptyList[java.lang.Throwable] \/ (CatalogURIMapper, CatalogURIMapper) = {
 
     val defaultOMGCatalogFile =

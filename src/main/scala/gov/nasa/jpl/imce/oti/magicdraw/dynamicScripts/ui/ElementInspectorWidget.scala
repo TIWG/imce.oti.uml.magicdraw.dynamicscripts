@@ -177,6 +177,22 @@ object ElementInspectorWidget {
       })
   }
 
+  def annotatingComments
+  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+   ek: MagicDrawElementKindDesignation, e: Element)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+    implicit val umlUtil = MagicDrawUMLUtil(project)
+    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
+      l = (nels) => Failure(nels.head),
+      r = (info) => {
+        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+        elementOperationWidget[UMLElement[MagicDrawUML], UMLComment[MagicDrawUML]](
+          derived, e,
+          _.annotatedElement_comment,
+          MagicDrawUMLUtil(project))
+      })
+  }
+
   def ownedElements
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
