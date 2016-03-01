@@ -6,6 +6,7 @@ import sbt._
 import scala.collection.JavaConversions._
 
 import gov.nasa.jpl.imce.sbt._
+import gov.nasa.jpl.imce.sbt.ProjectHelper._
 
 useGpg := true
 
@@ -143,14 +144,19 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
 
     resourceDirectory in Compile := baseDirectory.value / "resources",
 
-    unmanagedClasspath in Compile <++= unmanagedJars in Compile,
-    libraryDependencies ++= Seq (
+    unmanagedClasspath in Compile <++= unmanagedJars in Compile
+  )
+  .dependsOnSourceProjectOrLibraryArtifacts(
+    "oti-uml-magicdraw-adapter",
+    "org.omg.oti.uml.magicdraw.adapter",
+    Seq(
       "org.omg.tiwg" %% "oti-uml-magicdraw-adapter"
         % Versions_oti_uml_magicdraw_adapter.version % "compile"
         withSources() withJavadoc() artifacts
         Artifact("oti-uml-magicdraw-adapter", "zip", "zip", Some("resource"), Seq(), None, Map())
-    ),
-
+    )
+  )
+  .settings(
     extractArchives <<= (baseDirectory, update, streams) map {
       (base, up, s) =>
 

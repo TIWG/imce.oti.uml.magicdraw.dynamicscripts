@@ -218,74 +218,41 @@ object InspectOTIPackageInfo {
       guiLog.log(s"${pkg.qualifiedName.get}: $ann")
     }
 
-    val result1
-    : NonEmptyList[java.lang.Throwable] \/ (CatalogURIMapper, CatalogURIMapper) =
-      MDAPI.getMDCatalogs()
+    val result
+    : Set[java.lang.Throwable] \&/ Unit
+    = for {
+      ds1 <-
+      documentOps
+        .initializeDocumentSet()
+        .leftMap[Set[java.lang.Throwable]](_.list.to[Set])
 
-    val result2
-    : NonEmptyList[java.lang.Throwable] \&/ Unit =
-      result1
-        .toThese
-        .map { case (documentURIMapper, builtInURIMapper) =>
+      mdocs <-
+      ds1.documentOps.createDocumentsFromExistingRootPackages(selectedPackages.to[Set])
 
-          val ds1 =
-            documentOps
-              .initializeDocumentSet(documentURIMapper, builtInURIMapper)
-              .leftMap[Set[java.lang.Throwable]](_.list.to[Set])
+      documents = {
+        val docsm: Set[Document[MagicDrawUML]] = for {mdoc <- mdocs} yield mdoc
+        docsm
+      }
 
-          val ds2 =
-            ds1.flatMap { ds: MagicDrawDocumentSet =>
-              val documents
-              : Set[java.lang.Throwable] \&/ Set[MagicDrawDocument]
-              = ds.documentOps.createDocumentsFromExistingRootPackages(selectedPackages.to[Set])
+      ds2 <- documentOps.addDocuments(ds1, documents)
 
-              val result
-              : Set[java.lang.Throwable] \&/ MagicDrawDocumentSet
-              = documents
-                .flatMap { mdocs: Set[MagicDrawDocument] =>
-                  val docsm: Set[Document[MagicDrawUML]] = for {mdoc <- mdocs} yield mdoc
-                  val added: Set[java.lang.Throwable] \&/ DocumentSet[MagicDrawUML] = documentOps.addDocuments(ds, docsm)
-                  val dsm: Set[java.lang.Throwable] \&/ MagicDrawDocumentSet =
-                    added
-                      .flatMap {
-                        case mdSet: MagicDrawDocumentSet =>
-                          \&/.That(mdSet)
-                        case dSet =>
-                          \&/.This(Set[java.lang.Throwable](
-                            UMLError.umlAdaptationError(s"The document set, $dSet, should be a MagicDrawDocumentSet")
-                          ))
-                      }
-                  dsm
-                }
-              result
-            }
+    } yield {
 
-          ds2.a.fold[Unit](
-            guiLog.log(s"MagicDrawDocumentSet.createMagicDrawProjectDocumentSet: no errors")
-          ){ nels =>
-            guiLog.log(s"MagicDrawDocumentSet.createMagicDrawProjectDocumentSet: ${nels.size} errors")
-            nels.foreach { error =>
-              guiLog.log(s"==> $error")
-            }
-          }
+      implicit val ds: DocumentSet[MagicDrawUML] = ds2
+      implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator()
 
-          ds2.foreach {
-            implicit ds =>
-            implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator()
+      selectedPackages.foreach { pkg =>
+        guiLog.log(s"# OTI info: ${pkg.qualifiedName.get}")
+        guiLog.log(s"-- is OTI Specification Root? ${DocumentSet.isPackageRootOfSpecificationDocument(pkg)}")
+        guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiID: ${pkg.xmiID()}")
+        guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiUUID: ${pkg.xmiUUID()}")
+      }
 
-            selectedPackages.foreach { pkg =>
-              guiLog.log(s"# OTI info: ${pkg.qualifiedName.get}")
-              guiLog.log(s"-- is OTI Specification Root? ${DocumentSet.isPackageRootOfSpecificationDocument(pkg)}")
-              guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiID: ${pkg.xmiID()}")
-              guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiUUID: ${pkg.xmiUUID()}")
-            }
-          }
-
-          ()
-        }
+      ()
+    }
 
     val otiV = OTIMagicDrawValidation(p)
-    otiV.toTryOptionMDValidationDataResults(p, "*** OTI Package Inspector ***", result2.a)
+    otiV.errorSet2TryOptionMDValidationDataResults(p, "*** OTI Package Inspector ***", result.a)
   }
 
 }

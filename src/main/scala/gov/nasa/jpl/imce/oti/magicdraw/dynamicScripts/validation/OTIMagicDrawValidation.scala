@@ -341,7 +341,6 @@ case class OTIMagicDrawValidation(project: Project)(implicit mdUtil: MagicDrawUM
 
   }
 
-
   def toTryOptionMDValidationDataResults
   (p: Project, message: String, maybeErrors: NonEmptyList[java.lang.Throwable] \/ Unit)
   : Try[Option[MagicDrawValidationDataResults]] = {
@@ -377,6 +376,40 @@ case class OTIMagicDrawValidation(project: Project)(implicit mdUtil: MagicDrawUM
 
   }
 
+  def errorSet2TryOptionMDValidationDataResults
+  (p: Project, message: String, maybeErrors: Set[java.lang.Throwable] \/ Unit)
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    maybeErrors
+      .fold[Try[Option[MagicDrawValidationDataResults]]](
+      l = (nels: Set[java.lang.Throwable]) =>
+      {
+        val errorMessages
+        : Map[com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element, (String, List[com.nomagic.actions.NMAction])] =
+          nels
+            .map { cause =>
+              p.getModel -> Tuple2(cause.getMessage, List.empty[com.nomagic.actions.NMAction])
+            }
+            .toMap
+
+
+        scala.util.Success(
+          p.makeMDIllegalArgumentExceptionValidation(
+            message,
+            errorMessages,
+            "*::MagicDrawOTIValidation",
+            "*::UnresolvedCrossReference"
+          )
+            .validationDataResults
+            .some
+        )
+      },
+      r = (_: Unit) =>
+        Success(None)
+    )
+
+  }
+
   def toTryOptionMDValidationDataResults
   (p: Project, message: String, maybeErrors: Option[NonEmptyList[java.lang.Throwable]])
   : Try[Option[MagicDrawValidationDataResults]] = {
@@ -389,6 +422,37 @@ case class OTIMagicDrawValidation(project: Project)(implicit mdUtil: MagicDrawUM
       : Map[com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element, (String, List[com.nomagic.actions.NMAction])] =
         nels
           .toList
+          .map { error =>
+            p.getModel -> Tuple2(error.getMessage, List.empty[com.nomagic.actions.NMAction])
+          }
+          .toMap
+
+
+      scala.util.Success(
+        p.makeMDIllegalArgumentExceptionValidation(
+          message,
+          errors,
+          "*::MagicDrawOTIValidation",
+          "*::UnresolvedCrossReference"
+        )
+          .validationDataResults
+          .some
+      )
+    }
+
+  }
+
+  def errorSet2TryOptionMDValidationDataResults
+  (p: Project, message: String, maybeErrors: Option[Set[java.lang.Throwable]])
+  : Try[Option[MagicDrawValidationDataResults]] = {
+
+    maybeErrors
+      .fold[scala.util.Try[Option[MagicDrawValidationDataResults]]](
+      scala.util.Success(Option.empty[MagicDrawValidationDataResults])
+    ){ nels: Set[java.lang.Throwable] =>
+      val errors
+      : Map[com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element, (String, List[com.nomagic.actions.NMAction])] =
+        nels
           .map { error =>
             p.getModel -> Tuple2(error.getMessage, List.empty[com.nomagic.actions.NMAction])
           }

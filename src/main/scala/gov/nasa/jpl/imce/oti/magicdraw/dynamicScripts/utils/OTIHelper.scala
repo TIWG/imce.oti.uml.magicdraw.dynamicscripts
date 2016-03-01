@@ -94,14 +94,6 @@ object OTIHelper {
     : Set[UMLPackage[MagicDrawUML]]
     = Set()
 
-    val documentURIMapper
-    : CatalogURIMapper
-    = null
-
-    val builtInURIMapper
-    : CatalogURIMapper
-    = null
-
     val ignoreCrossReferencedElementFilter
     : UMLElement[MagicDrawUML] => Boolean
     = (_: UMLElement[MagicDrawUML]) => false
@@ -116,8 +108,6 @@ object OTIHelper {
 
     getOTIMagicDrawInfo(
       specificationRootPackages,
-      documentURIMapper,
-      builtInURIMapper,
       ignoreCrossReferencedElementFilter,
       unresolvedElementMapper,
       includeAllForwardRelationTriple) match {
@@ -153,8 +143,6 @@ object OTIHelper {
 
   def getOTIMagicDrawInfo
   (specificationRootPackages: Set[UMLPackage[MagicDrawUML]],
-   documentURIMapper: CatalogURIMapper,
-   builtInURIMapper: CatalogURIMapper,
    ignoreCrossReferencedElementFilter: UMLElement[MagicDrawUML] => Boolean,
    unresolvedElementMapper: UMLElement[MagicDrawUML] => Option[UMLElement[MagicDrawUML]],
    includeAllForwardRelationTriple: (Document[MagicDrawUML], RelationTriple[MagicDrawUML], Document[MagicDrawUML]) => Boolean)
@@ -184,7 +172,7 @@ object OTIHelper {
 
         val ds1 =
           documentOps
-            .initializeDocumentSet(documentURIMapper, builtInURIMapper)
+            .initializeDocumentSet()
             .leftMap[Set[java.lang.Throwable]](_.list.to[Set])
 
         val t2: Long = java.lang.System.currentTimeMillis()
