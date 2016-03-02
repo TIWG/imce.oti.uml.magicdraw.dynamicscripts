@@ -345,7 +345,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Inspect OTI info'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
               method: doit
