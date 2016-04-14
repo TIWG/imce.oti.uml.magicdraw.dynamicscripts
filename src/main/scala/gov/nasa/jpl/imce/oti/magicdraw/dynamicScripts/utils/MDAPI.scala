@@ -45,17 +45,16 @@ import javax.swing.SwingUtilities
 
 import com.nomagic.actions.NMAction
 import com.nomagic.magicdraw.core.{Application, ApplicationEnvironment, Project}
-import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
+import com.nomagic.magicdraw.uml.symbols.shapes.{CommentView,PackageView}
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import com.nomagic.uml2.ext.magicdraw.auxiliaryconstructs.mdmodels.Model
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
-import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Comment, Element}
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.symbols.internal.SymbolHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.internal.MDValidationAPIHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.wildCardMatch
 import org.omg.oti.magicdraw.uml.read._
-import org.omg.oti.uml.OTIPrimitiveTypes._
+import org.omg.oti.json.common.OTIPrimitiveTypes._
 import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, UnresolvedElementCrossReference}
 import org.omg.oti.uml.read.api._
@@ -103,41 +102,17 @@ object MDAPI {
   def unresolvedElementMapper
   (umlUtil: MagicDrawUMLUtil)
   ( e: UMLElement[MagicDrawUML] )
-  : Option[UMLElement[MagicDrawUML]] =
-    e.toolSpecific_id.map(OTI_ID.unwrap).fold[Option[UMLElement[MagicDrawUML]]](None) {
+  : Option[UMLElement[MagicDrawUML]]
+  = TOOL_SPECIFIC_ID.unwrap(e.toolSpecific_id) match {
       // @todo ???
       //case "_UML_" => Some( umlUtil.MDBuiltInUML.scope )
       //case "_StandardProfile_" => Some( umlUtil.MDBuiltInStandardProfile.scope )
       case _ => None
     }
 
-  def getMDCatalogs
-  (omgCatalogResourcePath: String =
-   "dynamicScripts/org.omg.oti.uml.core/resources/omgCatalog/omg.local.catalog.xml",
-   mdCatalogResourcePath: String =
-   "dynamicScripts/org.omg.oti.uml.magicdraw.adapter/resources/md18Catalog/omg.magicdraw.catalog.xml")
-  : NonEmptyList[java.lang.Throwable] \/ (CatalogURIMapper, CatalogURIMapper) = {
-
-    val defaultOMGCatalogFile =
-      new File(MDUML.getApplicationInstallDir.toURI.resolve(omgCatalogResourcePath))
-    val omgCatalog =
-      if (defaultOMGCatalogFile.exists()) Seq(defaultOMGCatalogFile)
-      else MagicDrawFileChooser.chooseCatalogFile("Select the OMG UML 2.5 *.catalog.xml file").to[Seq]
-
-    val defaultMDCatalogFile =
-      new File(MDUML.getApplicationInstallDir.toURI.resolve(mdCatalogResourcePath))
-    val mdCatalog =
-      if (defaultMDCatalogFile.exists()) Seq(defaultMDCatalogFile)
-      else MagicDrawFileChooser.chooseCatalogFile("Select the MagicDraw UML 2.5 *.catalog.xml file").to[Seq]
-
-    CatalogURIMapper.createMapperFromCatalogFiles(omgCatalog.to[Seq])
-    .flatMap { omgCatalogMapper: CatalogURIMapper =>
-        CatalogURIMapper.createMapperFromCatalogFiles(mdCatalog.to[Seq])
-        .map { mdCatalogMapper: CatalogURIMapper =>
-          (omgCatalogMapper, mdCatalogMapper)
-        }
-      }
-  }
+  def getComment(cv: CommentView)
+  : Comment
+  = cv.getElement.asInstanceOf[Comment]
 
   def getPackage(pv: PackageView) =
    getPackageOfView(pv)

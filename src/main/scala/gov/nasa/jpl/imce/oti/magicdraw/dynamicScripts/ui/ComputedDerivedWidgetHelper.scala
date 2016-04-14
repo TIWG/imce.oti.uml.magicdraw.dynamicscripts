@@ -56,7 +56,7 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 
-import org.omg.oti.uml.OTIPrimitiveTypes._
+import org.omg.oti.json.common.OTIPrimitiveTypes._
 import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read._
@@ -112,7 +112,7 @@ object ComputedDerivedWidgetHelper {
           case parent: UMLNamedElement[Uml] =>
             ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
           case parent                       =>
-            ReferenceNodeInfo( OTI_ID.unwrap(parent.toolSpecific_id.get), umlMagicDrawUMLElement(parent).getMagicDrawElement )
+            toToolSpecificIDReferenceNodeInfo(parent)
         }
       } ),
       "EMF eContainingFeature" -> {
@@ -140,18 +140,18 @@ object ComputedDerivedWidgetHelper {
                 case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
                 case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id}"
                 }
                 case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id}"
                 }
                 case ( _, Some( name ) ) => name
-                case ( _, _ )            => OTI_ID.unwrap(ne.toolSpecific_id.get)
+                case ( _, _ )            => TOOL_SPECIFIC_ID.unwrap(ne.toolSpecific_id)
               },
               umlMagicDrawUMLElement(e).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( OTI_ID.unwrap(e.toolSpecific_id.get), umlMagicDrawUMLElement(e).getMagicDrawElement )
+            toToolSpecificIDReferenceNodeInfo(e)
         } ),
       "metaclass" -> LabelNodeInfo( e.xmiType.head ) )
   }

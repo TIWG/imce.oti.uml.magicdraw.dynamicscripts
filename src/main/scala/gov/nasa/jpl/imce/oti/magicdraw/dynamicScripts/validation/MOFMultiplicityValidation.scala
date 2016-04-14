@@ -51,13 +51,16 @@ import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.symbols.internal.SymbolHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.actions._
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML,MagicDrawUMLUtil}
+import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
+import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
+import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
 import org.omg.oti.uml.read.api.UMLPackage
 import org.omg.oti.uml.validation._
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.util.{Success,Try}
+import scala.util.{Failure,Success,Try}
 import scala.{Option,None,Some,StringContext}
 import scala.Predef.ArrowAssoc
 
@@ -78,46 +81,50 @@ object MOFMultiplicityValidation {
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree, node: Node,
     pkg: Profile, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-        .toIterable
-        .selectByKindOf { case p: Package => umlPackage(p) }
-        .to[Set]
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case p: Package => umlPackage(p) }
 
-    doit(p, selectedPackages)
-  }
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project, ev: ActionEvent,
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree, node: Node,
     top: Package, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-        .toIterable
-        .selectByKindOf { case p: Package => umlPackage(p) }
-        .to[Set]
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case p: Package => umlPackage(p) }
 
-    doit(p, selectedPackages)
-  }
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project,
@@ -127,19 +134,25 @@ object MOFMultiplicityValidation {
     triggerView: PackageView,
     triggerElement: Profile,
     selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) } )
-  }
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case pv: PackageView => umlPackage(getPackageOfView(pv).get) }
+
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project,
@@ -149,95 +162,108 @@ object MOFMultiplicityValidation {
     triggerView: PackageView,
     triggerElement: Package,
     selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) } )
-  }
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case pv: PackageView => umlPackage(getPackageOfView(pv).get) }
+
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-  ( implicit _umlUtil: MagicDrawUMLUtil )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+    oa: MagicDrawOTIProfileAdapter,
+    pkgs: Set[UMLPackage[MagicDrawUML]] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(p),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
 
-    import _umlUtil._
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val otiV = OTIMagicDrawValidation(p)
+      val otiV = OTIMagicDrawValidation(p)
 
-    val elementMessages = scala.collection.mutable.HashMap[
-      Element,
-      scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
+      implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+      implicit val otiCharacteristicsProvider = oa.otiCharacteristicsProvider
 
-    for {
-      v <- ConnectableMultiplicityValidationHelper.analyzePackageContents(pkgs)
-      if MultiplicityValueValidationStatus.ValidValueStatus != v.status
-      mdPoP = umlMagicDrawUMLMultiplicityElement(v.parameter_or_property).getMagicDrawMultiplicityElement
-      vOptInfo <- (v.status, v.value, v.valueRepair) match {
-        case ( MultiplicityValueValidationStatus.ValidValueStatus, _, _ ) =>
-          Success(None)
-        case ( MultiplicityValueValidationStatus.RedundantValueStatus, Some(vDelete), _) =>
-          val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_RedundantValue,
-            Some(s"Delete redundant ${v.role.propertyName} value for ${v.parameter_or_property.qualifiedName.get}"),
-            DeleteRedundantValue(v.role) :: Nil)
-        case ( _, Some(vDelete), Some(vRepair)) =>
-          val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
-          if (MultiplicityElement_lowerValue == v.role)
+      val elementMessages = scala.collection.mutable.HashMap[
+        Element,
+        scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
+
+      for {
+        v <- ConnectableMultiplicityValidationHelper.analyzePackageContents(pkgs)
+        if MultiplicityValueValidationStatus.ValidValueStatus != v.status
+        mdPoP = umlMagicDrawUMLMultiplicityElement(v.parameter_or_property).getMagicDrawMultiplicityElement
+        vOptInfo <- (v.status, v.value, v.valueRepair) match {
+          case (MultiplicityValueValidationStatus.ValidValueStatus, _, _) =>
+            Success(None)
+          case (MultiplicityValueValidationStatus.RedundantValueStatus, Some(vDelete), _) =>
+            val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_RedundantValue,
+              Some(s"Delete redundant ${v.role.propertyName} value for ${v.parameter_or_property.qualifiedName.get}"),
+              DeleteRedundantValue(v.role) :: Nil)
+          case (_, Some(vDelete), Some(vRepair)) =>
+            val mdVDelete = umlMagicDrawUMLElement(vDelete).getMagicDrawElement
+            if (MultiplicityElement_lowerValue == v.role)
+              otiV.makeValidationInfo(
+                otiV.MD_OTI_ValidationConstraint_InvalidValueAsInteger,
+                Some(s"Replace lower value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
+                ReplaceLowerIntegerValue(vDelete.xmiType.head, vRepair) :: Nil)
+            else
+              otiV.makeValidationInfo(
+                otiV.MD_OTI_ValidationConstraint_InvalidValueAsUnlimitedNatural,
+                Some(s"Replace upper value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
+                ReplaceUpperUnlimitedNaturalValue(vDelete.xmiType.head, vRepair) :: Nil)
+          case (MultiplicityValueValidationStatus.InvalidValueAsIntegerStatus, _, _) =>
             otiV.makeValidationInfo(
               otiV.MD_OTI_ValidationConstraint_InvalidValueAsInteger,
-              Some(s"Replace lower value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
-              ReplaceLowerIntegerValue(vDelete.xmiType.head, vRepair) :: Nil)
-          else
+              v.explanation,
+              Nil)
+          case (MultiplicityValueValidationStatus.InvalidValueAsStringStatus, _, _) =>
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_InvalidValueAsString,
+              v.explanation,
+              Nil)
+          case (MultiplicityValueValidationStatus.InvalidValueAsUnlimitedNaturalStatus, _, _) =>
             otiV.makeValidationInfo(
               otiV.MD_OTI_ValidationConstraint_InvalidValueAsUnlimitedNatural,
-              Some(s"Replace upper value for ${v.parameter_or_property.qualifiedName.get} with $vRepair"),
-              ReplaceUpperUnlimitedNaturalValue(vDelete.xmiType.head, vRepair) :: Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueAsIntegerStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueAsInteger,
-            v.explanation,
-            Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueAsStringStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueAsString,
-            v.explanation,
-            Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueAsUnlimitedNaturalStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueAsUnlimitedNatural,
-            v.explanation,
-            Nil)
-        case ( MultiplicityValueValidationStatus.InvalidValueKindStatus, _, _ ) =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidValueKind,
-            v.explanation,
-            Nil)
-        case _ =>
-          Success(None)
-      }
-      vInfo <- vOptInfo
-      validationInfo = elementMessages.getOrElseUpdate(
-        mdPoP, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
-    } validationInfo += vInfo
+              v.explanation,
+              Nil)
+          case (MultiplicityValueValidationStatus.InvalidValueKindStatus, _, _) =>
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_InvalidValueKind,
+              v.explanation,
+              Nil)
+          case _ =>
+            Success(None)
+        }
+        vInfo <- vOptInfo
+        validationInfo = elementMessages.getOrElseUpdate(
+          mdPoP, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
+      } validationInfo += vInfo
 
-    val elementValidationMessages: Map[Element, Iterable[OTIMagicDrawValidation.MDValidationInfo]] =
-      (for { tuple <- elementMessages } yield tuple._1 -> tuple._2.to[Seq]).toMap
+      val elementValidationMessages: Map[Element, Iterable[OTIMagicDrawValidation.MDValidationInfo]] =
+        (for {tuple <- elementMessages} yield tuple._1 -> tuple._2.to[Seq]).toMap
 
-    val validation =
-      otiV.makeMDIllegalArgumentExceptionValidation(
-        "EMOF [32] & CMOF [14] Multiplicity Validation",
-        elementValidationMessages)
-    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF MultiplicityElement Validation", validation)
+      val validation =
+        otiV.makeMDIllegalArgumentExceptionValidation(
+          "EMOF [32] & CMOF [14] Multiplicity Validation",
+          elementValidationMessages)
+      otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF MultiplicityElement Validation", validation)
 
-  }
+    })
 }

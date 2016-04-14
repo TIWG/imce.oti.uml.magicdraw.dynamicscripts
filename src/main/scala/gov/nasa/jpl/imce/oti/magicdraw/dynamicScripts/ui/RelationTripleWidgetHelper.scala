@@ -55,7 +55,7 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 import org.omg.oti.uml._
-import org.omg.oti.uml.OTIPrimitiveTypes._
+import org.omg.oti.json.common.OTIPrimitiveTypes._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read._
 import scala.reflect.{ classTag, ClassTag }
@@ -121,7 +121,7 @@ object RelationTripleWidgetHelper {
           case parent: UMLNamedElement[Uml] =>
             ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
           case parent =>
-            ReferenceNodeInfo( OTI_ID.unwrap(parent.toolSpecific_id.get), umlMagicDrawUMLElement(parent).getMagicDrawElement )
+            toToolSpecificIDReferenceNodeInfo(parent)
         }
       } ),
       "subject" ->
@@ -136,18 +136,18 @@ object RelationTripleWidgetHelper {
                 case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
                 case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id}"
                 }
                 case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id}"
                 }
                 case ( _, Some( name ) ) => name
-                case ( _, _ )            => OTI_ID.unwrap(ne.toolSpecific_id.get)
+                case ( _, _ )            => TOOL_SPECIFIC_ID.unwrap(ne.toolSpecific_id)
               },
               umlMagicDrawUMLElement(r.sub).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( OTI_ID.unwrap(e.toolSpecific_id.get), umlMagicDrawUMLElement(e).getMagicDrawElement )
+            toToolSpecificIDReferenceNodeInfo(e)
         } ),
       "sMetaclass" -> LabelNodeInfo( r.sub.xmiType.head ),
       "relation" ->
@@ -170,18 +170,18 @@ object RelationTripleWidgetHelper {
                 case ( l: UMLLiteralUnlimitedNatural[Uml], _ ) => l.value.toString
                 case ( v: UMLInstanceValue[Uml], _ ) => v.instance match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id}"
                 }
                 case ( v: MagicDrawUMLElementValue, _ ) => v.element match {
                   case None      => "<unbound element>"
-                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id.get}"
+                  case Some( e ) => s"=> ${e.mofMetaclassName}: ${e.toolSpecific_id}"
                 }
                 case ( _, Some( name ) ) => name
-                case ( _, _ )            => OTI_ID.unwrap(ne.toolSpecific_id.get)
+                case ( _, _ )            => TOOL_SPECIFIC_ID.unwrap(ne.toolSpecific_id)
               },
               umlMagicDrawUMLElement(r.obj).getMagicDrawElement )
           case e: UMLElement[Uml] =>
-            ReferenceNodeInfo( OTI_ID.unwrap(e.toolSpecific_id.get), umlMagicDrawUMLElement(e).getMagicDrawElement )
+            toToolSpecificIDReferenceNodeInfo(e)
         } ),
       "oMetaclass" -> LabelNodeInfo( r.obj.xmiType.head ),
       "oNamespace" -> ( r.obj.owningNamespace match {

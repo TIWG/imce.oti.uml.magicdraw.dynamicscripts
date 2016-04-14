@@ -46,6 +46,8 @@ import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
+import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
+import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 import org.omg.oti.uml._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
@@ -54,7 +56,7 @@ import org.omg.oti.uml.xmi.IDGenerator
 import scala.collection.immutable._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
-import scala.{Option,None,StringContext,Unit}
+import scala.{None, Option, StringContext, Unit}
 import scala.Predef.ArrowAssoc
 
 
@@ -66,162 +68,182 @@ object ElementInspectorWidget {
   def appliedStereotypes
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil( project )
-    OTIHelper.getOTIMDInfo().fold[Try[( java.awt.Component, Seq[ValidationAnnotation] )]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg = info._1
-        appliedStereotypeInstanceWidget[UMLElement[MagicDrawUML]](
-          derived, e,
-          MagicDrawUMLUtil(project))
-      })
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    appliedStereotypes(derived, ek, e) _)
+
+  def appliedStereotypes
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, e: Element)
+  (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+    appliedStereotypeInstanceWidget[UMLElement[MagicDrawUML]](
+      derived, e,
+      ordsa.otiAdapter.umlOps)
   }
 
   def appliedStereotypesWithoutMetaclassProperties
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
-        elementOperationWidget[UMLElement[MagicDrawUML], UMLStereotype[MagicDrawUML]](
-          derived, e,
-          _.getAppliedStereotypesWithoutMetaclassProperties.getOrElse(Set()),
-          MagicDrawUMLUtil(project))
-      })
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    appliedStereotypesWithoutMetaclassProperties(derived, ek, e) _)
+
+  def appliedStereotypesWithoutMetaclassProperties
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, e: Element)
+  (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+    implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+    elementOperationWidget[UMLElement[MagicDrawUML], UMLStereotype[MagicDrawUML]](
+      derived, e,
+      _.getAppliedStereotypesWithoutMetaclassProperties.getOrElse(Set()),
+      ordsa.otiAdapter.umlOps)
   }
 
   def allForwardReferencesFromStereotypeTagProperties
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
-        elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-          derived, e,
-          _.allForwardReferencesFromStereotypeTagProperties.getOrElse(Set()),
-          MagicDrawUMLUtil(project))
-      })
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    allForwardReferencesFromStereotypeTagProperties(derived, ek, e) _)
+
+  def allForwardReferencesFromStereotypeTagProperties
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, e: Element)
+  (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+    implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+      derived, e,
+      _.allForwardReferencesFromStereotypeTagProperties.getOrElse(Set()),
+      ordsa.otiAdapter.umlOps)
   }
 
   def allForwardReferencesToElements
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
-        elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-          derived, e,
-          _.allForwardReferencesToElements.getOrElse(Set()),
-          MagicDrawUMLUtil(project))
-      })
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    allForwardReferencesToElements(derived, ek, e) _)
+
+  def allForwardReferencesToElements
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, e: Element)
+  (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+    implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+      derived, e,
+      _.allForwardReferencesToElements.getOrElse(Set()),
+      ordsa.otiAdapter.umlOps)
   }
 
   def allForwardReferencesToImportablePackageableElements
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
-        elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-          derived, e,
-          _.allForwardReferencesToImportablePackageableElements.getOrElse(Set()),
-          MagicDrawUMLUtil(project))
-      })
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    allForwardReferencesToImportablePackageableElements(derived, ek, e) _)
+
+  def allForwardReferencesToImportablePackageableElements
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, e: Element)
+  (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+    implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+      derived, e,
+      _.allForwardReferencesToImportablePackageableElements.getOrElse(Set()),
+      ordsa.otiAdapter.umlOps)
   }
 
   def getPackageOwnerWithURI
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
-        elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
-          derived, e,
-          (x: UMLElement[MagicDrawUML]) => {
-            val r = x.getPackageOwnerWithEffectiveURI()(idg.otiCharacteristicsProvider)
-            r.getOrElse(None).to[Iterable]
-          },
-          MagicDrawUMLUtil(project))
-      })
-  }
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    getPackageOwnerWithURI(derived, ek, e) _)
 
+  def getPackageOwnerWithURI
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, e: Element)
+  (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+    implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+    elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
+      derived, e,
+      (x: UMLElement[MagicDrawUML]) => {
+        val r = x.getPackageOwnerWithEffectiveURI()(idg.otiCharacteristicsProvider)
+        r.getOrElse(None).to[Iterable]
+      },
+      ordsa.otiAdapter.umlOps)
+  }
   def packageOrProfileOwner
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
-        elementOperationWidget[UMLElement[MagicDrawUML], UMLPackage[MagicDrawUML]](
-          derived, e,
-          getPackageOrProfileOwner(_).to[Iterable],
-          MagicDrawUMLUtil(project))
-      })
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    packageOrProfileOwner(derived, ek, e) _)
+
+  def packageOrProfileOwner
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, e: Element)
+  (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+    implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+    elementOperationWidget[UMLElement[MagicDrawUML], UMLPackage[MagicDrawUML]](
+      derived, e,
+      getPackageOrProfileOwner(_).to[Iterable],
+      ordsa.otiAdapter.umlOps)
   }
 
   def annotatingComments
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
-        elementOperationWidget[UMLElement[MagicDrawUML], UMLComment[MagicDrawUML]](
-          derived, e,
-          _.annotatedElement_comment,
-          MagicDrawUMLUtil(project))
-      })
-  }
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+      implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+      elementOperationWidget[UMLElement[MagicDrawUML], UMLComment[MagicDrawUML]](
+        derived, e,
+        _.annotatedElement_comment,
+        ordsa.otiAdapter.umlOps)
+    })
 
   def ownedElements
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+      implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
         elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
           derived, e,
           _.ownedElement,
-          MagicDrawUMLUtil(project))
-      })
-  }
+          ordsa.otiAdapter.umlOps)
+    })
 
   def allOwnedElementsWithinPackageScope
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
    ek: MagicDrawElementKindDesignation, e: Element)
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
-    implicit val umlUtil = MagicDrawUMLUtil(project)
-    OTIHelper.getOTIMDInfo().fold[Try[(java.awt.Component, Seq[ValidationAnnotation])]](
-      l = (nels) => Failure(nels.head),
-      r = (info) => {
-        implicit val idg: IDGenerator[MagicDrawUML] = info._1
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+      implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
         elementOperationWidget[UMLElement[MagicDrawUML], UMLElement[MagicDrawUML]](
           derived, e,
           _.allOwnedElementsWithinPackageScope,
-          MagicDrawUMLUtil(project))
-      })
-  }
+          ordsa.otiAdapter.umlOps)
+    })
 }

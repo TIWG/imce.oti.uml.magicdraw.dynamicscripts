@@ -40,7 +40,7 @@ package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation
 
 import java.awt.event.ActionEvent
 
-import com.nomagic.magicdraw.core.Project
+import com.nomagic.magicdraw.core.{Application, Project}
 import com.nomagic.magicdraw.ui.browser.{Node, Tree}
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
@@ -50,14 +50,16 @@ import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.symbols.internal.SymbolHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.internal.MDValidationAPIHelper._
+import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
+import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.read.api._
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
 import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Success, Try}
-import scala.{Option,None}
+import scala.util.{Failure, Success, Try}
+import scala.{None, Option}
 
 object MOFAllValidation {
 
@@ -66,38 +68,54 @@ object MOFAllValidation {
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree, node: Node,
     pkg: Profile, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-      .toIterable
-      .selectByKindOf { case p: Package => umlPackage( p ) }
-      .to[Set]
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    doit(p, selectedPackages)
-  }
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
+
+      doit(p, oa, selectedPackages)
+    })
 
   def doit
   ( p: Project, ev: ActionEvent,
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree, node: Node,
     top: Package, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-      .toIterable
-      .selectByKindOf { case p: Package => umlPackage( p ) }
-      .to[Set]
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    doit(p, selectedPackages)
-  }
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
+
+      doit(p, oa, selectedPackages)
+    })
 
   def doit
   ( p: Project,
@@ -107,61 +125,87 @@ object MOFAllValidation {
     triggerView: PackageView,
     triggerElement: Profile,
     selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) } )
-  }
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-  def doit(
-    p: Project,
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
+        .toIterable
+        .selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) }
+        .to[Set]
+
+      doit(p, oa, selectedPackages)
+    })
+
+  def doit
+  ( p: Project,
     ev: ActionEvent,
     script: DynamicScriptsTypes.DiagramContextMenuAction,
     dpe: DiagramPresentationElement,
     triggerView: PackageView,
     triggerElement: Package,
-    selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] = {
+    selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) } )
-  }
+      implicit val umlOps = oa.umlOps
+      import umlOps._
+
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
+        .toIterable
+        .selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) }
+        .to[Set]
+
+      doit(p, oa, selectedPackages)
+    })
 
   def doit
   ( p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-  ( implicit _umlUtil: MagicDrawUMLUtil )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+    oa: MagicDrawOTIProfileAdapter,
+    pkgs: Set[UMLPackage[MagicDrawUML]] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = {
 
     for {
-      vo <- MOFDefaultValueValidation.doit(p, pkgs)
+      vo <- MOFDefaultValueValidation.doit(p, oa, pkgs)
       v <- vo
     } p.showMDValidationDataResults(v)
 
     for {
-      vo <- MOFMultiplicityValidation.doit(p, pkgs)
+      vo <- MOFMultiplicityValidation.doit(p, oa, pkgs)
       v <- vo
     } p.showMDValidationDataResults(v)
 
     for {
-      vo <- MOFNamedElementValidation.doit(p, pkgs)
+      vo <- MOFNamedElementValidation.doit(p, oa, pkgs)
       v <- vo
     } p.showMDValidationDataResults(v)
 
     for {
-      vo <- MOFTypedElementValidation.doit(p, pkgs)
+      vo <- MOFTypedElementValidation.doit(p, oa, pkgs)
       v <- vo
     } p.showMDValidationDataResults(v)
 
     for {
-      vo <- MOFVisibilityValidation.doit(p, pkgs)
+      vo <- MOFVisibilityValidation.doit(p, oa, pkgs)
       v <- vo
     } p.showMDValidationDataResults(v)
 

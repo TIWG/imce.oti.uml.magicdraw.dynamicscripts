@@ -45,7 +45,7 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 import org.omg.oti.magicdraw.uml.read._
-import org.omg.oti.uml.OTIPrimitiveTypes._
+import org.omg.oti.json.common.OTIPrimitiveTypes._
 import org.omg.oti.uml.read.UMLStereotypeTagValue
 import org.omg.oti.uml.read.api._
 
@@ -98,7 +98,9 @@ object AppliedStereotypeWidgetHelper {
               case ne: MagicDrawUMLNamedElement if ne.qualifiedName.isDefined =>
                 ReferenceNodeInfo(ne.qualifiedName.get, ne.getMagicDrawElement)
               case _ =>
-                ReferenceNodeInfo(OTI_ID.unwrap(tv.extendedElement.toolSpecific_id.get), tv.extendedElement.getMagicDrawElement)
+                ReferenceNodeInfo(
+                  TOOL_SPECIFIC_ID.unwrap(tv.extendedElement.toolSpecific_id),
+                  tv.extendedElement.getMagicDrawElement)
             }),
           "applied stereotype" ->
             ReferenceNodeInfo(tv.appliedStereotype.name.get, tv.appliedStereotype.getMagicDrawElement),
@@ -111,7 +113,9 @@ object AppliedStereotypeWidgetHelper {
               case ne: MagicDrawUMLNamedElement if ne.qualifiedName.isDefined =>
                 ReferenceNodeInfo(ne.qualifiedName.get, ne.getMagicDrawElement)
               case _ =>
-                ReferenceNodeInfo(OTI_ID.unwrap(tv.extendedElement.toolSpecific_id.get), tv.extendedElement.getMagicDrawElement)
+                ReferenceNodeInfo(
+                  TOOL_SPECIFIC_ID.unwrap(tv.extendedElement.toolSpecific_id),
+                  tv.extendedElement.getMagicDrawElement)
             })
         )
       case tv: MagicDrawUMLStereotypeTagPropertyMetaclassElementReference =>
@@ -121,7 +125,9 @@ object AppliedStereotypeWidgetHelper {
               case ne: MagicDrawUMLNamedElement if ne.qualifiedName.isDefined =>
                 ReferenceNodeInfo(ne.name.get, ne.getMagicDrawElement)
               case _ =>
-                ReferenceNodeInfo(OTI_ID.unwrap(tv.extendedElement.toolSpecific_id.get), tv.extendedElement.getMagicDrawElement)
+                ReferenceNodeInfo(
+                  TOOL_SPECIFIC_ID.unwrap(tv.extendedElement.toolSpecific_id),
+                  tv.extendedElement.getMagicDrawElement)
             }),
           "applied stereotype" ->
             ReferenceNodeInfo(tv.appliedStereotype.name.get, tv.appliedStereotype.getMagicDrawElement),
@@ -134,7 +140,9 @@ object AppliedStereotypeWidgetHelper {
               case ne: MagicDrawUMLNamedElement if ne.qualifiedName.isDefined =>
                 ReferenceNodeInfo(ne.qualifiedName.get, ne.getMagicDrawElement)
               case e =>
-                ReferenceNodeInfo(OTI_ID.unwrap(e.toolSpecific_id.get), e.getMagicDrawElement)
+                ReferenceNodeInfo(
+                  TOOL_SPECIFIC_ID.unwrap(e.toolSpecific_id),
+                  e.getMagicDrawElement)
             })
           //            TreeNodeInfo(
           //              identifier = "values",
@@ -153,7 +161,7 @@ object AppliedStereotypeWidgetHelper {
               case ne: MagicDrawUMLNamedElement if ne.qualifiedName.isDefined =>
                 ReferenceNodeInfo(ne.name.get, ne.getMagicDrawElement)
               case _ =>
-                ReferenceNodeInfo(OTI_ID.unwrap(tv.extendedElement.toolSpecific_id.get), tv.extendedElement.getMagicDrawElement)
+                toToolSpecificIDReferenceNodeInfo(tv.extendedElement)
             }),
           "applied stereotype" ->
             ReferenceNodeInfo(tv.appliedStereotype.name.get, tv.appliedStereotype.getMagicDrawElement),
@@ -166,7 +174,7 @@ object AppliedStereotypeWidgetHelper {
               case ne: MagicDrawUMLNamedElement if ne.qualifiedName.isDefined =>
                 ReferenceNodeInfo(ne.qualifiedName.get, ne.getMagicDrawElement)
               case e =>
-                ReferenceNodeInfo(OTI_ID.unwrap(e.toolSpecific_id.get), e.getMagicDrawElement)
+                toToolSpecificIDReferenceNodeInfo(e)
             })
           //            TreeNodeInfo(
           //              identifier = "values",
@@ -185,7 +193,7 @@ object AppliedStereotypeWidgetHelper {
               case ne: MagicDrawUMLNamedElement if ne.qualifiedName.isDefined =>
                 ReferenceNodeInfo(ne.name.get, ne.getMagicDrawElement)
               case _ =>
-                ReferenceNodeInfo(OTI_ID.unwrap(tv.extendedElement.toolSpecific_id.get), tv.extendedElement.getMagicDrawElement)
+                toToolSpecificIDReferenceNodeInfo(tv.extendedElement)
             }),
           "applied stereotype" ->
             ReferenceNodeInfo(tv.appliedStereotype.name.get, tv.appliedStereotype.getMagicDrawElement),
@@ -253,8 +261,10 @@ object AppliedStereotypeWidgetHelper {
   def appliedStereotypeInstanceWidget[U <: UMLElement[MagicDrawUML]]
   (derived: DynamicScriptsTypes.ComputedDerivedWidget,
    mdE: MagicDrawUML#Element,
-   util: MagicDrawUMLUtil)(implicit uTag: ClassTag[U])
-  : Try[(java.awt.Component, Seq[ValidationAnnotation])] = {
+   util: MagicDrawUMLUtil)
+  (implicit uTag: ClassTag[U])
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
     val e = util.umlElement(mdE)
     val uClass = uTag.runtimeClass
     require(uClass != null)

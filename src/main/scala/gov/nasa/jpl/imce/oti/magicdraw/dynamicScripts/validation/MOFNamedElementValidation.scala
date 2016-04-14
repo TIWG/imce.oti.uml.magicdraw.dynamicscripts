@@ -49,13 +49,16 @@ import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.symbols.internal.SymbolHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML,MagicDrawUMLUtil}
+import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
+import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
+import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
 import org.omg.oti.uml.read.api.UMLPackage
 import org.omg.oti.uml.validation._
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.util.{Success,Try}
+import scala.util.{Failure,Success,Try}
 import scala.{Option,None}
 import scala.Predef.ArrowAssoc
 /**
@@ -73,46 +76,50 @@ object MOFNamedElementValidation {
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree, node: Node,
     pkg: Profile, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-        .toIterable
-        .selectByKindOf { case p: Package => umlPackage(p) }
-        .to[Set]
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case p: Package => umlPackage(p) }
 
-    doit(p, selectedPackages)
-  }
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project, ev: ActionEvent,
     script: DynamicScriptsTypes.BrowserContextMenuAction,
     tree: Tree, node: Node,
     top: Package, selection: java.util.Collection[Element] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-        .toIterable
-        .selectByKindOf { case p: Package => umlPackage(p) }
-        .to[Set]
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case p: Package => umlPackage(p) }
 
-    doit(p, selectedPackages)
-  }
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project,
@@ -122,19 +129,25 @@ object MOFNamedElementValidation {
     triggerView: PackageView,
     triggerElement: Profile,
     selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) } )
-  }
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case pv: PackageView => umlPackage(getPackageOfView(pv).get) }
+
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project,
@@ -144,59 +157,72 @@ object MOFNamedElementValidation {
     triggerView: PackageView,
     triggerElement: Package,
     selection: java.util.Collection[PresentationElement] )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil( p )
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) } )
-  }
+      val selectedPackages
+      : Set[UMLPackage[MagicDrawUML]]
+      = selection.toSet selectByKindOf { case pv: PackageView => umlPackage(getPackageOfView(pv).get) }
+
+      doit(p, oa, selectedPackages)
+
+    })
 
   def doit
   ( p: Project,
-    pkgs: Iterable[UMLPackage[MagicDrawUML]] )
-  ( implicit _umlUtil: MagicDrawUMLUtil )
-  : Try[Option[MagicDrawValidationDataResults]] = {
+    oa: MagicDrawOTIProfileAdapter,
+    pkgs: Set[UMLPackage[MagicDrawUML]] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(p),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
 
-    import _umlUtil._
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val otiV = OTIMagicDrawValidation(p)
+      val otiV = OTIMagicDrawValidation(p)
 
-    val elementMessages = scala.collection.mutable.HashMap[
-      Element,
-      scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
+      implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+      implicit val otiCharacteristicsProvider = oa.otiCharacteristicsProvider
 
-    for {
-      v <- NamedElementValidationHelper.analyzePackageContents(pkgs)
-      if NamedElementValidationStatus.ValidNamedElementNameStatus != v.status
-      mdNE = umlMagicDrawUMLNamedElement(v.namedElement).getMagicDrawNamedElement
-      vOptInfo <- v.status match {
-        case NamedElementValidationStatus.ValidNamedElementNameStatus =>
-          Success(None)
-        case NamedElementValidationStatus.InvalidUnnamedNamedElementStatus =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidUnnamedNamedElement,
-            v.explanation,
-            Nil)
-      }
-      vInfo <- vOptInfo
-      validationInfo = elementMessages.getOrElseUpdate(
-        mdNE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
-    } validationInfo += vInfo
+      val elementMessages = scala.collection.mutable.HashMap[
+        Element,
+        scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
 
-    val elementValidationMessages: Map[Element, Iterable[OTIMagicDrawValidation.MDValidationInfo]] =
-      (for { tuple <- elementMessages } yield tuple._1 -> tuple._2.to[Seq]).toMap
+      for {
+        v <- NamedElementValidationHelper.analyzePackageContents(pkgs)
+        if NamedElementValidationStatus.ValidNamedElementNameStatus != v.status
+        mdNE = umlMagicDrawUMLNamedElement(v.namedElement).getMagicDrawNamedElement
+        vOptInfo <- v.status match {
+          case NamedElementValidationStatus.ValidNamedElementNameStatus =>
+            Success(None)
+          case NamedElementValidationStatus.InvalidUnnamedNamedElementStatus =>
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_InvalidUnnamedNamedElement,
+              v.explanation,
+              Nil)
+        }
+        vInfo <- vOptInfo
+        validationInfo = elementMessages.getOrElseUpdate(
+          mdNE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
+      } validationInfo += vInfo
 
-    val validation =
-      otiV.makeMDIllegalArgumentExceptionValidation(
-        "EMOF [3] & CMOF [6] NamedElement Validation",
-        elementValidationMessages)
-    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF NamedElement Validation", validation)
-  }
+      val elementValidationMessages: Map[Element, Iterable[OTIMagicDrawValidation.MDValidationInfo]] =
+        (for {tuple <- elementMessages} yield tuple._1 -> tuple._2.to[Seq]).toMap
+
+      val validation =
+        otiV.makeMDIllegalArgumentExceptionValidation(
+          "EMOF [3] & CMOF [6] NamedElement Validation",
+          elementValidationMessages)
+      otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF NamedElement Validation", validation)
+    })
 }

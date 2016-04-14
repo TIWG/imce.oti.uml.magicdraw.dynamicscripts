@@ -124,9 +124,11 @@ object setOTIUUIDs {
     selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] =
     doit( p, ev, selection flatMap { case pv: PackageView => getPackageOfView(pv) } )
 
-  def doit(
-    p: Project, ev: ActionEvent,
-    selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] = {
+  def doit
+  ( p: Project, ev: ActionEvent,
+    selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog
@@ -135,10 +137,13 @@ object setOTIUUIDs {
     implicit val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
 
-    implicit val otiCharacterizations: Option[Map[UMLPackage[Uml], UMLComment[Uml]]] = None
+    implicit val otiCharacterizations
+    : Option[Map[UMLPackage[Uml], UMLComment[Uml]]]
+    = None
 
-    implicit val otiCharacterizationProfileProvider: OTICharacteristicsProvider[MagicDrawUML] =
-      MagicDrawOTICharacteristicsProfileProvider()
+    implicit val otiCharacterizationProfileProvider
+    : OTICharacteristicsProvider[MagicDrawUML]
+    = MagicDrawOTICharacteristicsProfileProvider()
 
     val runnable = new RunnableWithProgress() {
 
@@ -150,9 +155,8 @@ object setOTIUUIDs {
 
           val selectedPackages: Set[UMLPackage[Uml]] =
             selection
-            .toIterable
-            .selectByKindOf { case p: Package => umlPackage( p ) }
             .to[Set]
+            .selectByKindOf { case p: Package => umlPackage( p ) }
 
           progressStatus.setCurrent( 0 )
           progressStatus.setMax( 0 )

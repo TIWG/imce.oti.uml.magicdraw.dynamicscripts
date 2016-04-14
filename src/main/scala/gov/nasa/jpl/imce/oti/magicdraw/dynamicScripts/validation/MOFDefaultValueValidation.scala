@@ -49,15 +49,18 @@ import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.symbols.internal.SymbolHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
+import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
+import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
 import org.omg.oti.uml.read.api.UMLPackage
 import org.omg.oti.uml.validation.{DefaultValueValidationHelper, DefaultValueValidationStatus}
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.util.{Success,Try}
-import scala.Predef.{ArrowAssoc}
-import scala.{Option,None}
+import scala.util.{Failure, Success, Try}
+import scala.Predef.ArrowAssoc
+import scala.{None, Option}
 /**
 * Validates all TypedElements in scope of the selected packages per MOF 2.5 well-formedness constraints
 *
@@ -86,46 +89,54 @@ object MOFDefaultValueValidation {
    script: DynamicScriptsTypes.BrowserContextMenuAction,
    tree: Tree, node: Node,
    pkg: Profile, selection: java.util.Collection[Element])
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil(p)
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
-      .toIterable
-      .selectByKindOf { case p: Package => umlPackage(p) }
-      .to[Set]
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
+        .toIterable
+        .selectByKindOf { case p: Package => umlPackage(p) }
+        .to[Set]
 
-    doit(p, selectedPackages)
-  }
+      doit(p, oa, selectedPackages)
+    })
 
   def doit
   (p: Project, ev: ActionEvent,
    script: DynamicScriptsTypes.BrowserContextMenuAction,
    tree: Tree, node: Node,
    top: Package, selection: java.util.Collection[Element])
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil(p)
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val selectedPackages: Set[UMLPackage[Uml]] =
-      selection
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
         .toIterable
         .selectByKindOf { case p: Package => umlPackage(p) }
         .to[Set]
 
-    doit(p, selectedPackages)
-  }
+      doit(p, oa, selectedPackages)
+    })
 
   def doit
   (p: Project,
@@ -135,19 +146,27 @@ object MOFDefaultValueValidation {
    triggerView: PackageView,
    triggerElement: Profile,
    selection: java.util.Collection[PresentationElement])
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil(p)
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    val app = Application.getInstance()
-    val guiLog = app.getGUILog
-    guiLog.clearLog()
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage(getPackageOfView(pv).get) })
-  }
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
+        .toIterable
+        .selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) }
+        .to[Set]
+
+      doit(p, oa, selectedPackages)
+    })
 
   def doit
   ( p: Project,
@@ -157,70 +176,89 @@ object MOFDefaultValueValidation {
     triggerView: PackageView,
     triggerElement: Package,
     selection: java.util.Collection[PresentationElement])
-  : Try[Option[MagicDrawValidationDataResults]] = {
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(p),
+    (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val umlUtil = MagicDrawUMLUtil(p)
-    import umlUtil._
+      val app = Application.getInstance()
+      val guiLog = app.getGUILog
+      guiLog.clearLog()
 
-    doit(
-      p,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage(getPackageOfView(pv).get) })
-  }
+      implicit val umlOps = oa.umlOps
+      import umlOps._
+
+      val selectedPackages
+      : Set[UMLPackage[Uml]]
+      = selection
+        .toIterable
+        .selectByKindOf { case pv: PackageView => umlPackage( getPackageOfView(pv).get ) }
+        .to[Set]
+
+      doit(p, oa, selectedPackages)
+    })
 
   def doit
   (p: Project,
-   pkgs: Iterable[UMLPackage[MagicDrawUML]])
-  (implicit _umlUtil: MagicDrawUMLUtil)
-  : Try[Option[MagicDrawValidationDataResults]] = {
+   oa: MagicDrawOTIProfileAdapter,
+   pkgs: Set[UMLPackage[MagicDrawUML]] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(p),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
 
-    import _umlUtil._
+      implicit val umlOps = oa.umlOps
+      import umlOps._
 
-    val otiV = OTIMagicDrawValidation(p)
+      val otiV = OTIMagicDrawValidation(p)
 
-    val elementMessages = scala.collection.mutable.HashMap[
-      Element,
-      scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
+      implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+      implicit val otiCharacteristicsProvider = oa.otiCharacteristicsProvider
 
-    for {
-      v <- DefaultValueValidationHelper.analyzePackageContents(pkgs)
-      if DefaultValueValidationStatus.ValidDefaultValueStatus != v.status
-      mdE = umlMagicDrawUMLElement(v.e).getMagicDrawElement
-      vOptInfo <- v.status match {
-        case DefaultValueValidationStatus.ValidDefaultValueStatus =>
-          Success(None)
-        case DefaultValueValidationStatus.InvalidDefaultValueForClassTypedParameterOrPropertyStatus =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForClassTypedParameterOrProperty,
-            v.explanation,
-            Nil)
-        case DefaultValueValidationStatus.InvalidDefaultValueForEnumerationTypedParameterOrPropertyStatus =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForEnumerationTypedParameterOrProperty,
-            v.explanation,
-            Nil)
-        case DefaultValueValidationStatus.InvalidDefaultValueForPrimitiveTypeTypedParameterOrPropertyStatus =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForPrimitiveTypeTypedParameterOrProperty,
-            v.explanation,
-            Nil)
-        case DefaultValueValidationStatus.InvalidDefaultValueForMultiValuedParameterOrPropertyStatus =>
-          otiV.makeValidationInfo(
-            otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForMultiValuedParameterOrProperty,
-            v.explanation,
-            Nil)
-      }
-      vInfo <- vOptInfo
-      validationInfo = elementMessages.getOrElseUpdate(
-        mdE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
-    } validationInfo += vInfo
+      val elementMessages = scala.collection.mutable.HashMap[
+        Element,
+        scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]]()
 
-    val elementValidationMessages: Map[Element, Iterable[OTIMagicDrawValidation.MDValidationInfo]] =
-      (for { tuple <- elementMessages } yield tuple._1 -> tuple._2.to[Seq]).toMap
+      for {
+        v <- DefaultValueValidationHelper.analyzePackageContents(pkgs)
+        if DefaultValueValidationStatus.ValidDefaultValueStatus != v.status
+        mdE = umlMagicDrawUMLElement(v.e).getMagicDrawElement
+        vOptInfo <- v.status match {
+          case DefaultValueValidationStatus.ValidDefaultValueStatus =>
+            Success(None)
+          case DefaultValueValidationStatus.InvalidDefaultValueForClassTypedParameterOrPropertyStatus =>
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForClassTypedParameterOrProperty,
+              v.explanation,
+              Nil)
+          case DefaultValueValidationStatus.InvalidDefaultValueForEnumerationTypedParameterOrPropertyStatus =>
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForEnumerationTypedParameterOrProperty,
+              v.explanation,
+              Nil)
+          case DefaultValueValidationStatus.InvalidDefaultValueForPrimitiveTypeTypedParameterOrPropertyStatus =>
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForPrimitiveTypeTypedParameterOrProperty,
+              v.explanation,
+              Nil)
+          case DefaultValueValidationStatus.InvalidDefaultValueForMultiValuedParameterOrPropertyStatus =>
+            otiV.makeValidationInfo(
+              otiV.MD_OTI_ValidationConstraint_InvalidDefaultValueForMultiValuedParameterOrProperty,
+              v.explanation,
+              Nil)
+        }
+        vInfo <- vOptInfo
+        validationInfo = elementMessages.getOrElseUpdate(
+          mdE, scala.collection.mutable.ArrayBuffer[OTIMagicDrawValidation.MDValidationInfo]())
+      } validationInfo += vInfo
 
-    val validation =
-      otiV.makeMDIllegalArgumentExceptionValidation(
-        "EMOF [24,25,26,31] & CMOF [13,24,25,26] DefaultValue Validation",
-        elementValidationMessages)
-    otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF Default Value Validation", validation)
-  }
+      val elementValidationMessages: Map[Element, Iterable[OTIMagicDrawValidation.MDValidationInfo]] =
+        (for {tuple <- elementMessages} yield tuple._1 -> tuple._2.to[Seq]).toMap
+
+      val validation =
+        otiV.makeMDIllegalArgumentExceptionValidation(
+          "EMOF [24,25,26,31] & CMOF [13,24,25,26] DefaultValue Validation",
+          elementValidationMessages)
+      otiV.toTryOptionMagicDrawValidationDataResults(p, "MOF Default Value Validation", validation)
+    })
 }

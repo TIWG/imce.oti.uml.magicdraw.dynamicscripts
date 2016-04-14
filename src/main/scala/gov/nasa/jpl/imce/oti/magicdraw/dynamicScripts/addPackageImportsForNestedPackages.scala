@@ -54,7 +54,7 @@ import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.collection.JavaConversions._
-import scala.collection.Iterable
+import scala.collection.immutable.Vector
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
 import scala.{Option,None,StringContext,Unit}
@@ -80,7 +80,7 @@ object addPackageImportsForNestedPackages {
     addPackageImportsForNestedPackages(
       p,
       umlUtil,
-      selection.toSet selectByKindOf { case pv: PackageView => umlPackage( SymbolHelper.getPackageOfView(pv).get) } )
+      selection.to[Vector] selectByKindOf { case pv: PackageView => umlPackage( SymbolHelper.getPackageOfView(pv).get) } )
     Success( None )
   }
       
@@ -96,7 +96,7 @@ object addPackageImportsForNestedPackages {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
     
-    addPackageImportsForNestedPackages( p, umlUtil, selection.toSet selectByKindOf ( { case pv: PackageView => umlPackage( SymbolHelper.getPackageOfView(pv).get ) } ) )
+    addPackageImportsForNestedPackages( p, umlUtil, selection.to[Vector] selectByKindOf ( { case pv: PackageView => umlPackage( SymbolHelper.getPackageOfView(pv).get ) } ) )
     Success( None )
   }
        
@@ -109,7 +109,7 @@ object addPackageImportsForNestedPackages {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
     
-    addPackageImportsForNestedPackages( p, umlUtil, selection.toSet selectByKindOf ( { case pkg: Package => umlPackage( pkg ) } ) )    
+    addPackageImportsForNestedPackages( p, umlUtil, selection.to[Vector] selectByKindOf ( { case pkg: Package => umlPackage( pkg ) } ) )
     Success( None )
   }
     
@@ -122,18 +122,20 @@ object addPackageImportsForNestedPackages {
     val umlUtil = MagicDrawUMLUtil( p )
     import umlUtil._
     
-    addPackageImportsForNestedPackages( p, umlUtil, selection.toSet selectByKindOf ( { case pkg: Package => umlPackage( pkg ) } ) )    
+    addPackageImportsForNestedPackages( p, umlUtil, selection.to[Vector] selectByKindOf ( { case pkg: Package => umlPackage( pkg ) } ) )
     Success( None )
   }
     
-  def addPackageImportsForNestedPackages(
-      p: Project,
-      umlUtil: MagicDrawUMLUtil, 
-      pkgs: Iterable[UMLPackage[MagicDrawUML]] ): Unit = {
+  def addPackageImportsForNestedPackages
+  ( p: Project,
+    umlUtil: MagicDrawUMLUtil,
+    pkgs: Vector[UMLPackage[MagicDrawUML]] )
+  : Unit
+  = {
 
     import umlUtil._
     val app = Application.getInstance()
-    val guiLog = app.getGUILog()
+    val guiLog = app.getGUILog
     guiLog.clearLog()
     
     val f = p.getElementsFactory

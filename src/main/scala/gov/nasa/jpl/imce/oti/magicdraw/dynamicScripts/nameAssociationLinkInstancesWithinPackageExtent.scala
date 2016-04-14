@@ -187,19 +187,19 @@ object nameAssociationLinkInstancesWithinPackageExtent {
               val linkName = prefix + sName + "," + tName + ")"
               link.name match {
                 case Some( lName ) if ( lName == linkName ) => 
-                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - already named!: '${linkName}'")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id}) - already named!: '${linkName}'")
                   ()
                 case _ =>
-                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) set name to: '${linkName}'")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id}) set name to: '${linkName}'")
                   umlMagicDrawUMLInstanceSpecification(link).getMagicDrawInstanceSpecification.setName( linkName )
                   count = count + 1
               }
             case ( Some( sName ), None ) => 
-                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - source named: '${sName}' but target is unnamed! (id=${targetInstance.toolSpecific_id.get})")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id}) - source named: '${sName}' but target is unnamed! (id=${targetInstance.toolSpecific_id})")
             case ( None, Some( tName ) ) => 
-                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - target named: '${tName}' but source is unnamed! (id=${sourceInstance.toolSpecific_id.get})")
+                  guiLog.log( s" Link (id=${link.toolSpecific_id}) - target named: '${tName}' but source is unnamed! (id=${sourceInstance.toolSpecific_id})")
             case ( None, None ) =>
-                  guiLog.log( s" Link (id=${link.toolSpecific_id.get}) - source is unnamed: (id=${sourceInstance.toolSpecific_id.get}) target is unnamed: (id=${sourceInstance.toolSpecific_id.get})")              
+                  guiLog.log( s" Link (id=${link.toolSpecific_id}) - source is unnamed: (id=${sourceInstance.toolSpecific_id}) target is unnamed: (id=${sourceInstance.toolSpecific_id})")
           }
         }
 

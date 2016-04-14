@@ -62,25 +62,29 @@ import scala.{Option,None,Some,StringContext}
 
 object AnalyzeAssociationVariety {
 
-  def doit(
-            p: Project, ev: ActionEvent,
-            script: DynamicScriptsTypes.BrowserContextMenuAction,
-            tree: Tree, node: Node,
-            top: Package, selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] =
-    doit( p, selection )
+  def doit
+  ( p: Project, ev: ActionEvent,
+    script: DynamicScriptsTypes.BrowserContextMenuAction,
+    tree: Tree, node: Node,
+    top: Package, selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = doit( p, selection )
 
-  def doit(
-            p: Project, ev: ActionEvent,
-            script: DynamicScriptsTypes.DiagramContextMenuAction,
-            dpe: DiagramPresentationElement,
-            triggerView: PackageView,
-            triggerElement: Package,
-            selection: java.util.Collection[PresentationElement] ): Try[Option[MagicDrawValidationDataResults]] =
-    doit( p, selection flatMap { case pv: PackageView => getPackageOfView(pv) } )
+  def doit
+  ( p: Project, ev: ActionEvent,
+    script: DynamicScriptsTypes.DiagramContextMenuAction,
+    dpe: DiagramPresentationElement,
+    triggerView: PackageView,
+    triggerElement: Package,
+    selection: java.util.Collection[PresentationElement] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = doit( p, selection flatMap { case pv: PackageView => getPackageOfView(pv) } )
 
-  def doit(
-            p: Project,
-            selection: java.util.Collection[Element] ): Try[Option[MagicDrawValidationDataResults]] = {
+  def doit
+  ( p: Project,
+    selection: java.util.Collection[Element] )
+  : Try[Option[MagicDrawValidationDataResults]]
+  = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog
@@ -91,9 +95,8 @@ object AnalyzeAssociationVariety {
 
     val selectedPackages: Set[UMLPackage[Uml]] =
       selection
-      .toIterable
-      .selectByKindOf { case p: Package => umlPackage(p) }
       .to[Set]
+      .selectByKindOf { case p: Package => umlPackage(p) }
 
     val allPackages = selectedPackages.flatMap(_.allNestedPackages)
 

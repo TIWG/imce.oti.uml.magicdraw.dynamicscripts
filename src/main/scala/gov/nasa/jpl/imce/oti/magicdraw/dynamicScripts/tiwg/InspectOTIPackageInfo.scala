@@ -54,10 +54,10 @@ import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.MDAPI
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
 import org.omg.oti.magicdraw.uml.canonicalXMI._
 import org.omg.oti.magicdraw.uml.characteristics._
+import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.canonicalXMI._
-import org.omg.oti.uml.characteristics._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.uml.xmi.Document
 
@@ -134,7 +134,7 @@ object InspectOTIPackageInfo {
       .createMagicDrawCatalogManager()
       .fold[scala.util.Try[Option[MagicDrawValidationDataResults]]](
       l = (nels: UMLError.ThrowableNel) =>
-        MDAPI.thrwoables2MagicDrawValidationDataResults(p, "InspectOTIPackageInfo")(nels.list.toSet),
+        MDAPI.thrwoables2MagicDrawValidationDataResults(p, "InspectOTIPackageInfo")(nels),
       r = (mdCatalogMgr: MagicDrawCatalogManager) =>
         doit(p, selection, mdCatalogMgr))
 
@@ -142,117 +142,105 @@ object InspectOTIPackageInfo {
   (p: Project,
    selection: java.util.Collection[Element],
    mdCatalogMgr: MagicDrawCatalogManager)
-  : scala.util.Try[Option[MagicDrawValidationDataResults]] = {
+  : scala.util.Try[Option[MagicDrawValidationDataResults]]
+  = {
 
     val a = Application.getInstance()
     val guiLog = a.getGUILog
     guiLog.clearLog()
 
-    implicit val umlUtil = MagicDrawUMLUtil(p)
-    import umlUtil._
+    val otiCharacterizations: Option[Map[UMLPackage[MagicDrawUML], UMLComment[MagicDrawUML]]] = None
 
-    implicit val otiCharacterizations: Option[Map[UMLPackage[Uml], UMLComment[Uml]]] =
-      None
+    MagicDrawOTIAdapters.initializeWithProfileCharacterizations(p, otiCharacterizations)()
+      .fold[scala.util.Try[Option[MagicDrawValidationDataResults]]](
+      (nels: Set[java.lang.Throwable]) =>
+        scala.util.Failure(nels.head),
+      (oa: MagicDrawOTIProfileAdapter) => {
 
-    implicit val otiCharacterizationProfileProvider: OTICharacteristicsProfileProvider[MagicDrawUML] =
-      MagicDrawOTICharacteristicsProfileProvider()
+        implicit val umlOps = oa.umlOps
 
-    val otiInfo = MagicDrawOTIInfo(mdCatalogMgr, umlUtil, otiCharacterizationProfileProvider)
+        val result
+        : Set[java.lang.Throwable] \&/ Unit
+        = for {
+          odsa <- MagicDrawOTIAdapters.withInitialDocumentSetForProfileAdapter(oa)
 
-    implicit val documentOps = new MagicDrawDocumentOps(otiInfo)
+          selectedPackages = {
+            implicit val umlOps: MagicDrawUMLUtil = oa.umlOps
+            import umlOps._
 
-    implicit def Package2CommentMapSemigroup
-    : Semigroup[Map[UMLPackage[Uml], UMLComment[Uml]]] =
-      Semigroup.instance(_ ++ _)
+            selection
+              .to[Seq]
+              .selectByKindOf { case pkg: Package => umlPackage(pkg) }
+              .sortBy(_.xmiElementLabel)
+          }
 
-    val selectedPackages: List[UMLPackage[Uml]] =
-      selection
-        .toIterable
-        .selectByKindOf { case p: Package => umlPackage(p) }
-        .toList
-        .sortBy(_.xmiElementLabel)
+          _ = {
+            oa.otiCharacteristicsProvider match {
+              case otiProfileCharacteristicsProvider: MagicDrawOTICharacteristicsProfileProvider =>
 
-    val otiMDCharacterizations
-    : NonEmptyList[java.lang.Throwable] \/ Map[UMLPackage[Uml], UMLComment[Uml]] =
-      (Map[UMLPackage[Uml], UMLComment[Uml]]()
-        .right[NonEmptyList[java.lang.Throwable]] /: selectedPackages.to[Set]) {
-        (acc, pkg) =>
-          acc +++
-            otiCharacterizationProfileProvider
-              .getSpecificationRootAnnotatingComment(pkg)
-              .map { doc =>
-                doc
-                  .fold[Map[UMLPackage[Uml], UMLComment[Uml]]]({
-                  guiLog.log(s"${pkg.qualifiedName.get}: no OTI characterization")
-                  Map()
-                }) { d =>
-                  guiLog.log(s"${pkg.qualifiedName.get}: has OTI characterization")
-                  Map(pkg -> d)
+                implicit val otiChProvider = otiProfileCharacteristicsProvider
+                selectedPackages.foreach { pkg =>
+                  val anns = pkg.annotatedElement_comment
+                  guiLog.log(s"${pkg.qualifiedName.get}: annotating comments: ${anns.size}")
+                  guiLog.log(s"${pkg.qualifiedName.get}: URI: ${pkg.URI}")
+                  guiLog.log(s"${pkg.qualifiedName.get}: effective URI: ${pkg.getEffectiveURI()}")
+                  guiLog.log(s"${pkg.qualifiedName.get}: oti pkg URI: ${pkg.oti_packageURI()}")
+                  guiLog.log(s"${pkg.qualifiedName.get}: oti pkg nsPrefix: ${pkg.oti_nsPrefix()}")
+                  guiLog.log(s"${pkg.qualifiedName.get}: oti pkg uuidPrefix: ${pkg.oti_uuidPrefix()}")
+                  guiLog.log(s"${pkg.qualifiedName.get}: oti doc URL: ${pkg.oti_documentURL()}")
+
+                  val ann: String =
+                    otiProfileCharacteristicsProvider.getSpecificationRootAnnotatingComment(pkg)
+                      .fold[String](
+                      l = (nels: Set[java.lang.Throwable]) => {
+                        nels.toList.map(_.getMessage)
+                          .mkString(s"${nels.size} errors\n", "\n", "\n")
+                      },
+                      r = (c: Option[UMLComment[MagicDrawUML]]) => {
+                        c.fold[String](
+                          "no annotation"
+                        ) { cc: UMLComment[MagicDrawUML] =>
+                          s"OTI annotation... $cc"
+                        }
+                      })
+                  guiLog.log(s"${pkg.qualifiedName.get}: $ann")
                 }
-              }
-      }
-    selectedPackages.foreach { pkg =>
-      val anns = pkg.annotatedElement_comment
-      guiLog.log(s"${pkg.qualifiedName.get}: annotating comments: ${anns.size}")
-      guiLog.log(s"${pkg.qualifiedName.get}: URI: ${pkg.URI}")
-      guiLog.log(s"${pkg.qualifiedName.get}: effective URI: ${pkg.getEffectiveURI()}")
-      guiLog.log(s"${pkg.qualifiedName.get}: oti pkg URI: ${pkg.oti_packageURI()}")
-      guiLog.log(s"${pkg.qualifiedName.get}: oti pkg nsPrefix: ${pkg.oti_nsPrefix()}")
-      guiLog.log(s"${pkg.qualifiedName.get}: oti pkg uuidPrefix: ${pkg.oti_uuidPrefix()}")
-      guiLog.log(s"${pkg.qualifiedName.get}: oti doc URL: ${pkg.oti_documentURL()}")
-
-      val ann: String =
-        otiCharacterizationProfileProvider.getSpecificationRootAnnotatingComment(pkg)
-          .fold[String](
-          l = (nels: NonEmptyList[java.lang.Throwable]) => {
-            nels.toList.map(_.getMessage)
-              .mkString(s"${nels.size} errors\n", "\n", "\n")
-          },
-          r = (c: Option[UMLComment[Uml]]) => {
-            c.fold[String](
-              "no annotation"
-            ) { cc: UMLComment[Uml] =>
-              s"OTI annotation... $cc"
+              case _ =>
+                ()
             }
-          })
-      guiLog.log(s"${pkg.qualifiedName.get}: $ann")
-    }
+            ()
+          }
 
-    val result
-    : Set[java.lang.Throwable] \&/ Unit
-    = for {
-      ds1 <-
-      documentOps
-        .initializeDocumentSet()
-        .leftMap[Set[java.lang.Throwable]](_.list.to[Set])
+          documents <- odsa.documentOps.createDocumentsFromExistingRootPackages(selectedPackages.to[Set])
 
-      mdocs <-
-      ds1.documentOps.createDocumentsFromExistingRootPackages(selectedPackages.to[Set])
+          odsa2 <- odsa.documentOps.addDocuments(odsa.ds, documents).flatMap {
+            case mdSet: MagicDrawDocumentSet =>
+              \&/.That(odsa.copy(ds = mdSet))
+            case dSet =>
+              \&/.This(Set[java.lang.Throwable](
+                UMLError.umlAdaptationError(s"The document set, $dSet, should be a MagicDrawDocumentSet")
+              ))
+          }
 
-      documents = {
-        val docsm: Set[Document[MagicDrawUML]] = for {mdoc <- mdocs} yield mdoc
-        docsm
-      }
+        } yield {
 
-      ds2 <- documentOps.addDocuments(ds1, documents)
+          implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator()(odsa2.ds)
 
-    } yield {
+          implicit val otiChProvider = oa.otiCharacteristicsProvider
 
-      implicit val ds: DocumentSet[MagicDrawUML] = ds2
-      implicit val idg: MagicDrawIDGenerator = MagicDrawIDGenerator()
+          selectedPackages.foreach { pkg =>
+            guiLog.log(s"# OTI info: ${pkg.qualifiedName.get}")
+            guiLog.log(s"-- is OTI Specification Root? ${DocumentSet.isPackageRootOfSpecificationDocument(pkg)}")
+            guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiID: ${pkg.xmiID()}")
+            guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiUUID: ${pkg.xmiUUID()}")
+          }
 
-      selectedPackages.foreach { pkg =>
-        guiLog.log(s"# OTI info: ${pkg.qualifiedName.get}")
-        guiLog.log(s"-- is OTI Specification Root? ${DocumentSet.isPackageRootOfSpecificationDocument(pkg)}")
-        guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiID: ${pkg.xmiID()}")
-        guiLog.log(s"-- ${pkg.qualifiedName.get}: xmiUUID: ${pkg.xmiUUID()}")
-      }
+          ()
+        }
 
-      ()
-    }
+        val otiV = OTIMagicDrawValidation(p)
+        otiV.errorSet2TryOptionMDValidationDataResults(p, "*** OTI Package Inspector ***", result.a)
 
-    val otiV = OTIMagicDrawValidation(p)
-    otiV.errorSet2TryOptionMDValidationDataResults(p, "*** OTI Package Inspector ***", result.a)
+      })
   }
-
 }

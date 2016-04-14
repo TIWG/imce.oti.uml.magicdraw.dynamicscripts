@@ -54,7 +54,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
@@ -342,6 +342,14 @@ dynamicScripts(
       name='OMG Tool Infrastructure'
       [ m: Package ]
       scripts {
+          DiagramContextMenuAction(
+              name: 'Json Export as OTI DocumentSet Configuration'
+              project: imce.oti.uml.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              access: r/w
+              class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.JsonExportAsOTIDocumentSetConfiguration
+              method: doit
+          )
           BrowserContextMenuAction(
               name: 'Inspect OTI info'
               project: imce.oti.uml.magicdraw.dynamicscripts
@@ -356,6 +364,14 @@ dynamicScripts(
               dependencies: { org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Create OTI Characterizations for selected packages in context'
+              project: imce.oti.uml.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              access: r/w
+              class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.CreateOTICharacterizationsForSelectedPackages
               method: doit
           )
           BrowserContextMenuAction(

@@ -226,17 +226,21 @@ object nameTest {
   }
 
   def getMDBrowserSelectedElements
-  : Set[Element] = {
+  : Set[Element]
+  = {
     val project = Application.getInstance().getProjectsManager.getActiveProject
     if ( null == project )
       return Set()
 
     val tab = project.getProjectActiveBrowserTabTree
     val elementFilter: ( Node => Option[Element] ) = { n =>
-      if ( n.getUserObject.isInstanceOf[Element] )
-        Some( n.getUserObject.asInstanceOf[Element] )
-      else
-        None }
+      n.getUserObject match {
+        case u: Element =>
+          Some(u)
+        case _ =>
+          None
+      }
+    }
     val elements =
       tab.fold[Set[Element]](Set()){
         btab =>
@@ -246,6 +250,6 @@ object nameTest {
             .map ( _.get )
             .to[Set]
       }
-    elements.toSet
+    elements
   }
 }

@@ -118,22 +118,24 @@ object checkPrimaryPackageSelectionCanAccessSecondaryPackageSelection {
   }
       
       
-  def checkPrimaryPackageSelectionCanAccessSecondaryPackageSelection(
-      umlUtil: MagicDrawUMLUtil, 
-      primaryPkg: UMLPackage[MagicDrawUML], 
-      secondaryPkgs: Iterable[UMLPackage[MagicDrawUML]] ): Unit = {
+  def checkPrimaryPackageSelectionCanAccessSecondaryPackageSelection
+  (umlUtil: MagicDrawUMLUtil,
+   primaryPkg: UMLPackage[MagicDrawUML],
+   secondaryPkgs: Set[UMLPackage[MagicDrawUML]] )
+  : Unit
+  = {
     
     import umlUtil._
     val app = Application.getInstance()
     val guiLog = app.getGUILog
 
-    val primaryAccessible = primaryPkg.allIndirectlyVisibleMembersTransitivelyAccessibleFromNestingPackagesAndAppliedProfiles
-    val secondaryContents = secondaryPkgs.flatMap (_.allOwnedElements.selectByKindOf {
-      case pe: UMLPackageableElement[Uml] =>
-        pe
-    } toSet).to[Set]
+    val primaryAccessible =
+      primaryPkg.allIndirectlyVisibleMembersTransitivelyAccessibleFromNestingPackagesAndAppliedProfiles
+    val secondaryContents =
+      secondaryPkgs.flatMap (_.allOwnedElements.selectByKindOf { case pe: UMLPackageableElement[Uml] => pe})
 
-    val secondaryVisible = secondaryPkgs.flatMap (_.allVisibleMembersTransitively) toSet
+    val secondaryVisible =
+      secondaryPkgs.flatMap (_.allVisibleMembersTransitively)
     
     val excluded = (secondaryContents & secondaryVisible) -- primaryAccessible
     guiLog.log(s"OK?: ${excluded.isEmpty}")

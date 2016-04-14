@@ -118,20 +118,22 @@ object changePackageExtentIDs {
                 None
             }}
           .to[Set]
-        val resetMap = entries.flatMap { entry =>
-          val oldId = entry.getOldID.get
-          val newId = entry.getNewID.get
-          Option.apply( project.getElementByID( oldId ) ) match {
-            case Some( e: Element ) =>
-              val uuid = UUIDRegistry.getUUID( e )
-              if ( oldId == newId )
+        val resetMap = entries
+          .flatMap { entry =>
+            val oldId = entry.getOldID.get
+            val newId = entry.getNewID.get
+            Option.apply(project.getElementByID(oldId)) match {
+              case Some(e: Element) =>
+                val uuid = UUIDRegistry.getUUID(e)
+                if (oldId == newId)
+                  None
+                else
+                  Seq(oldId -> newId, uuid -> uuid)
+              case _ =>
                 None
-              else
-                Seq( oldId -> newId, uuid -> uuid )
-            case _ =>
-              None
+            }
           }
-        } toMap;
+          .toMap
 
         val runnable = new RunnableWithProgress() {
           def run( progressStatus: ProgressStatus ): Unit = {
