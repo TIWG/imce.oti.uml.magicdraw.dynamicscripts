@@ -41,9 +41,12 @@ package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui
 import java.awt.event.ActionEvent
 
 import com.nomagic.magicdraw.core.Project
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
+import com.nomagic.magicdraw.uml.UUIDRegistry
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, NamedElement}
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
+import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes.{AbstractTreeNodeInfo, HyperlinkTableCellValueEditorRenderer, LabelNodeInfo, ReferenceNodeInfo}
+import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables.GroupTableNodeUI
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
@@ -56,14 +59,75 @@ import org.omg.oti.uml.xmi.IDGenerator
 import scala.collection.immutable._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
-import scala.{None, Option, StringContext, Unit}
-import scala.Predef.ArrowAssoc
+import scala.{None, Option, Some, StringContext, Unit}
+import scala.Predef.{ArrowAssoc,String}
 
 
 object ElementInspectorWidget {
 
   import AppliedStereotypeWidgetHelper._
   import ComputedDerivedWidgetHelper._
+
+  def otiInfo
+  (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+   ek: MagicDrawElementKindDesignation, e: Element)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawAdapterForProfileCharacteristics(project),
+    otiInfo(derived, ek, Seq(e)) _)
+
+  def otiInfo
+  (derived: DynamicScriptsTypes.ComputedDerivedWidget, ek: MagicDrawElementKindDesignation, es: Seq[Element])
+  (oa: MagicDrawOTIProfileAdapter)
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = {
+
+    val rows
+    : Seq[Map[String, AbstractTreeNodeInfo]]
+    = es.map { e =>
+      Map(
+        "Element" ->
+          (e match {
+            case ne: NamedElement =>
+              ReferenceNodeInfo(ne.getHumanName, ne)
+            case _ =>
+              ReferenceNodeInfo(e.getID, e)
+          }),
+        "Tool-specific ID" ->
+          LabelNodeInfo(e.getID),
+        "Tool-specific UUID" ->
+          LabelNodeInfo(UUIDRegistry.getUUID(e))
+      )
+    }
+
+    val ui = GroupTableNodeUI(
+      DynamicScriptsTypes.ComputedDerivedTree(
+        derived.name, derived.icon, derived.context, derived.access,
+        derived.className, derived.methodName, derived.refresh,
+        columnValueTypes = Some(Seq(
+          DynamicScriptsTypes.DerivedFeatureValueType(
+            key = DynamicScriptsTypes.SName("Element"),
+            typeName = DynamicScriptsTypes.HName("Element"),
+            typeInfo = DynamicScriptsTypes.StringTypeDesignation()),
+          DynamicScriptsTypes.DerivedFeatureValueType(
+            key = DynamicScriptsTypes.SName("Tool-specific ID"),
+            typeName = DynamicScriptsTypes.HName("Tool-specific ID"),
+            typeInfo = DynamicScriptsTypes.StringTypeDesignation()),
+          DynamicScriptsTypes.DerivedFeatureValueType(
+            key = DynamicScriptsTypes.SName("Tool-specific UUID"),
+            typeName = DynamicScriptsTypes.HName("Tool-specific UUID"),
+            typeInfo = DynamicScriptsTypes.StringTypeDesignation())))),
+      rows,
+      Seq("Element", "Tool-specific ID", "Tool-specific UUID"))
+    //ui._table.addMouseListener( DoubleClickMouseListener.createAbstractTreeNodeInfoDoubleClickMouseListener( ui._table ) )
+    HyperlinkTableCellValueEditorRenderer.addRenderer4AbstractTreeNodeInfo(ui._table)
+
+    val validationAnnotations = rows flatMap
+      (_.values) flatMap
+      AbstractTreeNodeInfo.collectAnnotationsRecursively
+
+    Success((ui.panel, validationAnnotations))
+  }
 
   def appliedStereotypes
   (project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,

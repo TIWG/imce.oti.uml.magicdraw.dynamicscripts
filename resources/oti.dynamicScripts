@@ -938,7 +938,15 @@ dynamicScripts(
 characterization(
 	name='Element (OMG Tool Infrastructure)'
 	[ m: Element ]
-	features {		
+	features {
+		EarlyDerivedWidget(
+			name: 'OTI Element::otiInfo'
+			project: imce.oti.uml.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            access: r/o
+            class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
+            method: otiInfo
+        )
 		EarlyDerivedWidget(
 			name: 'OTI Element::appliedStereotypes'
 			project: imce.oti.uml.magicdraw.dynamicscripts
