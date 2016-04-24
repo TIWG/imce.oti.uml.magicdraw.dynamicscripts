@@ -45,7 +45,11 @@ import javax.swing.SwingUtilities
 
 import com.nomagic.actions.NMAction
 import com.nomagic.magicdraw.core.{Application, ApplicationEnvironment, Project}
-import com.nomagic.magicdraw.uml.symbols.shapes.{CommentView,PackageView}
+import com.nomagic.magicdraw.ui.ProjectWindow
+import com.nomagic.magicdraw.uml.symbols.shapes.{CommentView, PackageView}
+import com.nomagic.magicdraw.validation.ui.ValidationResultPanel
+import com.nomagic.magicdraw.validation.{RuleViolationResult, ValidationRunData}
+import com.nomagic.ui.ExtendedPanel
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import com.nomagic.uml2.ext.magicdraw.auxiliaryconstructs.mdmodels.Model
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Comment, Element}
@@ -67,6 +71,10 @@ import scala.util.Try
 import scalaz.Scalaz._
 import scalaz._
 import scala.{Boolean, None, Option, Some, StringContext, Tuple2, Tuple3, Unit}
+
+@scala.deprecated("", "")
+trait MDAPI {}
+
 object MDAPI {
 
   def thrwoables2MagicDrawValidationDataResults
@@ -120,6 +128,31 @@ object MDAPI {
   def getAllProfiles(p: Project)(implicit umlUtil: MagicDrawUMLUtil): Set[UMLProfile[MagicDrawUML]] = {
     import umlUtil._
     StereotypesHelper.getAllProfiles(p).to[Set]
+  }
+
+  def getProjectWindows
+  (p: Project)
+  : Set[ProjectWindow]
+  = p.getWindows.to[Set]
+
+  def getProjectValidationResults
+  (p: Project)
+  : Set[ProjectValidationResultPanelInfo]
+  = getProjectWindows(p).flatMap { pw =>
+    Option.apply(pw.getContent).flatMap { pwc =>
+      pwc.getWindowComponent match {
+        case vrp: ValidationResultPanel =>
+          Some(ProjectValidationResultPanelInfo(
+            validatedProject = vrp.getValidatedProject,
+            validationID = vrp.getValidationID,
+            validationRunData = vrp.getValidationRunData,
+            results = vrp.getResults.to[Set],
+            projectWindow = pw,
+            uiPanel = vrp))
+        case _ =>
+          None
+      }
+    }
   }
 
   type MDValidationElementResults = Map[Element, Tuple2[String, List[NMAction]]]

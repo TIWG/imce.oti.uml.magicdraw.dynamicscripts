@@ -36,21 +36,44 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts
+package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.json.magicDrawValidation
 
-import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes.ReferenceNodeInfo
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import play.api.libs.json._
 
-import org.omg.oti.json.common.OTIPrimitiveTypes.TOOL_SPECIFIC_ID
-import org.omg.oti.uml.read.api.UMLElement
+import org.omg.oti.json.uml.OTIMOFElement
 
-package object ui {
+import scala.Predef.String
+import scala.Option
 
-  def toToolSpecificIDReferenceNodeInfo
-  (e: UMLElement[MagicDrawUML])
-  (implicit umlUtil: MagicDrawUMLUtil)
-  : ReferenceNodeInfo
-  = ReferenceNodeInfo(
-    TOOL_SPECIFIC_ID.unwrap(e.toolSpecific_id),
-    umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement )
+/**
+  * OTI UML Json data structure for a MagicDraw Annotation
+  *
+  * @see com.nomagic.magicdraw.annotation.Annotation
+  * @see com.nomagic.magicdraw.validation.RuleViolationResult
+  *
+  * @param constraint OTI UML Json conversion of the RuleViolationResult.getRule
+  * @param severity OTI UML Json conversion of Annotation.getSeverity
+  * @param kind Annotation.getKind, if any
+  * @param text Annotation.getText, if any
+  */
+case class ElementAnnotation
+( constraint: OTIMOFElement.OTIUMLConstraint,
+  severity: OTIMOFElement.OTIUMLEnumerationLiteral,
+  kind: Option[String],
+  text: Option[String])
+
+object ElementAnnotation {
+
+  implicit def reads
+  : Reads[ElementAnnotation]
+  = Json.reads[ElementAnnotation]
+
+  implicit def writes
+  : Writes[ElementAnnotation]
+  = Json.writes[ElementAnnotation]
+
+  implicit def formats
+  : Format[ElementAnnotation]
+  = Json.format[ElementAnnotation]
+
 }

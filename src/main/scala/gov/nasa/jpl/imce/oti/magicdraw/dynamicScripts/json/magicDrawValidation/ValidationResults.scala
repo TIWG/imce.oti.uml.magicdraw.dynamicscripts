@@ -36,21 +36,29 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts
+package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.json.magicDrawValidation
 
-import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes.ReferenceNodeInfo
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import play.api.libs.json._
 
-import org.omg.oti.json.common.OTIPrimitiveTypes.TOOL_SPECIFIC_ID
-import org.omg.oti.uml.read.api.UMLElement
+import scala.collection.immutable.Iterable
+import scala.Predef.String
 
-package object ui {
+case class ValidationResults
+( name: String,
+  elementResults: Iterable[RuleViolationDataResults] )
 
-  def toToolSpecificIDReferenceNodeInfo
-  (e: UMLElement[MagicDrawUML])
-  (implicit umlUtil: MagicDrawUMLUtil)
-  : ReferenceNodeInfo
-  = ReferenceNodeInfo(
-    TOOL_SPECIFIC_ID.unwrap(e.toolSpecific_id),
-    umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement )
+object ValidationResults {
+
+  implicit def reads
+  : Reads[ValidationResults]
+  = Json.reads[ValidationResults]
+
+  implicit def writes
+  : Writes[ValidationResults]
+  = Json.writes[ValidationResults]
+
+  implicit def formats
+  : Format[ValidationResults]
+  = Json.format[ValidationResults]
+
 }

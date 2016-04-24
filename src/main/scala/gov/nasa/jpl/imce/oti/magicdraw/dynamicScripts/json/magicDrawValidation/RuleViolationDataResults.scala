@@ -36,21 +36,38 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts
+package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.json.magicDrawValidation
 
-import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes.ReferenceNodeInfo
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import play.api.libs.json._
 
-import org.omg.oti.json.common.OTIPrimitiveTypes.TOOL_SPECIFIC_ID
-import org.omg.oti.uml.read.api.UMLElement
+import org.omg.oti.json.uml.OTIMOFElement
+import scala.collection.immutable.Iterable
 
-package object ui {
+/**
+  * OTI UML Json data structure for MagicDraw RuleViolationResults for the same MagicDraw Element
+  *
+  * @see com.nomagic.magicdraw.validation.RuleViolationResult
+  * @see com.nomagic.magicdraw.annotation.Annotation
+  *
+  * @param element OTI UML Json conversion of RuleViolationResult.getElement
+  * @param annotations OTI UML Json conversion of all Annotations that annotate the element
+  */
+case class RuleViolationDataResults
+( element: OTIMOFElement,
+  annotations: Iterable[ElementAnnotation] )
 
-  def toToolSpecificIDReferenceNodeInfo
-  (e: UMLElement[MagicDrawUML])
-  (implicit umlUtil: MagicDrawUMLUtil)
-  : ReferenceNodeInfo
-  = ReferenceNodeInfo(
-    TOOL_SPECIFIC_ID.unwrap(e.toolSpecific_id),
-    umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement )
+object RuleViolationDataResults {
+
+  implicit def reads
+  : Reads[RuleViolationDataResults]
+  = Json.reads[RuleViolationDataResults]
+
+  implicit def writes
+  : Writes[RuleViolationDataResults]
+  = Json.writes[RuleViolationDataResults]
+
+  implicit def formats
+  : Format[RuleViolationDataResults]
+  = Json.format[RuleViolationDataResults]
+
 }
