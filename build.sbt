@@ -63,6 +63,7 @@ def docSettings(diagrams:Boolean): Seq[Setting[_]] =
         Seq()
         ) ++
         Seq(
+          "-no-link-warnings",
           "-doc-title", name.value,
           "-doc-root-content", baseDirectory.value + "/rootdoc.txt"
         ),
