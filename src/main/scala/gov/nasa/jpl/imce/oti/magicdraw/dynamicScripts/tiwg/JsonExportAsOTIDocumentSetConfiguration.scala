@@ -149,7 +149,7 @@ object JsonExportAsOTIDocumentSetConfiguration {
       }
 
       config <- (emptyConfig /: selectedSpecificationRootPackages) {
-        addSpecificationRootPackage(oa)
+        addSpecificationRootPackage(odsa)
       }
       t2 = java.lang.System.currentTimeMillis()
       _ = {
@@ -292,13 +292,13 @@ object JsonExportAsOTIDocumentSetConfiguration {
   }
 
   def addSpecificationRootPackage
-  (oa: MagicDrawOTIProfileAdapter)
+  (odsa: MagicDrawOTIDocumentSetAdapterForProfileProvider)
   (ri: Set[java.lang.Throwable] \&/ OTIDocumentSetConfiguration,
    p: UMLPackage[MagicDrawUML])
   : Set[java.lang.Throwable] \&/ OTIDocumentSetConfiguration
   = for {
     current <- ri
-    pInfo <- oa.otiCharacteristicsProvider.getSpecificationRootCharacteristics(p).toThese
+    pInfo <- odsa.getSpecificationRootCharacteristics(p).toThese
 
   } yield pInfo.fold[OTIDocumentSetConfiguration](current) { info =>
     current.copy(
@@ -306,13 +306,4 @@ object JsonExportAsOTIDocumentSetConfiguration {
         current.documents :+ OTIDocumentConfiguration(info, p.toolSpecific_id, p.toolSpecific_url) )
   }
 
-
-  def showJson
-  (pkg: UMLPackage[MagicDrawUML])
-  (implicit oa: MagicDrawOTIProfileAdapter)
-  : Unit
-  = {
-    val elements = pkg.allOwnedElements
-
-  }
 }
