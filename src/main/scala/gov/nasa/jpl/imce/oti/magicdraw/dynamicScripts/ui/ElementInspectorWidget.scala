@@ -42,6 +42,7 @@ import java.awt.event.ActionEvent
 
 import com.nomagic.magicdraw.core.Project
 import com.nomagic.magicdraw.uml.UUIDRegistry
+import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, NamedElement}
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
@@ -60,7 +61,7 @@ import scala.collection.immutable._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 import scala.{None, Option, Some, StringContext, Unit}
-import scala.Predef.{ArrowAssoc,String}
+import scala.Predef.{ArrowAssoc, String}
 
 
 object ElementInspectorWidget {
@@ -93,6 +94,8 @@ object ElementInspectorWidget {
             case _ =>
               ReferenceNodeInfo(e.getID, e)
           }),
+        "Metaclass" ->
+          LabelNodeInfo(StereotypesHelper.getBaseClass(e).getName),
         "Tool-specific ID" ->
           LabelNodeInfo(e.getID),
         "Tool-specific UUID" ->
@@ -110,6 +113,10 @@ object ElementInspectorWidget {
             typeName = DynamicScriptsTypes.HName("Element"),
             typeInfo = DynamicScriptsTypes.StringTypeDesignation()),
           DynamicScriptsTypes.DerivedFeatureValueType(
+            key = DynamicScriptsTypes.SName("Metaclass"),
+            typeName = DynamicScriptsTypes.HName("Metaclass"),
+            typeInfo = DynamicScriptsTypes.StringTypeDesignation()),
+          DynamicScriptsTypes.DerivedFeatureValueType(
             key = DynamicScriptsTypes.SName("Tool-specific ID"),
             typeName = DynamicScriptsTypes.HName("Tool-specific ID"),
             typeInfo = DynamicScriptsTypes.StringTypeDesignation()),
@@ -118,7 +125,7 @@ object ElementInspectorWidget {
             typeName = DynamicScriptsTypes.HName("Tool-specific UUID"),
             typeInfo = DynamicScriptsTypes.StringTypeDesignation())))),
       rows,
-      Seq("Element", "Tool-specific ID", "Tool-specific UUID"))
+      Seq("Element", "Metaclass", "Tool-specific ID", "Tool-specific UUID"))
     //ui._table.addMouseListener( DoubleClickMouseListener.createAbstractTreeNodeInfoDoubleClickMouseListener( ui._table ) )
     HyperlinkTableCellValueEditorRenderer.addRenderer4AbstractTreeNodeInfo(ui._table)
 
