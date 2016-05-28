@@ -226,10 +226,12 @@ object JsonExportAsOTIDocumentSetConfiguration {
 
     val t0: Long = java.lang.System.currentTimeMillis()
 
+    val mdInstallDir = MDUML.getApplicationInstallDir.toPath
+    val jsonOTIDocumentConfigurationURI = mdInstallDir.resolve(s"dynamicScripts/MagicDraw-${p.getPrimaryProjectID}.documentSet.json").toUri
+
     val jconfig = Json.toJson(config)
     System.out.println(Json.prettyPrint(jconfig))
 
-    val mdInstallDir = MDUML.getApplicationInstallDir.toPath
 
     val jsonExportZipURI = mdInstallDir.resolve(s"dynamicScripts/MagicDraw-${p.getPrimaryProjectID}.zip").toUri
 
