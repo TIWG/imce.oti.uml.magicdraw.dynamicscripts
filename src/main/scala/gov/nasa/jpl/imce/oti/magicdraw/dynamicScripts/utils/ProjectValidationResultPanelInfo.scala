@@ -44,7 +44,7 @@ import com.nomagic.magicdraw.validation.{RuleViolationResult, ValidationRunData}
 import com.nomagic.ui.ExtendedPanel
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.json.magicDrawValidation.{ElementAnnotation, RuleViolationDataResults, ValidationResults}
-import org.omg.oti.magicdraw.uml.canonicalXMI.helper.MagicDrawOTIJsonElementHelperForProfileAdapter
+import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 
 import scala.collection.immutable.{Iterable, Vector}
 import scala.{None, Option, Some}
@@ -58,14 +58,14 @@ case class ProjectValidationResultPanelInfo
   projectWindow: ProjectWindow,
   uiPanel: ExtendedPanel ) {
 
-  def toValidationResults
+  def toValidationResultsForProfileAdapter
   (implicit ojeh: MagicDrawOTIJsonElementHelperForProfileAdapter)
   : ValidationResults
   = ValidationResults(
     name = projectWindow.getInfo.getName,
-    elementResults = toRuleViolationDataResults)
+    elementResults = toRuleViolationDataResultsProfileAdapter)
 
-  def toRuleViolationDataResults
+  def toRuleViolationDataResultsProfileAdapter
   (implicit ojeh: MagicDrawOTIJsonElementHelperForProfileAdapter)
   : Iterable[RuleViolationDataResults]
   = {
@@ -89,4 +89,36 @@ case class ProjectValidationResultPanelInfo
         None
     }
   }
+  def toValidationResultsForDataAdapter
+  (implicit ojeh: MagicDrawOTIJsonElementHelperForDataAdapter)
+  : ValidationResults
+  = ValidationResults(
+    name = projectWindow.getInfo.getName,
+    elementResults = toRuleViolationDataResultsForDataAdapter)
+
+  def toRuleViolationDataResultsForDataAdapter
+  (implicit ojeh: MagicDrawOTIJsonElementHelperForDataAdapter)
+  : Iterable[RuleViolationDataResults]
+  = {
+    import ojeh._
+
+    results.groupBy(_.getElement).flatMap {
+
+      case (element: Element, violations: Iterable[RuleViolationResult]) =>
+        Some(RuleViolationDataResults(
+          element,
+          for {
+            v <- violations
+            ann = v.getAnnotation
+          } yield ElementAnnotation(
+            constraint = v.getRule,
+            severity = ann.getSeverity,
+            kind = Option.apply(ann.getKind),
+            text = Option.apply(ann.getText))))
+
+      case _ =>
+        None
+    }
+  }
+
 }
