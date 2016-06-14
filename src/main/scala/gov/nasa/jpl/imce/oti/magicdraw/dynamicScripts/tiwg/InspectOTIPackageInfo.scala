@@ -211,7 +211,9 @@ object InspectOTIPackageInfo {
             ()
           }
 
-          documents <- odsa.documentOps.createDocumentsFromExistingRootPackages(selectedPackages.to[Set])
+          documents <- odsa.documentOps.createDocumentsFromExistingRootPackages(
+            allRoots = selectedPackages.to[Set],
+            extentOfPkg = MagicDrawOTIHelper.defaultExtentOfPkg)
 
           odsa2 <- odsa.documentOps.addDocuments(odsa.ds, documents).flatMap {
             case mdSet: MagicDrawDocumentSet =>

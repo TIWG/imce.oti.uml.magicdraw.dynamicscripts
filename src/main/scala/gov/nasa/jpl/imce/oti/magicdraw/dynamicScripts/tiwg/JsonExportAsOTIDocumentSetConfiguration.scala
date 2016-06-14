@@ -140,7 +140,11 @@ object JsonExportAsOTIDocumentSetConfiguration {
     val t0: Long = java.lang.System.currentTimeMillis()
 
     val result = for {
-      odsa <- MagicDrawOTIHelper.getOTIMagicDrawProfileDocumentSetAdapter(oa, selectedSpecificationRootPackages)
+      odsa <- MagicDrawOTIHelper.getOTIMagicDrawProfileDocumentSetAdapter(
+        oa,
+        selectedSpecificationRootPackages,
+        MagicDrawOTIHelper.defaultExtentOfPkg)
+
       t1 = java.lang.System.currentTimeMillis()
       _ = {
         System.out.println(
