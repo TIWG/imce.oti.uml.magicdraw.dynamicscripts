@@ -39,36 +39,18 @@
 package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts
 
 import java.awt.event.ActionEvent
-import java.io.File
 import java.lang.System
-import java.util.UUID
-import javax.swing.JFileChooser
-import javax.swing.filechooser.FileFilter
 
-import com.nomagic.ci.persistence.local.spi.localproject.LocalPrimaryProject
-import com.nomagic.magicdraw.actions.ActionsID
 import com.nomagic.magicdraw.actions.ActionsProvider
 import com.nomagic.magicdraw.core.Application
-import com.nomagic.magicdraw.core.ApplicationEnvironment
 import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.core.project.ProjectsManager
-import com.nomagic.magicdraw.core.ProjectUtilitiesInternal
-import com.nomagic.magicdraw.core.utils.ChangeElementID
-import com.nomagic.magicdraw.ui.MagicDrawProgressStatusRunner
 import com.nomagic.magicdraw.ui.browser.Node
-import com.nomagic.magicdraw.ui.browser.Tree
-import com.nomagic.magicdraw.uml.{ClassTypes, UUIDRegistry}
-import com.nomagic.magicdraw.uml.actions.SelectInContainmentTreeRunnable
-import com.nomagic.task.RunnableWithProgress
-import com.nomagic.task.ProgressStatus
+import com.nomagic.magicdraw.uml.ClassTypes
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
-import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Stereotype
 
 import org.omg.oti.uml._
-import org.omg.oti.changeMigration.Metamodel
 import org.omg.oti.uml.characteristics._
 import org.omg.oti.uml.read.api._
 
@@ -76,23 +58,15 @@ import org.omg.oti.magicdraw.uml.characteristics._
 import org.omg.oti.magicdraw.uml.read._
 
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes._
-import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
-import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML._
 import gov.nasa.jpl.dynamicScripts.magicdraw.{ClassLoaderHelper, DynamicScriptsPlugin}
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.xmi.XMLResource
-
-import gov.nasa.jpl.magicdraw.enhanced.migration.LocalModuleMigrationInterceptor
-
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Failure, Success, Try}
-import scala.{Boolean,Option,None,Some,StringContext,Unit}
-import scala.Predef.{genericArrayOps,ArrowAssoc}
+import scala.util.{Success, Try}
+import scala.{Boolean,Option,None,Some,StringContext}
+import scala.Predef.genericArrayOps
 
 /**
  * @author Nicolas.F.Rouquette@jpl.nasa.gov

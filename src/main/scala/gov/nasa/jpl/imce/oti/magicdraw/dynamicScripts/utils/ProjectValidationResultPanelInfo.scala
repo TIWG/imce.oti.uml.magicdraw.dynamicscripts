@@ -46,7 +46,7 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.json.magicDrawValidation.{ElementAnnotation, RuleViolationDataResults, ValidationResults}
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 
-import scala.collection.immutable.{Iterable, Vector}
+import scala.collection.immutable.Iterable
 import scala.{None, Option, Some}
 import scala.Predef.String
 

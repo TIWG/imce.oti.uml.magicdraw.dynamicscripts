@@ -47,7 +47,6 @@ import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{LiteralUnlimitedNatural,
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
-import scala.language.postfixOps
 import scala.{Boolean,StringContext,Unit}
 import scala.Predef.{Integer2int,String}
 

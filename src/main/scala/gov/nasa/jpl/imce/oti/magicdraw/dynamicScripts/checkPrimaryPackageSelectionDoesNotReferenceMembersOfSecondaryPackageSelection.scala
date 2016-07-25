@@ -41,7 +41,6 @@ package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts
 import java.awt.event.ActionEvent
 
 import com.nomagic.magicdraw.core.{Application, Project}
-import com.nomagic.magicdraw.uml.actions.SelectInContainmentTreeRunnable
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
@@ -56,7 +55,7 @@ import org.omg.oti.uml.read.api._
 import scala.Predef.ArrowAssoc
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
+import scala.language.postfixOps
 import scala.util.{Success, Try}
 import scala.{Option,None,StringContext,Unit}
 /**

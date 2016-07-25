@@ -54,13 +54,11 @@ import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 import org.omg.oti.uml._
 import org.omg.oti.uml.read.api._
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
-import org.omg.oti.uml.xmi.IDGenerator
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
 
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Failure, Success, Try}
-import scala.{None, Option, Some, StringContext, Unit}
+import scala.util.{Success, Try}
+import scala.{None, Some}
 import scala.Predef.{ArrowAssoc, String}
 
 

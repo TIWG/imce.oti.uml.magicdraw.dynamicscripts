@@ -45,7 +45,6 @@ import com.nomagic.magicdraw.openapi.uml.SessionManager
 import com.nomagic.magicdraw.uml.symbols.DiagramPresentationElement
 import com.nomagic.magicdraw.uml.symbols.PresentationElement
 import com.nomagic.magicdraw.uml.symbols.shapes.InstanceSpecificationView
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.InstanceSpecification
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
 
@@ -58,9 +57,8 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.actions._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
-import scala.{Option,None,Some,StringContext,Unit}
+import scala.{Option,None,Some,StringContext}
 import scala.Predef.{ArrowAssoc,String}
 
 /**

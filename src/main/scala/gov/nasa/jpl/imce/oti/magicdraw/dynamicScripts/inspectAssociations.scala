@@ -53,7 +53,6 @@ import org.omg.oti.uml.read.api._
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
 import scala.{Option,None,Some,StringContext,Unit}
 /**

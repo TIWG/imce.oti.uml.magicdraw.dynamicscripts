@@ -42,7 +42,6 @@ import java.awt.event.ActionEvent
 
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
-import java.io.File
 import javax.swing.BoxLayout
 import javax.swing.JLabel
 import javax.swing.JOptionPane
@@ -53,23 +52,17 @@ import com.jidesoft.swing.JideBoxLayout
 import com.nomagic.magicdraw.core.{Application, Project}
 import com.nomagic.magicdraw.ui.MagicDrawProgressStatusRunner
 import com.nomagic.magicdraw.ui.browser.{Node, Tree}
-import com.nomagic.magicdraw.uml.UUIDRegistry
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
-import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.task.{ProgressStatus, RunnableWithProgress}
-import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
-import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
-import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.MDAPI
 import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import scala.collection.JavaConversions._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
 import scala.{Option,None,Some,StringContext,Unit}
-import scala.Predef.{augmentString,ArrowAssoc}
+import scala.Predef.augmentString
 
 /**
  * @author Nicolas.F.Rouquette@jpl.nasa.gov

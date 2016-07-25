@@ -57,7 +57,6 @@ import org.omg.oti.uml.read.api._
 import scala.Predef.ArrowAssoc
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.Try
 import scala.{Option,Some,StringContext}
 

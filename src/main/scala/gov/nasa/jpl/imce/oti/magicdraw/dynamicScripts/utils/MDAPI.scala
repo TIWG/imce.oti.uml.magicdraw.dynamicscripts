@@ -39,17 +39,14 @@
 package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils
 
 import java.awt.event.ActionEvent
-import java.io.File
 import java.lang.Runnable
 import javax.swing.SwingUtilities
 
 import com.nomagic.actions.NMAction
-import com.nomagic.magicdraw.core.{Application, ApplicationEnvironment, Project}
+import com.nomagic.magicdraw.core.{Application, Project}
 import com.nomagic.magicdraw.ui.ProjectWindow
 import com.nomagic.magicdraw.uml.symbols.shapes.{CommentView, PackageView}
 import com.nomagic.magicdraw.validation.ui.ValidationResultPanel
-import com.nomagic.magicdraw.validation.{RuleViolationResult, ValidationRunData}
-import com.nomagic.ui.ExtendedPanel
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import com.nomagic.uml2.ext.magicdraw.auxiliaryconstructs.mdmodels.Model
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Comment, Element}
@@ -60,17 +57,16 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.wildCardMatch
 import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.json.common.OTIPrimitiveTypes._
 import org.omg.oti.uml.UMLError
-import org.omg.oti.uml.canonicalXMI.{CatalogURIMapper, UnresolvedElementCrossReference}
+import org.omg.oti.uml.canonicalXMI.UnresolvedElementCrossReference
 import org.omg.oti.uml.read.api._
 
 import scala.Predef.{ArrowAssoc, String}
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.postfixOps
 import scala.util.Try
 import scalaz.Scalaz._
 import scalaz._
-import scala.{Boolean, None, Option, Some, StringContext, Tuple2, Tuple3, Unit}
+import scala.{Boolean, None, Option, Some, StringContext, Tuple2, Unit}
 
 @scala.deprecated("", "")
 trait MDAPI {}

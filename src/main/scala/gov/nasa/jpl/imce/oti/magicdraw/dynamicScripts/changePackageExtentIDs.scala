@@ -42,11 +42,9 @@ import java.awt.event.ActionEvent
 import java.io.File
 import java.lang.System
 
-import com.nomagic.magicdraw.core.utils.ChangeElementID
-import com.nomagic.magicdraw.core.{Application, ApplicationEnvironment, Project}
+import com.nomagic.magicdraw.core.{Application, Project}
 import com.nomagic.magicdraw.ui.MagicDrawProgressStatusRunner
 import com.nomagic.magicdraw.uml.UUIDRegistry
-import com.nomagic.magicdraw.uml.actions.SelectInContainmentTreeRunnable
 import com.nomagic.task.{ProgressStatus, RunnableWithProgress}
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
@@ -59,9 +57,7 @@ import org.omg.oti.changeMigration.Metamodel
 import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import scala.Predef.{ArrowAssoc, require}
-import scala.collection.JavaConversions.{mapAsJavaMap, seqAsJavaList}
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 import scala.{Option,None,Some,StringContext,Unit}
 

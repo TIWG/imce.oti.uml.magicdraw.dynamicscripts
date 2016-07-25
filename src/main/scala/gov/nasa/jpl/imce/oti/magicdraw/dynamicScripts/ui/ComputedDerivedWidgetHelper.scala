@@ -38,36 +38,24 @@
  */
 package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui
 
-import java.awt.event.ActionEvent
-import java.awt.event.InputEvent
 import java.lang.{IllegalArgumentException,System}
-import javax.swing.JOptionPane
 import org.omg.oti.uml.xmi.IDGenerator
 
-import com.nomagic.magicdraw.core.Application
-import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.ui.dialogs.specifications.SpecificationDialogManager
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
-import gov.nasa.jpl.dynamicScripts.magicdraw.DynamicScriptsPlugin
-import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
-import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationComputedComponent
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.tables._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 
 import org.omg.oti.json.common.OTIPrimitiveTypes._
-import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read._
 
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
-import scala.{Option,None,Some,StringContext,Unit}
+import scala.{Option,None,Some,StringContext}
 import scala.Predef.{require,ArrowAssoc,String}
 
-import scala.reflect.{ classTag, ClassTag }
+import scala.reflect.ClassTag
 import scalaz._
 
 object ComputedDerivedWidgetHelper {

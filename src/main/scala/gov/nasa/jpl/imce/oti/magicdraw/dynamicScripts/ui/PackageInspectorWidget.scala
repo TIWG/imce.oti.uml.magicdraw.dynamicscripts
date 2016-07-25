@@ -39,33 +39,22 @@
 package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui
 
 import java.awt.event.ActionEvent
-import java.awt.event.InputEvent
-import java.lang.IllegalArgumentException
-import javax.swing.JOptionPane
 
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import org.omg.oti.uml.RelationTriple
-import org.omg.oti.uml.xmi.IDGenerator
 import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.ui.dialogs.specifications.SpecificationDialogManager
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
-import gov.nasa.jpl.dynamicScripts.magicdraw.DynamicScriptsPlugin
 import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
-import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationComputedComponent
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read.MagicDrawUML
-import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
-import scala.{None, Option, StringContext, Unit}
-import scala.Predef.ArrowAssoc
 
 object PackageInspectorWidget {
 
@@ -285,7 +274,7 @@ object PackageInspectorWidget {
             },
             ordsa.otiAdapter.umlOps)
         case _ =>
-          Failure(new IllegalArgumentException("Not a package!"))
+          Failure(new java.lang.IllegalArgumentException("Not a package!"))
       }
     })
 

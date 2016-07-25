@@ -58,7 +58,7 @@ import org.omg.oti.uml.validation.{DefaultValueValidationHelper, DefaultValueVal
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.util.{Failure, Success, Try}
+import scala.util.{Success, Try}
 import scala.Predef.ArrowAssoc
 import scala.{None, Option}
 /**

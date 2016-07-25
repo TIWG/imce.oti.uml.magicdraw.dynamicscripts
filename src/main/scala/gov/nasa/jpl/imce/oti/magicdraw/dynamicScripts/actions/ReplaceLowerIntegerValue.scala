@@ -49,7 +49,6 @@ import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import scala.Predef.{Integer2int,String}
 import scala.{Boolean,StringContext,Unit}
-import scala.language.postfixOps
 
 /**
 * @see MOF 2.5, Section 12.4 EMOF Constraints

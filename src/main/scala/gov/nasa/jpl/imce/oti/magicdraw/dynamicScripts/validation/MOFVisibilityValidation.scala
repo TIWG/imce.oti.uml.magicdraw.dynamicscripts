@@ -59,7 +59,7 @@ import org.omg.oti.uml.validation._
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.util.{Failure,Success,Try}
+import scala.util.{Success,Try}
 import scala.{Option,None}
 import scala.Predef.{ArrowAssoc,require}
 

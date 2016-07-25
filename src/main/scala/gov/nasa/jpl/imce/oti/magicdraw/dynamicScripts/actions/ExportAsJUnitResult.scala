@@ -38,23 +38,15 @@
  */
 package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.actions
 
-import java.awt.event.ActionEvent
 import java.io.{File, FileOutputStream, OutputStreamWriter, PrintWriter}
 
 import com.nomagic.magicdraw.annotation.Annotation
-import com.nomagic.magicdraw.core.{Application, Project}
-import com.nomagic.magicdraw.ui.ProjectWindow
-import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes.MainToolbarMenuAction
+import com.nomagic.magicdraw.core.Application
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
-import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.{MDAPI, ProjectValidationResultPanelInfo}
-import org.omg.oti.magicdraw.uml.characteristics.MagicDrawOTICharacteristicsProfileProvider
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
-import org.omg.oti.uml.characteristics.OTICharacteristicsProvider
-import org.omg.oti.uml.read.api.{UMLComment, UMLPackage}
+import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
 
 import scala.collection.JavaConversions._
-import scala.language.postfixOps
 import scala.util._
 import scala.xml._
 import scala.{Boolean, None, Option, Some, StringContext, Unit}

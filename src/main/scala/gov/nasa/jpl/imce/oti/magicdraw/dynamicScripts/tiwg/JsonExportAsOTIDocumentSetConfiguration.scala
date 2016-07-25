@@ -45,7 +45,6 @@ import java.util.concurrent.TimeUnit
 import com.nomagic.magicdraw.core.{Application, Project}
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
-import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
@@ -57,7 +56,7 @@ import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
 import play.api.libs.json._
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper.{MagicDrawOTIDocumentSetAdapterForProfileProvider, MagicDrawOTIHelper, MagicDrawOTIProfileAdapter}
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
 import org.omg.oti.json.common._
 import org.omg.oti.json.extent.{OTIDocumentExtent, OTIDocumentLocation}
 import org.omg.oti.json.uml.serialization.OTIJsonSerializationHelper
@@ -67,9 +66,9 @@ import org.omg.oti.uml.xmi.Document
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.{Boolean, Int, Long, None, Option, Some, StringContext, Unit}
-import scala.Predef.{ArrowAssoc, String, augmentString, refArrayOps}
-import scala.util.{Failure, Success, Try}
+import scala.{Int, Long, Option, StringContext, Unit}
+import scala.Predef.{String, augmentString}
+import scala.util.Try
 import scalaz._
 import Scalaz._
 /**

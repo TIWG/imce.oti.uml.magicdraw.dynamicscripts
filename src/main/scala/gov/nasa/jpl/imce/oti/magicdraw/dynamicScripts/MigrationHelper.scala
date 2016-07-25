@@ -46,23 +46,16 @@ import java.nio.file.Path
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileFilter
 
-
-import scala.collection.JavaConversions.mapAsJavaMap
-import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.util.{Failure,Success,Try}
 import scala.{Boolean,Int,Option,None,Some,StringContext,Unit}
-import scala.Predef.{require,ArrowAssoc,String}
+import scala.Predef.{require,String}
 
 import com.nomagic.magicdraw.core.Application
-import com.nomagic.magicdraw.core.ApplicationEnvironment
 import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.core.modules.ModulesServiceInternal
-import com.nomagic.magicdraw.core.project.ProjectsManager
 import com.nomagic.magicdraw.ui.MagicDrawProgressStatusRunner
 import com.nomagic.magicdraw.uml.ConvertElementInfo
 import com.nomagic.magicdraw.uml.Refactoring
-import com.nomagic.magicdraw.uml.actions.SelectInContainmentTreeRunnable
 import com.nomagic.task.ProgressStatus
 import com.nomagic.task.RunnableWithProgress
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element

@@ -43,8 +43,6 @@ import java.lang.System
 
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.collectionAsScalaIterable
-import scala.language.implicitConversions
-import scala.language.postfixOps
 import scala.util.Success
 import scala.util.Try
 
@@ -76,10 +74,8 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataR
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
-import scala.{Option,None,Some,StringContext,Unit}
-import scala.Predef.ArrowAssoc
+import scala.{Option,None,StringContext,Unit}
 
 /**
  * @author Nicolas.F.Rouquette@jpl.nasa.gov

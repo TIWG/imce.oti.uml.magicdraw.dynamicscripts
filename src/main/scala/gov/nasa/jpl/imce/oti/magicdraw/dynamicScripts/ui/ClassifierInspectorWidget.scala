@@ -48,14 +48,11 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
-import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
 import org.omg.oti.uml.read.api._
-import org.omg.oti.uml.xmi.IDGenerator
 
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Failure, Try}
-import scala.None
+import scala.util.Try
 
 object ClassifierInspectorWidget {
 

@@ -42,7 +42,7 @@ import java.lang.IllegalArgumentException
 
 import com.nomagic.magicdraw.annotation.Annotation
 import com.nomagic.magicdraw.core.{Application, Project}
-import com.nomagic.magicdraw.validation.{RuleViolationResult, ValidationRunData, ValidationSuiteHelper}
+import com.nomagic.magicdraw.validation.{RuleViolationResult, ValidationRunData}
 import com.nomagic.task.RunnableWithProgress
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Constraint, Element, EnumerationLiteral, Package => MDPackage}
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
@@ -55,7 +55,6 @@ import org.omg.oti.uml.UMLError
 import scala.Predef.{augmentString,require,ArrowAssoc,String}
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 import scalaz.Scalaz._
 import scalaz._

@@ -59,16 +59,13 @@ import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.canonicalXMI._
 import org.omg.oti.uml.read.api._
-import org.omg.oti.uml.xmi.Document
 
-import scala.Predef.ArrowAssoc
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scalaz.Scalaz._
 import scalaz._
 import scala.Predef.String
-import scala.{None, Option, Some, StringContext, Unit}
+import scala.{None, Option, StringContext, Unit}
 
 object InspectOTIPackageInfo {
 

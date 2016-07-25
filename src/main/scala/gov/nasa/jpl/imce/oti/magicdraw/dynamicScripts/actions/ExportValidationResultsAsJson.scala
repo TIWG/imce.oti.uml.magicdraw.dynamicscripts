@@ -46,7 +46,7 @@ import com.nomagic.magicdraw.core.{Application, Project}
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes.MainToolbarMenuAction
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
-import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.json.magicDrawValidation.{DocumentValidationResults, RuleViolationDataResults}
+import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.json.magicDrawValidation.{DocumentValidationResults}
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.{MDAPI, OTIHelper, ProjectValidationResultPanelInfo}
 import org.omg.oti.json.common.OTIPrimitiveTypes
 import org.omg.oti.json.extent.{DocumentLocation, ToolSpecificDocumentLocation}
@@ -56,7 +56,6 @@ import play.api.libs.json._
 
 import scala.collection.immutable._
 import scala.{None, Option, StringContext}
-import scala.Predef.augmentString
 import scala.util.{Success, Try}
 
 object ExportValidationResultsAsJson {

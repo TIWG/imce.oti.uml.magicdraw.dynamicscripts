@@ -39,33 +39,27 @@
 package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui
 
 import java.awt.event.ActionEvent
-import java.awt.event.InputEvent
-import javax.swing.JOptionPane
 
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
-import org.omg.oti.uml.xmi.IDGenerator
 
-import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
-import scala.util.{Failure, Success, Try}
-import scala.{None, Option, StringContext, Unit}
-import scala.Predef.{ArrowAssoc, String}
 import com.nomagic.magicdraw.core.Project
-import com.nomagic.magicdraw.ui.dialogs.specifications.SpecificationDialogManager
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
+import com.nomagic.uml2.ext.magicdraw.compositestructures.mdinternalstructures.StructuredClassifier
+
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
-import gov.nasa.jpl.dynamicScripts.magicdraw.DynamicScriptsPlugin
 import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
-import gov.nasa.jpl.dynamicScripts.magicdraw.specificationDialog.SpecificationComputedComponent
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
+
 import org.omg.oti.uml.read.api._
 import org.omg.oti.magicdraw.uml.read.MagicDrawUML
-import org.omg.oti.magicdraw.uml.read.MagicDrawUMLUtil
-import com.nomagic.magicdraw.core.Application
-import com.nomagic.uml2.ext.magicdraw.compositestructures.mdinternalstructures.StructuredClassifier
 import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
+
+import scala.collection.immutable._
+import scala.util.{Success, Try}
+import scala.StringContext
+import scala.Predef.String
 
 object StructuredClassifierInspectorWidget {
 

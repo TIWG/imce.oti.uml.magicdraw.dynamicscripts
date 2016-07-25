@@ -55,7 +55,6 @@ import org.omg.oti.magicdraw.uml.read.{MagicDrawUML, MagicDrawUMLUtil}
 
 import scala.collection.JavaConversions._
 import scala.collection.immutable.Vector
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Success, Try}
 import scala.{Option,None,StringContext,Unit}
 

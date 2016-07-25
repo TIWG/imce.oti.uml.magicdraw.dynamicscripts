@@ -63,7 +63,7 @@ import scala.{None, Option, StringContext}
 import scala.Predef.{ArrowAssoc, String, require}
 import scalaz._
 import Scalaz._
-import scala.util.{Failure, Success, Try}
+import scala.util.{Success, Try}
 
 /**
 * Validates all TypedElements in scope of the selected packages per MOF 2.5 well-formedness constraints

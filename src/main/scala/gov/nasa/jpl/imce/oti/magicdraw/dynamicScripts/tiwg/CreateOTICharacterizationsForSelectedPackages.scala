@@ -41,33 +41,26 @@ package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg
 import java.awt.event.ActionEvent
 
 import com.nomagic.magicdraw.core.{Application, Project}
-import com.nomagic.magicdraw.ui.browser.{Node, Tree}
 import com.nomagic.magicdraw.uml.symbols.shapes.PackageView
 import com.nomagic.magicdraw.uml.symbols.{DiagramPresentationElement, PresentationElement}
-import com.nomagic.uml2.ext.magicdraw.auxiliaryconstructs.mdmodels.Model
-import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.{Element, Package}
-import com.nomagic.uml2.ext.magicdraw.mdprofiles.Profile
+import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Package
 import com.nomagic.uml2.ext.jmi.helpers.StereotypesHelper
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.ui.symbols.internal.SymbolHelper._
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
-import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.MDAPI
 import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.OTIMagicDrawValidation
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
 import org.omg.oti.magicdraw.uml.characteristics.MagicDrawOTICharacteristicsProfileProvider
 import org.omg.oti.magicdraw.uml.read._
 import org.omg.oti.uml.UMLError
 import org.omg.oti.uml.read.api._
-import org.omg.oti.uml.xmi.Document
 
-import scala.Predef.ArrowAssoc
 import scala.collection.JavaConversions._
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scalaz._
 import Scalaz._
 import scala.Predef.String
-import scala.{None, Option, Some, StringContext, Unit}
+import scala.{None, Option, StringContext, Unit}
 
 object CreateOTICharacterizationsForSelectedPackages {
 

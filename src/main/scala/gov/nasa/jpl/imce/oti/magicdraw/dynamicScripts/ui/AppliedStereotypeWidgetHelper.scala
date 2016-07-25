@@ -51,7 +51,6 @@ import org.omg.oti.uml.read.api._
 
 import scala.Predef.ArrowAssoc
 import scala.collection.immutable._
-import scala.language.{implicitConversions, postfixOps}
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 import scala.{None,Some,StringContext}

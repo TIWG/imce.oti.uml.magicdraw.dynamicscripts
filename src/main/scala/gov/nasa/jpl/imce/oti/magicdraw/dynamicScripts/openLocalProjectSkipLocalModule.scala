@@ -45,7 +45,6 @@ import java.lang.System
 import com.nomagic.magicdraw.actions.ActionsID
 import com.nomagic.magicdraw.actions.ActionsProvider
 import com.nomagic.magicdraw.core.Application
-import com.nomagic.magicdraw.core.ApplicationEnvironment
 import com.nomagic.magicdraw.core.Project
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils.MDUML
 
@@ -56,10 +55,9 @@ import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes.MainToolbarMenuAction
 import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataResults
 import gov.nasa.jpl.magicdraw.enhanced.migration.LocalModuleMigrationInterceptor
 
-import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
-import scala.{Option,None,Some,StringContext,Unit}
-import scala.Predef.{require,ArrowAssoc}
+import scala.{Option,None,Some,StringContext}
+import scala.Predef.require
 
 /**
  * @author Nicolas.F.Rouquette@jpl.nasa.gov
