@@ -56,6 +56,7 @@ import play.api.libs.json._
 
 import scala.collection.immutable._
 import scala.{None, Option, StringContext}
+import scala.Predef.augmentString
 import scala.util.{Success, Try}
 
 object ExportValidationResultsAsJson {
@@ -250,7 +251,10 @@ object ExportValidationResultsAsJson {
       val entry = new java.util.zip.ZipEntry(entryName)
       zos.putNextEntry(entry)
       val s = Json.prettyPrint(Json.toJson(vDocument))
-      zos.write(s.getBytes(java.nio.charset.Charset.forName("UTF-8")))
+
+      // convert the string in 10K chunks.
+      for ( segment <- s.grouped(10240) )
+        zos.write(segment.getBytes(java.nio.charset.Charset.forName("UTF-8")))
 
       zos.closeEntry()
     }
