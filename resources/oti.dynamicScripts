@@ -10,7 +10,7 @@ toolbarMenuScripts(
 			project: imce.oti.uml.magicdraw.dynamicscripts
             dependencies: { org.omg.oti.uml.json.serialization, org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.actions.ExportValidationResultsAsJson
-			method: export )
+			method: exportForDataAdapter )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Change XMI:IDs per project migration.xmi'

@@ -243,6 +243,22 @@ object PackageInspectorWidget {
         ordsa.otiAdapter.umlOps)
     })
 
+  def allStereotypedElements
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    ek: MagicDrawElementKindDesignation, e: Element )
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
+  = OTIHelper.toTry(
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+      implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
+      implicit val util = ordsa.otiAdapter.umlOps
+      val otiE = util.umlElement(e)
+      otiE.allOwnedElements
+      elementOperationWidget[UMLPackage[MagicDrawUML], UMLPackageableElement[MagicDrawUML]](
+        derived, e,
+        _.allIndirectlyVisibleMembersTransitivelyAccessibleFromNestingPackagesAndAppliedProfiles,
+        ordsa.otiAdapter.umlOps)
+    })
   def forwardReferencesToPackagesOrProfiles
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )

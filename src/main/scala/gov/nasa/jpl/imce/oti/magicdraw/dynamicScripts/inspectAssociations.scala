@@ -150,7 +150,11 @@ object inspectAssociations {
 
       case Some( ( sourceEnd, targetEnd ) ) =>
         guiLog.log( s" sourceEnd: ${sourceEnd.qualifiedName} ")
+        guiLog.log( s" source ID: ${sourceEnd.toolSpecific_id} ")
+        guiLog.log(s"source type: ${sourceEnd._type.get.qualifiedName.get}")
         guiLog.log( s" targetEnd: ${targetEnd.qualifiedName} ")
+        guiLog.log( s" target ID: ${targetEnd.toolSpecific_id} ")
+        guiLog.log(s"target type: ${targetEnd._type.get.qualifiedName.get}")
         
     }
   }
