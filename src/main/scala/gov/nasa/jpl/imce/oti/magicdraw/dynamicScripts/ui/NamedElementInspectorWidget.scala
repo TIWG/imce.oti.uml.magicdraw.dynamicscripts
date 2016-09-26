@@ -43,8 +43,8 @@ object NamedElementInspectorWidget {
     ek: MagicDrawElementKindDesignation, e: Element )
   : Try[(java.awt.Component, Seq[ValidationAnnotation])]
   = OTIHelper.toTry(
-    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
-    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForDataCharacteristics(project),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForDataProvider) => {
       implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
         elementOperationWidget[UMLNamedElement[MagicDrawUML], UMLNamespace[MagicDrawUML]](
           derived, e,
@@ -57,8 +57,8 @@ object NamedElementInspectorWidget {
     ek: MagicDrawElementKindDesignation, e: Element )
   : Try[(java.awt.Component, Seq[ValidationAnnotation])]
   = OTIHelper.toTry(
-    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
-    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForDataCharacteristics(project),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForDataProvider) => {
       implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
         elementOperationWidget[UMLNamedElement[MagicDrawUML], UMLPackage[MagicDrawUML]](
           derived, e,
@@ -71,8 +71,8 @@ object NamedElementInspectorWidget {
     ek: MagicDrawElementKindDesignation, e: Element )
   : Try[(java.awt.Component, Seq[ValidationAnnotation])]
   = OTIHelper.toTry(
-    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(project),
-    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForDataCharacteristics(project),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForDataProvider) => {
       implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
       elementOperationWidget[UMLNamedElement[MagicDrawUML], UMLPackage[MagicDrawUML]](
         derived, e,

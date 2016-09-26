@@ -171,8 +171,8 @@ object MOFVisibilityValidation {
     pkgs: Set[UMLPackage[MagicDrawUML]] )
   : Try[Option[MagicDrawValidationDataResults]]
   = OTIHelper.toTry(
-    MagicDrawOTIHelper.getOTIMagicDrawInfoForProfileCharacteristics(p),
-    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForProfileProvider) => {
+    MagicDrawOTIHelper.getOTIMagicDrawInfoForDataCharacteristics(p),
+    (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForDataProvider) => {
 
       implicit val umlOps = oa.umlOps
       import umlOps._

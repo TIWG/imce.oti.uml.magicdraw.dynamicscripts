@@ -163,6 +163,153 @@ object ComputedDerivedWidgetHelper {
       else
         Failure( new IllegalArgumentException(s"${mdE.getHumanType}: ${mdE.getID} is not a kind of ${uClass.getName}"))
   }
-    
+
+  def makeComputedDerivedTreeForProperty
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget )
+  : DynamicScriptsTypes.ComputedDerivedTree =
+    DynamicScriptsTypes.ComputedDerivedTree(
+      derived.name, derived.icon, derived.context, derived.access,
+      derived.className, derived.methodName, derived.refresh,
+      columnValueTypes = Some( Seq(
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "context" ),
+          typeName = DynamicScriptsTypes.HName( "context" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "EMF eContainingFeature" ),
+          typeName = DynamicScriptsTypes.HName( "EMF eContainingFeature" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "OTI containing meta-property" ),
+          typeName = DynamicScriptsTypes.HName( "OTI containing meta-property" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "name" ),
+          typeName = DynamicScriptsTypes.HName( "name" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "metaclass" ),
+          typeName = DynamicScriptsTypes.HName( "metaclass" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "aggregation" ),
+          typeName = DynamicScriptsTypes.HName( "aggregation" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "type" ),
+          typeName = DynamicScriptsTypes.HName( "type" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "multiplicity" ),
+          typeName = DynamicScriptsTypes.HName( "multiplicity" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ),
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "isLogicallyNavigable" ),
+          typeName = DynamicScriptsTypes.HName( "isLogicallyNavigable" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() ) ,
+        DynamicScriptsTypes.DerivedFeatureValueType(
+          key = DynamicScriptsTypes.SName( "isSemanticallyNavigable" ),
+          typeName = DynamicScriptsTypes.HName( "isSemanticallyNavigable" ),
+          typeInfo = DynamicScriptsTypes.StringTypeDesignation() )  ) ) )
+
+  def createRowForProperty
+  ( e: UMLProperty[MagicDrawUML] )
+  ( implicit umlUtil: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
+  : Map[String, AbstractTreeNodeInfo] = {
+    import umlUtil._
+    Map(
+      "context" -> ( e.owner match {
+        case None => LabelNodeInfo( "<none>" )
+        case Some( o ) => o match {
+          case parent: UMLNamedElement[Uml] =>
+            ReferenceNodeInfo( parent.qualifiedName.get, umlMagicDrawUMLElement(parent).getMagicDrawElement )
+          case parent                       =>
+            toToolSpecificIDReferenceNodeInfo(parent)
+        }
+      } ),
+      "EMF eContainingFeature" -> {
+        Option.apply(umlUtil.umlMagicDrawUMLElement(e).getMagicDrawElement.eContainingFeature) match {
+          case None => LabelNodeInfo("<none>")
+          case Some(f) => LabelNodeInfo(f.getName)
+        }
+      },
+      "OTI containing meta-property" -> {
+        val meval = e.getContainingMetaPropertyEvaluator.getOrElse(None)
+        meval match {
+          case None => LabelNodeInfo("<none>")
+          case Some(mp) => LabelNodeInfo(mp.propertyName)
+        }
+      },
+      "name" ->
+        (e.name match {
+          case Some( name ) => LabelNodeInfo(name)
+          case None           => ReferenceNodeInfo(TOOL_SPECIFIC_ID.unwrap(e.toolSpecific_id), umlMagicDrawUMLElement(e).getMagicDrawElement)
+        }),
+      "metaclass" -> LabelNodeInfo( e.xmiType.head ),
+      "aggregation" -> ( e.aggregation match {
+        case None => LabelNodeInfo("<none>")
+        case Some(a) => LabelNodeInfo(a.toString)
+      }),
+      "type" -> ( e._type match {
+        case None => LabelNodeInfo("<none>")
+        case Some(et) => ReferenceNodeInfo(
+          et.name.head,
+          umlUtil.umlMagicDrawUMLElement(et).getMagicDrawElement )
+      }),
+      "multiplicity" -> {
+        val l = e.lower
+        val u = e.upper
+        if (u == -1)
+          LabelNodeInfo(s"[$l..*]")
+        else
+          LabelNodeInfo(s"[$l..$u]")
+      },
+      "isLogicallyNavigable" -> LabelNodeInfo( e.isLogicallyNavigable.toString ),
+      "isSemanticallyNavigable" -> LabelNodeInfo( e.isSemanticallyNavigable.toString )
+    )
+  }
+
+  def createGroupTableUIPanelForProperties[U <: UMLProperty[MagicDrawUML]]
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    pes: Iterable[U] )
+  ( implicit util: MagicDrawUMLUtil, idg: IDGenerator[MagicDrawUML] )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+
+    val rows: Seq[Map[String, AbstractTreeNodeInfo]] = pes.map ( createRowForProperty ).to[Seq]
+    System.out.println(s"* ${rows.size} rows")
+    System.out.println(rows.map(_.toString).mkString("\n *","\n *","\n"))
+
+    val ui = GroupTableNodeUI(
+      makeComputedDerivedTreeForProperty( derived ),
+      rows,
+      Seq(
+        "context", "EMF eContainingFeature", "OTI containing meta-property", "name",
+        "metaclass", "aggregation", "type", "multiplicity", "isLogicallyNavigable", "isSemanticallyNavigable" ) )
+    //ui._table.addMouseListener( DoubleClickMouseListener.createAbstractTreeNodeInfoDoubleClickMouseListener( ui._table ) )
+    HyperlinkTableCellValueEditorRenderer.addRenderer4AbstractTreeNodeInfo( ui._table )
+
+    val validationAnnotations = rows flatMap
+      ( _.values ) flatMap
+      AbstractTreeNodeInfo.collectAnnotationsRecursively
+
+    Success( ( ui.panel, validationAnnotations ) )
+  }
+
+  def propertyOperationWidget[U <: UMLElement[MagicDrawUML], V <: UMLProperty[MagicDrawUML]]
+  ( derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    mdE: MagicDrawUML#Element,
+    f: U => Iterable[V],
+    util: MagicDrawUMLUtil )
+  ( implicit uTag: ClassTag[U], idg: IDGenerator[MagicDrawUML] )
+  : Try[( java.awt.Component, Seq[ValidationAnnotation] )] = {
+    val e = util.umlElement( mdE )
+    val uClass = uTag.runtimeClass
+    require (uClass != null)
+    if ( uClass.isInstance( e ) )
+      createGroupTableUIPanelForProperties[V]( derived, f( e.asInstanceOf[U] ) )( util, idg )
+    else
+      Failure( new IllegalArgumentException(s"${mdE.getHumanType}: ${mdE.getID} is not a kind of ${uClass.getName}"))
+  }
+
 
 }

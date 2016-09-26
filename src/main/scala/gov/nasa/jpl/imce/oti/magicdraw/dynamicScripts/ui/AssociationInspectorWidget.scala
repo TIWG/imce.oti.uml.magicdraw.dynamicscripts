@@ -20,32 +20,26 @@ package gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui
 
 import java.awt.event.ActionEvent
 
-import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
-
 import com.nomagic.magicdraw.core.Project
 import com.nomagic.uml2.ext.magicdraw.classes.mdkernel.Element
-import com.nomagic.uml2.ext.magicdraw.compositestructures.mdinternalstructures.StructuredClassifier
-
 import gov.nasa.jpl.dynamicScripts.DynamicScriptsTypes
 import gov.nasa.jpl.dynamicScripts.magicdraw.designations.MagicDrawElementKindDesignation
-import gov.nasa.jpl.dynamicScripts.magicdraw.ui.nodes._
 import gov.nasa.jpl.dynamicScripts.magicdraw.utils._
-
-import org.omg.oti.uml.read.api._
-import org.omg.oti.magicdraw.uml.read.MagicDrawUML
+import gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.utils.OTIHelper
 import org.omg.oti.magicdraw.uml.canonicalXMI.MagicDrawIDGenerator
 import org.omg.oti.magicdraw.uml.canonicalXMI.helper._
+import org.omg.oti.magicdraw.uml.read.MagicDrawUML
+import org.omg.oti.uml.read.api._
 
 import scala.collection.immutable._
-import scala.util.{Success, Try}
-import scala.StringContext
-import scala.Predef.String
+import scala.util.Try
+import scala.{None, Some, Tuple2}
 
-object StructuredClassifierInspectorWidget {
+object AssociationInspectorWidget {
 
   import ComputedDerivedWidgetHelper._
-  
-  def allRoles
+
+  def memberEnds
   ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
     ek: MagicDrawElementKindDesignation, e: Element )
   : Try[(java.awt.Component, Seq[ValidationAnnotation])]
@@ -53,25 +47,31 @@ object StructuredClassifierInspectorWidget {
     MagicDrawOTIHelper.getOTIMagicDrawInfoForDataCharacteristics(project),
     (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForDataProvider) => {
       implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
-        elementOperationWidget[UMLStructuredClassifier[MagicDrawUML], UMLConnectableElement[MagicDrawUML]](
-          derived, e,
-          _.allRoles,
-          ordsa.otiAdapter.umlOps)
+      propertyOperationWidget[UMLAssociation[MagicDrawUML], UMLProperty[MagicDrawUML]](
+        derived, e,
+        (a: UMLAssociation[MagicDrawUML]) => {
+          a.memberEnd
+        },
+        ordsa.otiAdapter.umlOps)
     })
-
-  def compositeStructureTree
-  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedTree,
-    ek: MagicDrawElementKindDesignation, e: StructuredClassifier )
-  : Try[Seq[( AbstractTreeNodeInfo, Map[String, AbstractTreeNodeInfo] )]]
+  def orderedMemberEnds
+  ( project: Project, ev: ActionEvent, derived: DynamicScriptsTypes.ComputedDerivedWidget,
+    ek: MagicDrawElementKindDesignation, e: Element )
+  : Try[(java.awt.Component, Seq[ValidationAnnotation])]
   = OTIHelper.toTry(
     MagicDrawOTIHelper.getOTIMagicDrawInfoForDataCharacteristics(project),
     (ordsa: MagicDrawOTIResolvedDocumentSetAdapterForDataProvider) => {
       implicit val idg = MagicDrawIDGenerator()(ordsa.rds.ds)
-
-      val treeInfo = TreeNodeInfo(
-        identifier = s"${e.getQualifiedName}",
-        nested = Seq())
-
-      Success(Seq((treeInfo, Map[String, AbstractTreeNodeInfo]())))
+      propertyOperationWidget[UMLAssociation[MagicDrawUML], UMLProperty[MagicDrawUML]](
+        derived, e,
+        (a: UMLAssociation[MagicDrawUML]) => {
+          a.getDirectedAssociationEnd match {
+            case None =>
+              Seq.empty[UMLProperty[MagicDrawUML]]
+            case Some(Tuple2(source, target)) =>
+              Seq(source, target)
+          }
+        },
+        ordsa.otiAdapter.umlOps)
     })
 }

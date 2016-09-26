@@ -8,49 +8,49 @@ toolbarMenuScripts(
 			toolbarMenuPath: { 'TIWG' }
 			name: 'Export MD Validation Results to JSon'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json.serialization, org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.serialization, org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.actions.ExportValidationResultsAsJson
 			method: exportForDataAdapter )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Change XMI:IDs per project migration.xmi'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.changePackageExtentIDs
 			method: doit )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Open Local Project (skipping local module)'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.openLocalProjectSkipLocalModule
 			method: doit )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Migrate Package Extent xmi:ids (choose migration file, convertOnlyIncomingReferences=true)'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.MigrationHelper
 			method: customMigrationConvertOnlyIncomingReferences )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Migrate Package Extent xmi:ids (choose migration file, convertOnlyIncomingReferences=false)'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.MigrationHelper
 			method: customMigrationConvertAllReferences )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'OMG > Migration Support' }
 			name: 'Name Test'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameTest
 			method: doit )
 		MainToolbarMenuAction(
 			toolbarMenuPath: { 'Play' }
 			name: 'Enumeration'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
 			class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.playEnumeration
 			method: doit )
 	})
@@ -62,7 +62,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
@@ -70,7 +70,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/o)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
@@ -78,7 +78,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Inspect Associations (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
@@ -86,7 +86,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Inspect Associations (r/o)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
@@ -108,14 +108,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -123,14 +123,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Set names of link instances of selected Associations (r/o)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameAssociationLinkInstancesWithinPackageExtent
               method: doit
@@ -138,14 +138,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Inspect Associations (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Inspect Associations (r/o)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectAssociations
               method: doit
@@ -173,84 +173,84 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Check All (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFAllValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check All (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFAllValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check DefaultValues (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFDefaultValueValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check DefaultValues (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFDefaultValueValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check Parameter & Property Multiplicities (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFMultiplicityValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check Parameter & Property Multiplicities (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFMultiplicityValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check NamedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFNamedElementValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check NamedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFNamedElementValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check TypedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFTypedElementValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check TypedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFTypedElementValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check Visibility (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFVisibilityValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check Visibility (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFVisibilityValidation
               method: doit
           )
@@ -263,84 +263,84 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Check All (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFAllValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check All (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFAllValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check DefaultValues (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFDefaultValueValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check DefaultValues (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFDefaultValueValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check Parameter & Property Multiplicities (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFMultiplicityValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check Parameter & Property Multiplicities (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFMultiplicityValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check NamedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFNamedElementValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check NamedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFNamedElementValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check TypedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFTypedElementValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check TypedElements (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFTypedElementValidation
               method: doit
           )
           BrowserContextMenuAction(
               name: 'Check Visibility (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFVisibilityValidation
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Check Visibility (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.validation.MOFVisibilityValidation
               method: doit
           )
@@ -353,7 +353,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Json Export as OTI DocumentSet Configuration'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json.serialization, org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.serialization, org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.JsonExportAsOTIDocumentSetConfiguration
               method: doit
@@ -369,7 +369,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Inspect OTI info'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
               method: doit
@@ -377,7 +377,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Create OTI Characterizations for selected packages in context'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.CreateOTICharacterizationsForSelectedPackages
               method: doit
@@ -385,14 +385,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -400,14 +400,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set names of ValueTypes within scope of selected package(s) (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameValueTypesWithinPackageExtent
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Set names of ValueTypes within selected package(s) scope (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.nameValueTypesWithinPackageExtent
               method: doit
@@ -415,7 +415,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Package extents'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -423,7 +423,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Package extents'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -431,7 +431,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set OTI xmi:uuids for Package Extent'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
@@ -439,7 +439,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Analyze Association Variety'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.AnalyzeAssociationVariety
               method: doit
@@ -447,7 +447,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set OTI xmi:uuids for Package Extent'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
@@ -455,7 +455,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Package'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.generateCatalogURIMappingForBuiltInDocument
               method: doit
@@ -463,7 +463,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -471,7 +471,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -479,7 +479,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Export Selected Packages to OMG TI Canonical XMI'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -487,7 +487,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Export Selected Packages to OMG TI Canonical XMI'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -495,7 +495,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected package references only accessible members (except nesting packages and applied profiles)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitExceptNestingPackagesAndAppliedProfiles
@@ -503,7 +503,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected package references only accessible members (including nesting packages and applied profiles)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitIncludingNestingPackagesAndAppliedProfiles
@@ -511,7 +511,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection for missing imports of nested packages'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkPackageForImportsOfNestedPackages
               method: doit
@@ -519,7 +519,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection can access secondary package selection'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCanAccessSecondaryPackageSelection
               method: doit
@@ -527,7 +527,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection cannot access secondary package selection'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCannotAccessSecondaryPackageSelection
               method: doit
@@ -535,7 +535,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection can access secondary profile selection'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCanAccessSecondaryProfileSelection
               method: doit
@@ -543,7 +543,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection cannot access secondary profile selection'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionCannotAccessSecondaryProfileSelection
               method: doit
@@ -551,7 +551,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary package selection does not reference members of secondary package selection'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkPrimaryPackageSelectionDoesNotReferenceMembersOfSecondaryPackageSelection
               method: doit
@@ -565,7 +565,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Inspect OTI info'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
               method: doit
@@ -573,7 +573,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Inspect OTI info'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
               method: doit
@@ -581,14 +581,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -596,7 +596,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Model'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.generateCatalogURIMappingForBuiltInDocument
               method: doit
@@ -610,7 +610,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Json Export as OTI DocumentSet Configuration'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json.serialization, org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.serialization, org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.JsonExportAsOTIDocumentSetConfiguration
               method: doit
@@ -618,7 +618,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Inspect OTI info'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
               method: doit
@@ -626,7 +626,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Inspect OTI info'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.tiwg.InspectOTIPackageInfo
               method: doit
@@ -634,14 +634,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -649,7 +649,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Profile extents'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -657,7 +657,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Generate OTI Canonical XMI:IDs for selected Package extents'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.generateIDsForPackageExtents
               method: doit
@@ -665,7 +665,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Set OTI xmi:uuids for Profile Extent'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
@@ -673,7 +673,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Set OTI xmi:uuids for Profile Extent'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.setOTIUUIDs
               method: doit
@@ -681,7 +681,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Generate Catalog URI Mapping for built-in Document Profile'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.generateCatalogURIMappingForBuiltInDocument
               method: doit
@@ -689,7 +689,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -697,7 +697,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Add PackageImports for nested packages'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.addPackageImportsForNestedPackages
               method: doit
@@ -705,7 +705,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Export Selected Profiles to OMG TI Canonical XMI'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -713,7 +713,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Export Selected Profiles to OMG TI Canonical XMI'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.exportPackageExtents2OTICanonicalXMI
               method: doit
@@ -721,7 +721,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected profile references only accessible members (except nesting packages and applied profiles)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitExceptNestingPackagesAndAppliedProfiles
@@ -729,7 +729,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check each selected profile references only accessible members (including nesting packages and applied profiles)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkEachSelectedPackageReferencesOnlyAccessibleMembers
               method: doitIncludingNestingPackagesAndAppliedProfiles
@@ -737,7 +737,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Check primary profile selection for missing imports of nested packages'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.checkPackageForImportsOfNestedPackages
               method: doit
@@ -751,14 +751,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -766,7 +766,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'OTI CompositeStructure Inspector'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectCompositeStructure
               method: doit
@@ -774,7 +774,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'OTI CompositeStructure Inspector'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectCompositeStructure
               method: doit
@@ -805,14 +805,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -820,7 +820,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'OTI CompositeStructure Inspector'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectCompositeStructure
               method: doit
@@ -828,7 +828,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'OTI CompositeStructure Inspector'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectCompositeStructure
               method: doit
@@ -842,14 +842,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -857,7 +857,7 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'OTI CompositeStructure Inspector'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectCompositeStructure
               method: doit
@@ -865,7 +865,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'OTI CompositeStructure Inspector'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.inspectCompositeStructure
               method: doit
@@ -879,14 +879,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -908,14 +908,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -929,14 +929,14 @@ dynamicScripts(
           BrowserContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
           )
           DiagramContextMenuAction(
               name: 'Use OTI to override xmi:ID and/or xmi:UUID (r/w)'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/w
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.overrideIdentity
               method: doit
@@ -950,7 +950,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::otiInfo'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: otiInfo
@@ -958,7 +958,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::appliedStereotypes'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: appliedStereotypes
@@ -966,7 +966,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::appliedStereotypesWithoutMetaclassProperties'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: appliedStereotypesWithoutMetaclassProperties
@@ -974,7 +974,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::annotatedElement_comment'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: annotatingComments
@@ -982,7 +982,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::ownedElements'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: ownedElements
@@ -990,7 +990,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::allOwnedElementsWithinPackageScope'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allOwnedElementsWithinPackageScope
@@ -998,7 +998,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::packageOrProfileOwner'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: packageOrProfileOwner
@@ -1006,7 +1006,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::allForwardReferencesToElements'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allForwardReferencesToElements
@@ -1014,7 +1014,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::allForwardReferencesToImportablePackageableElements'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allForwardReferencesToImportablePackageableElements
@@ -1022,7 +1022,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Element::allForwardReferencesFromStereotypeTagProperties'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ElementInspectorWidget
             method: allForwardReferencesFromStereotypeTagProperties
@@ -1035,7 +1035,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI NamedElement::allNamespaces'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamedElementInspectorWidget
             method: allNamespaces
@@ -1043,7 +1043,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI NamedElement::owningPackage'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamedElementInspectorWidget
             method: owningPackage
@@ -1051,7 +1051,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI NamedElement::allOwningPackages'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamedElementInspectorWidget
             method: allOwningPackages
@@ -1061,11 +1061,19 @@ characterization(
 characterization(
 	name='Property (OMG Tool Infrastructure)'
 	[ m: Property ]
-	features {	
+	features {
+		EarlyDerivedWidget(
+			name: 'OTI Property::info'
+			project: imce.oti.uml.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            access: r/o
+            class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
+            method: info
+        )
 		EarlyDerivedWidget(
 			name: 'OTI Property::redefinedProperty'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: redefinedProperty
@@ -1073,7 +1081,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Property::redefiningdProperty'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: redefiningdProperty
@@ -1081,7 +1089,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Property::subsettedProperty'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: subsettedProperty
@@ -1089,7 +1097,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Property::subsettingProperty'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PropertyInspectorWidget
             method: subsettingProperty
@@ -1103,7 +1111,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::importedPackages'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: importedPackages
@@ -1111,7 +1119,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::allImportedPackagesTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: allImportedPackagesTransitively
@@ -1119,7 +1127,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::members'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: members
@@ -1127,7 +1135,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::importedMembers'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: importedMembers
@@ -1135,7 +1143,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::visibleMembers'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: visibleMembers
@@ -1143,7 +1151,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::allVisibleMembersTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: allVisibleMembersTransitively
@@ -1151,7 +1159,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::allVisibleMembersAccessibleTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: allVisibleMembersAccessibleTransitively
@@ -1159,7 +1167,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Namespace::forwardReferencesBeyondNamespaceScope'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.NamespaceInspectorWidget
             method: forwardReferencesBeyondNamespaceScope
@@ -1173,7 +1181,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Classifier::general'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ClassifierInspectorWidget
             method: general
@@ -1181,7 +1189,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Classifier::general_classifier'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ClassifierInspectorWidget
             method: generalClassifier
@@ -1195,7 +1203,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI StructuredClassifier::allRoles'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StructuredClassifierInspectorWidget
             method: allRoles
@@ -1203,7 +1211,7 @@ characterization(
 		EarlyDerivedTree(
 			name: 'OTI StructuredClassifier::compositeStructureTree'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StructuredClassifierInspectorWidget
             method: compositeStructureTree
@@ -1221,7 +1229,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::baseMetaProperties'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: baseMetaProperties
@@ -1229,7 +1237,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::baseMetaPropertiesExceptRedefined'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: baseMetaPropertiesExceptRedefined
@@ -1237,7 +1245,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::profile'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: profile
@@ -1245,7 +1253,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypes'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypes
@@ -1253,7 +1261,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypes'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypes
@@ -1261,7 +1269,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getAllSpecializedStereotypes'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getAllSpecializedStereotypes
@@ -1269,7 +1277,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypesOutsideProfile'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypesOutsideProfile
@@ -1277,7 +1285,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypesWithinProfile'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypesWithinProfile
@@ -1285,7 +1293,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getAllSpecializedStereotypesWithinProfile'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getAllSpecializedStereotypesWithinProfile
@@ -1293,7 +1301,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Stereotype::getSpecializedStereotypesFromOtherProfiles'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.StereotypeInspectorWidget
             method: getSpecializedStereotypesFromOtherProfiles
@@ -1307,7 +1315,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::nonImportedNestedPackages'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: nonImportedNestedPackages
@@ -1315,7 +1323,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allNestedPackages'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allNestedPackages
@@ -1323,7 +1331,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allNestingPackagesTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allNestingPackagesTransitively
@@ -1331,7 +1339,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyImportedPackagesIncludingNestingPackagesTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyImportedPackagesIncludingNestingPackagesTransitively
@@ -1339,7 +1347,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allApplicableStereotypes'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allApplicableStereotypes
@@ -1347,7 +1355,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::containingProfile'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: containingProfile
@@ -1355,7 +1363,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyAppliedProfilesExceptNestingPackages'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyAppliedProfilesExceptNestingPackages
@@ -1363,7 +1371,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyAppliedProfilesIncludingNestingPackagesTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyAppliedProfilesIncludingNestingPackagesTransitively
@@ -1371,7 +1379,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allDirectlyVisibleMembersTransitivelyAccessibleExceptNestingPackagesAndAppliedProfiles'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allDirectlyVisibleMembersTransitivelyAccessibleExceptNestingPackagesAndAppliedProfiles
@@ -1379,7 +1387,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allIndirectlyAppliedProfilesIncludingNestingPackagesTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allIndirectlyAppliedProfilesIncludingNestingPackagesTransitively
@@ -1387,7 +1395,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allForwardReferencesToImportablePackageableElementsFromAllOwnedElementsTransitively'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allForwardReferencesToImportablePackageableElementsFromAllOwnedElementsTransitively
@@ -1395,7 +1403,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allIndirectlyVisibleMembersTransitivelyAccessibleFromNestingPackagesAndAppliedProfiles'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allIndirectlyVisibleMembersTransitivelyAccessibleFromNestingPackagesAndAppliedProfiles
@@ -1403,7 +1411,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::forwardReferencesToPackagesOrProfiles'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: forwardReferencesToPackagesOrProfiles
@@ -1411,7 +1419,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::forwardReferencesBeyondPackageScope'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: forwardReferencesBeyondPackageScope
@@ -1419,7 +1427,7 @@ characterization(
 		EarlyDerivedWidget(
 			name: 'OTI Package::allPackagesWithinScope'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.PackageInspectorWidget
             method: allPackagesWithinScope
@@ -1433,7 +1441,7 @@ characterization(
 		EarlyDerivedProperty(
 			name: 'OTI Profile::allImportedProfiles'
 			project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ProfileInspectorWidget
             method: allImportedProfiles
@@ -1442,7 +1450,7 @@ characterization(
 	EarlyDerivedProperty(
 	    name: 'OTI Profile::allNestedProfiles'
 	    project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ProfileInspectorWidget
             method: allNestedProfiles
@@ -1451,7 +1459,7 @@ characterization(
 	EarlyDerivedProperty(
 	    name: 'OTI Profile::allVisibleProfiles'
 	    project: imce.oti.uml.magicdraw.dynamicscripts
-            dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
             access: r/o
             class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.ProfileInspectorWidget
             method: allVisibleProfiles
@@ -1465,7 +1473,7 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Invoke DynamicScript as diagram context-menu action for selection'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.invokeDiagramContextMenuActionForSelection
               method: doit
@@ -1479,10 +1487,32 @@ dynamicScripts(
           DiagramContextMenuAction(
               name: 'Invoke DynamicScript as main toolbar menu action'
               project: imce.oti.uml.magicdraw.dynamicscripts
-              dependencies: { org.omg.oti.uml.json, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
               access: r/o
               class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.invokeMainToolbarMenuAction
               method: doit
           )
       })
-      
+
+characterization(
+	name='Association (OMG Tool Infrastructure)'
+	[ m: Association ]
+	features {
+		EarlyDerivedWidget(
+			name: 'OTI Assocition::orderedMemberEnds'
+			project: imce.oti.uml.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            access: r/o
+            class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.AssociationInspectorWidget
+            method: orderedMemberEnds
+        )
+
+		EarlyDerivedWidget(
+			name: 'OTI Assocition::memberEnds'
+			project: imce.oti.uml.magicdraw.dynamicscripts
+            dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+            access: r/o
+            class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ui.AssociationInspectorWidget
+            method: memberEnds
+        )
+    })
