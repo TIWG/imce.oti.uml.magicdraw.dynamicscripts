@@ -46,7 +46,7 @@ case class ReplaceUpperUnlimitedNaturalValue(oldKind: String, newValue: Integer)
       case mult: MultiplicityElement =>
         mult.getUpperValue match {
           case l: LiteralUnlimitedNatural =>
-            l.getValue != newValue
+            l.getValue != newValue.intValue()
           case _ =>
             true
         }

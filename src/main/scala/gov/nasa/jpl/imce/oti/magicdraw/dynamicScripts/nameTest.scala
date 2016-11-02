@@ -88,11 +88,11 @@ object nameTest {
 
           for {
             s <- is.getSlot
-            p = s.getDefiningFeature match { case p: Uml#Property => umlProperty( p ) }
+            f = s.getDefiningFeature match { case fp: Uml#Property => umlProperty( fp ) }
             v = umlValueSpecification( s.getValue ).toSeq
           } {
-            guiLog.log( s" => ${p.qualifiedName.get}: ${s.getValue}" )
-            guiLog.log( s" => ${p.qualifiedName.get}: $v" )
+            guiLog.log( s" => ${f.qualifiedName.get}: ${s.getValue}" )
+            guiLog.log( s" => ${f.qualifiedName.get}: $v" )
           }
       }
       
@@ -101,24 +101,24 @@ object nameTest {
       val appliedS = StereotypesHelper.getStereotypes( mdE ).toSet[Uml#Stereotype].toList.sortBy(_.qualifiedName.get)
       System.out.println(s"Applied stereotypes: ${appliedS.size}")
       appliedS.foreach{ s => 
-        val metaProperties = StereotypesHelper.getExtensionMetaProperty( s, true ) filter { p =>
-          val pMetaclass = StereotypesHelper.getClassOfMetaClass( p.getType.asInstanceOf[Uml#Class] )
+        val metaProperties = StereotypesHelper.getExtensionMetaProperty( s, true ) filter { sp =>
+          val pMetaclass = StereotypesHelper.getClassOfMetaClass( sp.getType.asInstanceOf[Uml#Class] )
           eMetaclass == pMetaclass || StereotypesHelper.isSubtypeOf( pMetaclass, eMetaclass )
         }
         val sGeneral = getAllGeneralStereotypes( s ).toList.sortBy(_.qualifiedName.get)   
         System.out.println(
           s"Applied: ${s.qualifiedName.get} with "+
           s"${metaProperties.size} meta-properties, ${sGeneral.size} general stereotypes")
-        metaProperties.foreach{p => System.out.println(s"meta-property: ${p.getQualifiedName}")}
+        metaProperties.foreach{mp => System.out.println(s"meta-property: ${mp.getQualifiedName}")}
              
         sGeneral.foreach{ sg =>
           val mdSG = umlMagicDrawUMLElement(sg).getMagicDrawElement.asInstanceOf[Stereotype]
-          val gmetaProperties = StereotypesHelper.getExtensionMetaProperty( mdSG, true ) filter { p =>
-            val pMetaclass = StereotypesHelper.getClassOfMetaClass( p.getType.asInstanceOf[Uml#Class] )
+          val gmetaProperties = StereotypesHelper.getExtensionMetaProperty( mdSG, true ) filter { sp =>
+            val pMetaclass = StereotypesHelper.getClassOfMetaClass( sp.getType.asInstanceOf[Uml#Class] )
             eMetaclass == pMetaclass || StereotypesHelper.isSubtypeOf( pMetaclass, eMetaclass )
           }
           System.out.println(s"General: ${sg.qualifiedName.get} with ${gmetaProperties.size} meta-properties")
-          gmetaProperties.foreach{p => System.out.println(s"general meta-property: ${p.getQualifiedName}")}
+          gmetaProperties.foreach{mp => System.out.println(s"general meta-property: ${mp.getQualifiedName}")}
         }
           
       }
@@ -129,17 +129,17 @@ object nameTest {
           val baseClasses1 = StereotypesHelper.getBaseClasses( mdS, false )          
           System.out.println(s" baseClasses1: ${baseClasses1.size}")
           baseClasses1.toList.sortBy(_.getQualifiedName)
-            .foreach{p => System.out.println(s"baseClass1: ${p.getQualifiedName}")}
+            .foreach{sp => System.out.println(s"baseClass1: ${sp.getQualifiedName}")}
           
           val baseClasses2 = StereotypesHelper.getBaseClasses( mdS, true ) 
           System.out.println(s" baseClasses2: ${baseClasses2.size}")
           baseClasses2.toList.sortBy(_.getQualifiedName)
-            .foreach{p => System.out.println(s"baseClass2: ${p.getQualifiedName}")}
+            .foreach{sp => System.out.println(s"baseClass2: ${sp.getQualifiedName}")}
           
           val metaProperties = StereotypesHelper.getExtensionMetaProperty( mdS, false ) 
           System.out.println(s" metaProperties: ${metaProperties.size}")
           metaProperties.toList.sortBy(_.getQualifiedName)
-            .foreach{p => System.out.println(s"meta property: ${p.getQualifiedName}")}
+            .foreach{sp => System.out.println(s"meta property: ${sp.getQualifiedName}")}
 
         case ep: UMLPackage[Uml] =>
           System.out.println(s"package: ${ep.qualifiedName}; effective URI=${ep.getEffectiveURI}, URI=${ep.URI}")

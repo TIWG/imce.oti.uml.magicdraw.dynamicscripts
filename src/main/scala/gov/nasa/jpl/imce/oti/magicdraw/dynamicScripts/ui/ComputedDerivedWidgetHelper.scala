@@ -259,7 +259,7 @@ object ComputedDerivedWidgetHelper {
       "multiplicity" -> {
         val l = e.lower
         val u = e.upper
-        if (u == -1)
+        if (u.intValue() == -1)
           LabelNodeInfo(s"[$l..*]")
         else
           LabelNodeInfo(s"[$l..$u]")

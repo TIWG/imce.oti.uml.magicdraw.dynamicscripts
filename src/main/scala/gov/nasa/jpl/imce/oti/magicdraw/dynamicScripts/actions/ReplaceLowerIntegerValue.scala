@@ -46,7 +46,7 @@ case class ReplaceLowerIntegerValue(oldKind: String, newValue: Integer)
       case mult: MultiplicityElement =>
         mult.getLowerValue match {
           case l: LiteralInteger =>
-            l.getValue != newValue
+            l.getValue != newValue.intValue()
           case _ =>
             true
         }
