@@ -9,7 +9,7 @@ moduleName := name.value
 
 organization := "org.omg.tiwg"
 
-homepage := Some(url(s"https://github.com/TIWG/${moduleName.value}"))
+homepage := Some(url(s"https://tiwg.github.io/${moduleName.value}"))
 
 organizationName := "OMG Tool-Infrastructure Working Group"
 
