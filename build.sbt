@@ -12,9 +12,6 @@ updateOptions := updateOptions.value.withCachedResolution(true)
 
 shellPrompt in ThisBuild := { state => Project.extract(state).currentRef.project + "> " }
 
-cleanFiles <+=
-  baseDirectory { base => base / "imce.md.package" }
-
 lazy val mdInstallDirectory = SettingKey[File]("md-install-directory", "MagicDraw Installation Directory")
 
 mdInstallDirectory in Global :=
