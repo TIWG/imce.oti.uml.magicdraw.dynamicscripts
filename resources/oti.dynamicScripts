@@ -1516,3 +1516,47 @@ characterization(
             method: memberEnds
         )
     })
+
+dynamicScripts(
+      name='OTI MagicDraw DynamicScripts (QUDV Units)'
+      [ m: InstanceSpecification, c: '*Unit' ]
+      scripts {
+          DiagramContextMenuAction(
+              name: 'Toggle InstanceSpecification Slots visibiilty'
+              project: imce.oti.uml.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              access: r/o
+              class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ToggleInstanceSpecificationSlotVisibility
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Add QUDV Units as QUDV Diagram primary elements'
+              project: imce.oti.uml.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              access: r/o
+              class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.AddAsQUDVDiagramPrimaryElements
+              method: doit
+          )
+      })
+
+dynamicScripts(
+      name='OTI MagicDraw DynamicScripts (QUDV Quantities)'
+      [ m: InstanceSpecification, c: '*QuantityKind' ]
+      scripts {
+          DiagramContextMenuAction(
+              name: 'Toggle InstanceSpecification Slots visibiilty'
+              project: imce.oti.uml.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              access: r/o
+              class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.ToggleInstanceSpecificationSlotVisibility
+              method: doit
+          )
+          DiagramContextMenuAction(
+              name: 'Add QUDV QuantityKinds as QUDV Diagram primary elements'
+              project: imce.oti.uml.magicdraw.dynamicscripts
+              dependencies: { org.omg.oti.uml.json.schema, org.omg.oti.uml.core, org.omg.oti.uml.composite_structure_tree_analysis, org.omg.oti.uml.change_migration, org.omg.oti.uml.magicdraw.adapter }
+              access: r/o
+              class: gov.nasa.jpl.imce.oti.magicdraw.dynamicScripts.AddAsQUDVDiagramPrimaryElements
+              method: doit
+          )
+      })
