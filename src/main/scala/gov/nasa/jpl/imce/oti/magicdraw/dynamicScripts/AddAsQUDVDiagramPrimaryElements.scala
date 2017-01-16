@@ -14,7 +14,7 @@ import gov.nasa.jpl.dynamicScripts.magicdraw.validation.MagicDrawValidationDataR
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Set
-import scala.{None, Option, Some, StringContext}
+import scala.{Any,None, Option, Some, StringContext}
 import scala.util.{Failure, Success, Try}
 
 object AddAsQUDVDiagramPrimaryElements {
@@ -68,7 +68,7 @@ object QUDVHelper {
   : Try[Option[MagicDrawValidationDataResults]]
   = {
     val currentValue = StereotypesHelper.getStereotypePropertyValue(d, qudvDiagramS, "primaryQUDVElements", true)
-    val newValue = (currentValue.to[Set] ++ qudvElements).toList.asJava
+    val newValue: java.util.List[Any] = (currentValue.to[Set] ++ qudvElements).toList.asJava
     StereotypesHelper.setStereotypePropertyValue(d, qudvDiagramS, "primaryQUDVElements", newValue)
 
     Success(None)

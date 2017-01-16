@@ -122,8 +122,13 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
     unmanagedClasspath in Compile ++= (unmanagedJars in Compile).value,
 
     resolvers += Resolver.bintrayRepo("jpl-imce", "gov.nasa.jpl.imce"),
-    resolvers += Resolver.bintrayRepo("tiwg", "org.omg.tiwg")
+    resolvers += Resolver.bintrayRepo("tiwg", "org.omg.tiwg"),
 
+    resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases",
+    scalacOptions in (Compile, compile) += s"-P:artima-supersafe:config-file:${baseDirectory.value}/project/supersafe.cfg",
+    scalacOptions in (Test, compile) += s"-P:artima-supersafe:config-file:${baseDirectory.value}/project/supersafe.cfg",
+    scalacOptions in (Compile, doc) += "-Xplugin-disable:artima-supersafe",
+    scalacOptions in (Test, doc) += "-Xplugin-disable:artima-supersafe"
   )
   .dependsOnSourceProjectOrLibraryArtifacts(
     "oti-uml-magicdraw-adapter",
@@ -132,15 +137,17 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
       "org.omg.tiwg" %% "org.omg.oti.uml.magicdraw.adapter"
         % Versions_oti_uml_magicdraw_adapter.version % "compile"
         withSources() withJavadoc() artifacts
-        Artifact("org.omg.oti.uml.magicdraw.adapter", "zip", "zip", Some("resource"), Seq(), None, Map())
+        Artifact("org.omg.oti.uml.magicdraw.adapter", "zip", "zip", "resource")
     )
   )
   .settings(
 
     extractArchives := {
+      val base = baseDirectory.value
       val s = streams.value
       val up = update.value
       val mdInstallDir = (mdInstallDirectory in ThisBuild).value
+      val showDownloadProgress = true
       if (!mdInstallDir.exists) {
 
         val crossV = CrossVersion(scalaVersion.value, scalaBinaryVersion.value)(projectID.value)
@@ -149,38 +156,11 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
         val compileDepGraph =
           net.virtualvoid.sbt.graph.DependencyGraphKeys.ignoreMissingUpdate.value.configuration("compile").get
 
-        val mdParts = (for {
-          cReport <- up.configurations
-          if cReport.configuration == "compile"
-          mReport <- cReport.modules
-          if mReport.module.organization == "org.omg.tiwg.vendor.nomagic"
-          (artifact, archive) <- mReport.artifacts
-        } yield archive).sorted
-
-        {
-          s.log.warn(s"Extracting MagicDraw from ${mdParts.size} parts:")
-          mdParts.foreach { p => s.log.warn(p.getAbsolutePath) }
-
-          val merged = File.createTempFile("md_merged", ".zip")
-          println(s"merged: ${merged.getAbsolutePath}")
-
-          val zip = File.createTempFile("md_no_install", ".zip")
-          println(s"zip: ${zip.getAbsolutePath}")
-
-          val script = File.createTempFile("unzip_md", ".sh")
-          println(s"script: ${script.getAbsolutePath}")
-
-          val out = new java.io.PrintWriter(new java.io.FileOutputStream(script))
-          out.println("#!/bin/bash")
-          out.println(mdParts.map(_.getAbsolutePath).mkString("cat ", " ", s" > ${merged.getAbsolutePath}"))
-          out.println(s"zip -FF ${merged.getAbsolutePath} --out ${zip.getAbsolutePath}")
-          out.println(s"unzip -q ${zip.getAbsolutePath} -d ${mdInstallDir.getAbsolutePath}")
-          out.close()
-
-          val result = sbt.Process(command = "/bin/bash", arguments = Seq[String](script.getAbsolutePath)).!
-          require(0 <= result && result <= 2, s"Failed to execute script (exit=$result): ${script.getAbsolutePath}")
-          s.log.warn(s"Extracted.")
-        }
+        MagicDrawDownloader.fetchMagicDraw(
+          s.log, showDownloadProgress,
+          up,
+          credentials.value,
+          mdInstallDir, base / "target" / "no_install.zip")
 
         val pluginParts = (for {
           cReport <- up.configurations
