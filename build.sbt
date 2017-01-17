@@ -151,8 +151,6 @@ lazy val core = Project("imce-oti-uml-magicdraw-dynamicscripts", file("."))
       if (!mdInstallDir.exists) {
 
         val crossV = CrossVersion(scalaVersion.value, scalaBinaryVersion.value)(projectID.value)
-        val runtimeDepGraph =
-          net.virtualvoid.sbt.graph.DependencyGraphKeys.ignoreMissingUpdate.value.configuration("runtime").get
         val compileDepGraph =
           net.virtualvoid.sbt.graph.DependencyGraphKeys.ignoreMissingUpdate.value.configuration("compile").get
 
